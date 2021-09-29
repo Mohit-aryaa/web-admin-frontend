@@ -4,12 +4,12 @@ import { Observable, of, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
+import { environment } from 'environments/environment';
 
 @Injectable()
 export class AuthService
 {
     private _authenticated: boolean = false;
-
     /**
      * Constructor
      */
@@ -145,7 +145,7 @@ export class AuthService
      */
     signUp(user: { name: string; email: string; password: string; company: string }): Observable<any>
     {
-        return this._httpClient.post('api/auth/sign-up', user);
+        return this._httpClient.post('${apiUrl}/auth/register', user);
     }
 
     /**
