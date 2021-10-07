@@ -91,6 +91,49 @@ export class AuthService
             })
         );
     }
+    getAdminUsers(): Observable<any> 
+    {
+        return this._httpClient.get('http://18.221.25.167:3000/admin/user') 
+     }
+    addNewCategory(data: any){
+       return this._httpClient.post('http://18.221.25.167:3000/admin/interest', data)
+       
+    }
+    deleteCategory(del:any ) {
+        //console.log(info.Id)
+        return this._httpClient.delete('http://18.221.25.167:3000/admin/interest/'+del._id, del);    
+    }
+    signInOtp(credentials: any): Observable<any>
+    {
+        // Throw error, if the user is already logged in
+        if ( this._authenticated )
+        {
+            return throwError('User is already logged in.');
+        }
+
+        return this._httpClient.post('http://18.221.25.167:3000/auth/login', credentials).pipe(
+            switchMap((response: any) => {
+
+                // Store the access token in the local storage
+                console.log(response)
+                this.accessToken = response.token;
+
+                // Set the authenticated flag to true
+                this._authenticated = true;
+
+                // Store the user on the user service
+                this._userService.user = response.user;
+
+                // Return a new observable with the response
+                return of(response);
+            })
+        );
+    }
+
+    getOtp(data): Observable<any> 
+    {
+        return this._httpClient.post('http://18.221.25.167:3000/auth/request-otp', data);
+    }
 
     /**
      * Sign in using the access token

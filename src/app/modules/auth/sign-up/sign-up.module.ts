@@ -11,6 +11,8 @@ import { FuseAlertModule } from '@fuse/components/alert';
 import { SharedModule } from 'app/shared/shared.module';
 import { AuthSignUpComponent } from 'app/modules/auth/sign-up/sign-up.component';
 import { authSignupRoutes } from 'app/modules/auth/sign-up/sign-up.routing';
+import { MatTabsModule } from '@angular/material/tabs';
+import { Ng2TelInputModule } from 'ng2-tel-input';
 
 @NgModule({
     declarations: [
@@ -26,7 +28,9 @@ import { authSignupRoutes } from 'app/modules/auth/sign-up/sign-up.routing';
         MatProgressSpinnerModule,
         FuseCardModule,
         FuseAlertModule,
-        SharedModule
+        SharedModule,
+        MatTabsModule,
+        Ng2TelInputModule
     ]
 })
 export class AuthSignUpModule

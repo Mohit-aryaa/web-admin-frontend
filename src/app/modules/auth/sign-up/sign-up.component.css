@@ -1,0 +1,17 @@
+.iti__flag-container {
+    left: -15px!important;
+}
+#number {
+    padding-left: 2rem;
+}
+.otp-btn {
+    font-size: 12px; 
+    margin-right: -12px;
+}
+.iti__country-list {
+    background-color: white;
+    z-index: 9;
+}
+mat-tab-group {
+    margin-top: 1.5rem;
+}

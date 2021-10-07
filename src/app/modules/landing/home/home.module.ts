@@ -8,7 +8,7 @@ import { landingHomeRoutes } from 'app/modules/landing/home/home.routing';
 
 @NgModule({
     declarations: [
-        LandingHomeComponent
+        LandingHomeComponent,
     ],
     imports     : [
         RouterModule.forChild(landingHomeRoutes),
