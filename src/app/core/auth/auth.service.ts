@@ -91,18 +91,84 @@ export class AuthService
             })
         );
     }
+    
+    //Admin data queries
     getAdminUsers(): Observable<any> 
     {
         return this._httpClient.get('http://18.221.25.167:3000/admin/user') 
-     }
-    addNewCategory(data: any){
-       return this._httpClient.post('http://18.221.25.167:3000/admin/interest', data)
-       
     }
-    deleteCategory(del:any ) {
+    addAdminUsers(data: any) {
+        return this._httpClient.post('http://18.221.25.167:3000/admin/user', data)
+    }
+    updateAdminUsers(id, data: any) {
+        return this._httpClient.put(`http://18.221.25.167:3000/admin/user/${id}`, data)
+    }
+
+    //Intereste category queries
+    addNewInterestedCategory(data: any){
+       return this._httpClient.post('http://18.221.25.167:3000/admin/interest', data)  
+    }
+    getInterestedCategory(): Observable <any>
+    {
+        return this._httpClient.get('http://18.221.25.167:3000/admin/interest')
+    }
+    updateInterestedCategory(id, data: any) {
+        return this._httpClient.put(`http://18.221.25.167:3000/admin/interest/${id}`, data)
+    }
+    deleteInterestedCategory(del:any ) {
         //console.log(info.Id)
         return this._httpClient.delete('http://18.221.25.167:3000/admin/interest/'+del._id, del);    
     }
+
+     //Product category queries
+     addNewProductCategory(data: any){
+        return this._httpClient.post('http://18.221.25.167:3000/admin/product-category', data)  
+     }
+     getProductCategory(): Observable <any>
+     {
+         return this._httpClient.get('http://18.221.25.167:3000/admin/product-category')
+     }
+     updateProductCategory(id, data: any) {
+         return this._httpClient.put(`http://18.221.25.167:3000/admin/product-category/${id}`, data)
+     }
+     deleteProductCategory(del:any ) {
+         //console.log(info.Id)
+         return this._httpClient.delete('http://18.221.25.167:3000/admin/product-category/'+del._id, del);    
+     }
+
+     //Product subcategory queries
+     addNewProductSubCategory(data: any){
+        return this._httpClient.post('http://18.221.25.167:3000/admin/product-subcategory', data)  
+     }
+     getSubProductCategory(): Observable <any>
+     {
+         return this._httpClient.get('http://18.221.25.167:3000/admin/product-subcategory')
+     }
+     updateProductSubCategory(id, data: any) {
+         return this._httpClient.put(`http://18.221.25.167:3000/admin/product-subcategory/${id}`, data)
+     }
+     deleteProductSubCategory(del:any ) {
+         //console.log(info.Id)
+         return this._httpClient.delete('http://18.221.25.167:3000/admin/product-subcategory/'+del._id, del);    
+     }
+
+     //Seller Profile queries
+     addNewSellerProfile(data: any){
+        return this._httpClient.post('http://18.221.25.167:3000/admin/seller-profile', data)  
+     }
+     getSellerProfiley(): Observable <any>
+     {
+         return this._httpClient.get('http://18.221.25.167:3000/admin/seller-profile')
+     }
+     updateSellerProfile(id, data: any) {
+         return this._httpClient.put(`http://18.221.25.167:3000/admin/seller-profile/${id}`, data)
+     }
+     deleteSellerProfile(del:any ) {
+         //console.log(info.Id)
+         return this._httpClient.delete('http://18.221.25.167:3000/admin/seller-profile/'+del._id, del);    
+     }
+
+
     signInOtp(credentials: any): Observable<any>
     {
         // Throw error, if the user is already logged in

@@ -1,21 +1,21 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { InterestedCategoriesComponent } from './interested-categories.component';
+import { SellerProfileComponent } from './seller-profile.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTableModule } from '@angular/material/table';
-import { RouterModule } from '@angular/router';
-import { NgbModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { RouterModule } from '@angular/router';
 import { Ng2TelInputModule } from 'ng2-tel-input';
-
+// import { AgmCoreModule } from '@agm/core';
+import { GoogleMapsModule } from '@angular/google-maps'
 
 
 @NgModule({
   declarations: [
-    InterestedCategoriesComponent
+    SellerProfileComponent
   ],
   imports: [
     CommonModule,
@@ -23,7 +23,7 @@ import { Ng2TelInputModule } from 'ng2-tel-input';
       [
         {
         path: '',
-        component: InterestedCategoriesComponent
+        component: SellerProfileComponent
         }
       ]
     ),
@@ -34,7 +34,8 @@ import { Ng2TelInputModule } from 'ng2-tel-input';
     MatSortModule,
     FormsModule,
     ReactiveFormsModule,
-    Ng2TelInputModule
+    Ng2TelInputModule,
+    GoogleMapsModule
   ]
 })
-export class InterestedCategoriesModule { }
+export class SellerProfileModule { }

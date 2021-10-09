@@ -17,7 +17,7 @@ export class AuthSignInComponent implements OnInit
 {
     @ViewChild('signInNgForm') signInNgForm: NgForm;
     @ViewChild('signInOtpNgForm') signInOtpNgForm: NgForm;
-    //s@ViewChild('otpField')  otpFieldVariable: ElementRef; 
+    //@ViewChild('otpField')  otpFieldVariable: ElementRef; 
 
     alert: { type: FuseAlertType; message: string } = {
         type   : 'success',

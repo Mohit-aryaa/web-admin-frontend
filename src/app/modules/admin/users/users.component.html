@@ -13,7 +13,7 @@
             <!-- Name Column -->
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef> Name </th>
-                <td mat-cell *matCellDef="let element"> {{element.firstName}} {{element.lastName}}</td>
+                <td mat-cell *matCellDef="let element"> {{element.name}}</td>
             </ng-container>
 
             <ng-container matColumnDef="email">
@@ -29,24 +29,24 @@
             <!-- Gender Column -->
             <ng-container matColumnDef="phone">
                 <th mat-header-cell *matHeaderCellDef> Phone </th>
-                <td mat-cell *matCellDef="let element"> {{element.phone}} </td>
+                <td mat-cell *matCellDef="let element">  {{element.countryPhoneCode + ' '}}{{element.phone}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="registerWith">
+            <ng-container matColumnDef="registerdWith">
                 <th mat-header-cell *matHeaderCellDef> Register With  </th>
-                <td mat-cell *matCellDef="let element"> {{element.registerWith}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.registerdWith}} </td>
             </ng-container>
 
         
 
             <!-- Action Column -->
-            <ng-container matColumnDef="action">
+            <ng-container matColumnDef="action" >
                 <th mat-header-cell *matHeaderCellDef class="text-right"> Action </th>
-                <td mat-cell *matCellDef="let element" class="text-right">
-                    <button mat-icon-button>
+                <td mat-cell *matCellDef="let element; let i = index " class="text-right">
+                    <button mat-icon-button (click)="openUpdateModal(element, i)">
                         <mat-icon>edit</mat-icon>
                     </button>
-                    <button mat-icon-button color="warn">
+                    <button mat-icon-button color="warn" (click)="deleteAdminUser(element, i)">  
                         <mat-icon>delete</mat-icon>
                     </button>
                 </td>
@@ -61,45 +61,72 @@
 
     </div>
 
+
     <ng-template #content let-modal>
         <div class="modal-header">
-          <h4 class="modal-title" id="modal-basic-title">Category update</h4>
+          <h4 class="modal-title" id="modal-basic-title">{{selectedUser ? 'Update' : 'Add'}} Data</h4>
           <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-            <form class="px-4" [formGroup]="addAdminForm" (ngSubmit)="postData()">
+            <form class="px-4" [formGroup]="addAdminForm">
                 <div class="form-group mb-3" >
                   <label for=""  class="mb-1"> Name</label>
-                  <input type="text" class="form-control" id="name"  name="name" [formControlName]="'name'">
+                  <input type="text" class="form-control" id="name" formControlName="name">
                 </div>
                 <div class="form-group mb-3" >
                     <label for=""  class="mb-1"> Gender</label>
-                    <select class="form-select" aria-label="Default select example" id="name"  name="name" [formControlName]="'name'">
-                        <option selected>Open this select menu</option>
+                    <select class="form-select" aria-label="Default select example" id="gender"  name="gender" [formControlName]="'gender'">
+                        <option selected disabled>Open this select menu</option>
                         <option value="male">Male</option>
-                        <option value="2">female</option>
+                        <option value="female">female</option>
                       </select>
-                  </div>
+                </div>
                 <div class="form-group mb-3">
-                    <label for=""  class="mb-1"> Date of birth</label>
-                    <input class="form-control" type="datetime-local">
+                    <label for=""  class="mb-1" > Date of birth</label>
+                    <input class="form-control" type="date"  [formControlName]="'dateOfBirth'">
                 </div>
 
                 <div class="form-group mb-3">
                     <label for=""  class="mb-1"> Email</label>
-                    <input class="form-control" type="email">
+                    <input class="form-control" type="email" [formControlName]="'email'">
+                </div>
+
+                <div class="form-group mb-3">
+                    <input type="text" class="form-control d-none" [formControlName]="'countryPhoneCode'" readonly><br>
+                    <label for=""  class="mb-1"> Phone {{selectedUser ? ': Select your country code first' : ' '}}</label><br>
+                    <input class="form-control w-100" type="tel" [formControlName]="'phone'"
+                    [ng2TelInputOptions]="{initialCountry: 'us', separateDialCode:true }" ng2TelInput 
+                    (countryChange)="onCountryChange($event)">
                 </div>
 
                 <div class="form-group mb-3">
                     <label for=""  class="mb-1"> Registerd with</label>
-                    <input class="form-control" type="text">
+                    <input class="form-control" type="text" [formControlName]="'registerdWith'">
                 </div>
+
+               <div class="form-row row">
+                    <div class="form-group mb-3 col-md-6" >
+                        <label for=""  class="mb-1"> Interested Category</label>
+                        <select class="form-select" aria-label="Default select example"  name="interestCategories" [formControlName]="'interestCategories'">
+                            <option selected disabled>Open </option>
+                            <option *ngFor="let categories of getInterestCategories" value="{{categories.name}}">{{categories.name}}</option>   
+                        </select>
+                    </div>
+                    <div class="form-group mb-3 col-md-6" >
+                        <label for=""  class="mb-1"> Role type</label>
+                        <select class="form-select" aria-label="Default select example" id="roleType"  name="roleType" [formControlName]="'roleType'">
+                            <option selected disabled>Open</option>
+                            <option value="admin">Admin</option>   
+                            <option value="user">User</option>   
+                        </select>
+                    </div>
+               </div>
 
                 <div class="form-group mb-3">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="phoneVerified">
+                        <input class="form-check-input" type="checkbox" value="" id="phoneVerified" [formControlName]="'phoneVerified'">
                         <label class="form-check-label" for="phoneVerified">
                             Phone verified
                         </label>
@@ -108,16 +135,28 @@
 
                 <div class="form-group mb-3">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="emailVerified">
+                        <input class="form-check-input" type="checkbox" value="" id="emailVerified" [formControlName]="'emailVerified'">
                         <label class="form-check-label" for="emailVerified">
                             Email verified
                         </label>
                       </div>
                 </div>
+
+                <div class="form-group mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="active" [formControlName]="'isActive'">
+                        <label class="form-check-label" for="active">
+                            Active
+                        </label>
+                      </div>
+                </div>
                 
                 <div class="form-group mb-3">
-                    <button type="submit" class="btn btn-primary " [disabled]="!addCategoryForm.valid">save</button>
-                </div>         
+                    <button type="button" class="btn btn-primary "  (click)="postAdminData()">{{ selectedUser ? 'Update' : 'Add'}}</button>
+                </div>   
+                <!-- <ng-template [ngIf]="!addAdminForm.valid">
+                    <div><small class="text-danger">*Please fill all fields to continue*</small></div>
+                </ng-template> -->
                 
             </form>
         </div>

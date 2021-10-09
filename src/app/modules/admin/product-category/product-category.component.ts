@@ -7,23 +7,23 @@ import { MatTable, MatTableDataSource } from '@angular/material/table';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from 'app/core/auth/auth.service';
 
-
 @Component({
-  selector: 'app-interested-categories',
-  templateUrl: './interested-categories.component.html',
-  styleUrls: ['./interested-categories.component.scss']
+  selector: 'app-product-category',
+  templateUrl: './product-category.component.html',
+  styleUrls: ['./product-category.component.scss']
 })
-export class InterestedCategoriesComponent implements OnInit {
- 
+export class ProductCategoryComponent implements OnInit {
   @ViewChild('content') content: any;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  dataSource = new MatTableDataSource;
-  addInterestedCategoryForm: FormGroup;
-  selectedInterestedCategory: any;
-  constructor(private http: HttpClient, private modalService: NgbModal, private _formBuilder: FormBuilder, private _authService: AuthService) { }
+  dataSource = new MatTableDataSource<any>();
+  addProductCategoryForm: FormGroup;
+  selectedProductCategory: any;
 
-  displayedColumns: string[] = ['name', 'action'];
+  constructor(private http: HttpClient, private modalService: NgbModal, private _formBuilder: FormBuilder, private _authService: AuthService) { }
+  
+
+  displayedColumns: string[] = ['name', 'description', 'action'];
  
   ngAfterViewInit(): void {
     this.compileTable();
@@ -31,8 +31,17 @@ export class InterestedCategoriesComponent implements OnInit {
     //console.log(this.dataSource);
   }
 
+  
+
+  ngOnInit(): void {
+    this.addProductCategoryForm = this._formBuilder.group({
+      categoryName: ['', [Validators.required]],
+      categoryDescription: ['', [Validators.required]],
+    })
+  }
+
   getData(): void {
-    this._authService.getInterestedCategory().subscribe((res: any) => {
+    this._authService.getProductCategory().subscribe((res: any) => {
       //console.log(res);
       res.sort((a, b) => {
         var dateA = new Date(a.registerationDateTime).getTime();
@@ -43,23 +52,17 @@ export class InterestedCategoriesComponent implements OnInit {
     })
   }
 
-  ngOnInit(): void {
-    this.addInterestedCategoryForm = this._formBuilder.group({
-      name: ['', [Validators.required]]
-    })
-  }
-
   postData() {
-    console.log(this.addInterestedCategoryForm.value)
-    if(this.addInterestedCategoryForm.invalid) {
-      alert('All fields are required');
+    console.log(this.addProductCategoryForm.value)
+    if (this.addProductCategoryForm.invalid) {
+      alert('all fields are required');
       return false;
     }
-    if(this.selectedInterestedCategory) {
-      this._authService.updateInterestedCategory(this.selectedInterestedCategory, this.addInterestedCategoryForm.value).subscribe(
+    if(this.selectedProductCategory) {
+      this._authService.updateProductCategory(this.selectedProductCategory, this.addProductCategoryForm.value).subscribe(
         (results: any) => {
             //console.log(results);
-            this.addInterestedCategoryForm.patchValue({name: ''})
+            this.addProductCategoryForm.reset();
             this.modalService.dismissAll();
             this.getData();
         },
@@ -68,10 +71,10 @@ export class InterestedCategoriesComponent implements OnInit {
         }
       )
     } else {
-      this._authService.addNewInterestedCategory(this.addInterestedCategoryForm.value).subscribe(
+      this._authService.addNewProductCategory(this.addProductCategoryForm.value).subscribe(
         (results: any) => {
             //console.log(results);
-            this.addInterestedCategoryForm.patchValue({name: ''})
+            this.addProductCategoryForm.reset();
             this.modalService.dismissAll();
             this.getData();
         },
@@ -87,7 +90,7 @@ export class InterestedCategoriesComponent implements OnInit {
     console.log(delCategory);
     if(confirm("Are you sure to delete ?")) {
       console.log("Implement delete functionality here");
-      this._authService.deleteInterestedCategory(delCategory).subscribe(
+      this._authService.deleteProductCategory(delCategory).subscribe(
         (res: any) => {
           //console.log(res);
           //this.modalService.dismissAll();
@@ -95,15 +98,15 @@ export class InterestedCategoriesComponent implements OnInit {
         }
       )
     }
-    
   }
+
   compileTable(data = []) {
     this.dataSource = new MatTableDataSource<any>(data)
     this.dataSource.paginator = this.paginator;
   }
 
   openModal(id = null) {
-    this.selectedInterestedCategory = id;
+    this.selectedProductCategory = id;
     //console.log(data);
      
     this.modalService.open(this.content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
@@ -115,21 +118,13 @@ export class InterestedCategoriesComponent implements OnInit {
 
   
   openUpdateModal(data:any) {
-    console.log(data.name);
+    console.log(data.categoryName);
     this.openModal(data._id);
-    
-    console.log(data.countryPhoneCode);
     // this.countryFlag = ''
-    this.addInterestedCategoryForm.patchValue({
-      'name': data.name,
-     
-
+    this.addProductCategoryForm.patchValue({
+      'categoryName': data.categoryName,
+      'categoryDescription': data.categoryDescription
     });
-
   }
-
- 
-
-  
 
 }
