@@ -75,11 +75,7 @@ export const appRoutes: Route[] = [
         children   : [
             {path: 'example', loadChildren: () => import('app/modules/admin/example/example.module').then(m => m.ExampleModule)},
             {path: 'users', loadChildren: () => import('app/modules/admin/users/users.module').then(m => m.UsersModule)},
-            {path: 'interest', loadChildren: () => import('app/modules/admin/interested-categories/interested-categories.module').then(m => m.InterestedCategoriesModule)},
-            {path: 'product-categories', loadChildren: () => import('app/modules/admin/product-category/product-category.module').then(m => m.ProductCategoryModule)},
-            {path: 'product-subcategories', loadChildren: () => import('app/modules/admin/product-subcategory/product-subcategory.module').then(m => m.ProductSubcategoryModule)},
-            {path: 'seller-profile', loadChildren: () => import('app/modules/admin/seller-profile/seller-profile.module').then(m => m.SellerProfileModule)},
-        
+            
         ]
     }
 ];
