@@ -1,0 +1,12 @@
+.ng-invalid.ng-touched {
+    border-color: #dc3545 !important
+}
+::ng-deep .mat-simple-snackbar {
+    justify-content: center!important;
+}
+mat-spinner {
+    zoom: 0.3
+}
+.example-chip-list {
+    width: 100%;
+}

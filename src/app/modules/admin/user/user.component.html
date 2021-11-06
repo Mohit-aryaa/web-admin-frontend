@@ -1,0 +1,238 @@
+<div class="flex flex-col flex-auto min-w-0" style="max-height: 90vh; overflow-y: scroll;">
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:p-10">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <div class="fs-3">Users & Roles</div>
+            </div>
+            <div class="col-md-6 text-end">
+                <button (click)="openModal()" mat-flat-button color="primary" id="inviteBtn" class="mb-3 me-2 shadow">Invite User</button>
+                <button (click)="openRoleModal()" mat-flat-button color="primary" id="addBtn" class="mb-3 shadow">Add Role</button>
+            </div>
+        </div>
+        
+
+        <!-- CONTENT GOES HERE -->
+        <div class="row">
+            <div class="col-md-6 ">
+                <div class=" mat-elevation-z8 shadow-sm p-3 w-100 bg-white">
+                    <div class="d-flex px-3 py-4">
+                        <div class="col-6">
+                            <div class="fs-4">Users</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control bg-light sortInput rounded-pill" #userInput (keyup)="applyUserFilter(userInput.value)" placeholder="Search">
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="loading;else table" class="d-flex justify-content-center">
+                        <mat-spinner class="progress-spinner"></mat-spinner>
+                    </div>
+                    <ng-template #table>
+                        <table mat-table [dataSource]="userDataSource" matSort class="" style="width: 100%;">
+                            
+                            <ng-container matColumnDef="allUsers">
+                                <th mat-header-cell *matHeaderCellDef> All Users</th>
+                                <td mat-cell *matCellDef="let userElement">
+                                    <button class="btn btn-secondary my-4 text-white btn-rounded rounded-circle">{{ userElement.name | shortName}}</button>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell *matHeaderCellDef> Name</th>
+                                <td mat-cell *matCellDef="let userElement"><div class="fs-6"> {{userElement.name}}</div><div><small>{{userElement.email}}</small></div></td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="action">
+                                <th mat-header-cell *matHeaderCellDef class="text-right"> Action </th>
+                                <td mat-cell *matCellDef="let userElement; let i = index " class="text-right">
+                                <button mat-icon-button (click)="openUpdateModal(userElement, i)">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                    <button mat-icon-button color="warn"  (click)="deleteUser(userElement,i)"> 
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+                
+                            <tr mat-header-row *matHeaderRowDef="displayedUserColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedUserColumns;"></tr>
+                        </table>
+                    </ng-template>
+                     <mat-paginator 
+                        #UserTablePaginator
+                         [pageIndex]="0" 
+                         [pageSize]="5" 
+                         [pageSizeOptions]="[5, 10, 20]" 
+                         (page)="userPageChanged($event)"
+                         aria-label="Select page">
+                    </mat-paginator>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class=" mat-elevation-z8 shadow-sm w-100 p-3 bg-white">
+                    <div class="d-flex px-3 py-4">
+                        <div class="col-6">
+                            <div class="fs-4">Roles</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control bg-light sortInput rounded-pill" #roleInput (keyup)="applyRoleFilter(roleInput.value)" placeholder="Search">
+                            </div>
+                        </div>
+                    </div>
+                    <table mat-table  [dataSource]="roleDataSource" matSort  style="width: 100%;">
+
+                        <!-- Name Column -->
+                        <ng-container matColumnDef="roleName">
+                            <th mat-header-cell *matHeaderCellDef> Role Name</th>
+                            <td mat-cell *matCellDef="let element"> {{element.roleName}}</td>
+                        </ng-container>
+                
+                        <!-- Action Column -->
+                        <ng-container matColumnDef="action">
+                            <th mat-header-cell *matHeaderCellDef class="text-right"> Action </th>
+                            <td mat-cell *matCellDef="let element; let i = index " class="text-right">
+                            <button mat-icon-button (click)="openUpdateModal(element, i)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                                <button mat-icon-button color="warn"  (click)="deleteRole(element,i)"> 
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+            
+                        <tr mat-header-row *matHeaderRowDef="displayedRoleColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedRoleColumns;"></tr>
+                    </table>
+            
+                    <mat-paginator  
+                        #RoleTablePaginator
+                        [pageIndex]="0" 
+                        [pageSize]="5" 
+                        [pageSizeOptions]="[5, 10, 20]" 
+                        (page)="rolePageChanged($event)" 
+                        aria-label="Select page">
+                    </mat-paginator>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- modal -->
+    <ng-template #content let-modal class="bd-example-modal-lg">
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">{{seletedUser ? 'Update' : 'Add'}} Data</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form class="px-4" [formGroup]="userForm">
+                <div class="row">
+                    <div class="form-group mb-3 col-12">
+                        <label for="" class="mb-1"> Name</label>
+                        <input type="text" class="form-control" id="roleName" name="roleName" [formControlName]="'name'" placeholder="John doe">
+                    </div>
+                    <div class="form-group mb-3 col-12">
+                        <label for="" class="mb-1 "> Email</label>
+                        <input type="email" class="form-control" id="email" name="email" [formControlName]="'email'" placeholder="John@example.com">
+                    </div>
+
+                    <div class="form-group mb-3 col-12">
+                        <label for="" class="mb-1 "> Role</label>
+                        <select class="form-select" aria-label="Default select example" id="roleType" formControlName="roleType" >
+                            <option value="" selected hidden disabled>Select</option>
+                            <option *ngFor="let roles of userRoles; let i = index" [value]="roles._id" >{{roles.roleName}}</option>
+                        </select>
+                    </div>
+
+                    <!-- <div class="form-group mb-3 col-12">
+                        <label for="" class="mb-1 "> Password</label>
+                        <input type="password" class="form-control" id="password" name="password" [formControlName]="'password'" placeholder="John@example.com">
+                    </div> -->
+
+                </div>
+
+                <div class="form-group mb-3">
+                    <button type="submit" class="btn btn-primary "  (click)="postData()">{{seletedUser ? 'Update' :
+                        'Add'}}</button>
+                </div>
+
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Close</button>
+        </div>
+    </ng-template>
+
+    <ng-template #rolesModal let-modal class="bd-example-modal-lg">
+        <div class="modal-header">
+            <h4 class="modal-title" id="role-modal-basic-title">{{selectedRole ? 'Update' : 'Add'}} Data</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form class="px-4" #roleForm>
+                <div class="row">
+                    <div class="form-group mb-3 col-12">
+                        <label for="" class="mb-1"> Name</label>
+                        <input  class="form-control" id="roleName" name="roleName" [(ngModel)]="roleName"
+                            placeholder="John doe">
+                    </div>
+                    <div class="form-group mb-3 col-12">
+                        <label for="" class="mb-1 "> Permissions</label>
+                    </div>
+
+                    <div class="form-group mb-3 col-12 ">
+                        <div class="p-3" style="background: #f2f2f2;">
+                            <!-- Dashboard Permissions -->
+                            <mat-accordion class="" *ngFor="let p of permissions | keyvalue: originalOrder">
+                                <mat-expansion-panel class="mb-3" (opened)="panelOpenState = true"
+                                    (closed)="panelOpenState = false" >
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            <div class="for-group">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" [value]="true"
+                                                        [id]="permissions[p.key]" (input)="changeAll($event, permissions[p.key])" [checked]="isParentChecked(permissions[p.key])">
+                                                    <label class="form-check-label" [for]="permissions[p.key]">
+                                                        {{p.key | cameltostring}}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <div class="ps-2">
+                                        <div class="form-group mb-2" *ngFor="let pv of p.value | keyvalue: originalOrder">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                    [id]="pv.key" [(ngModel)]="permissions[p.key][pv.key]" [ngModelOptions]="{standalone: true}" >
+                                                <label class="form-check-label" [for]="pv.key">
+                                                    {{pv.key | cameltostring}}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group mb-3">
+                    <button type="submit" class="btn btn-primary "  (click)="postRoleData()">{{selectedRole ? 'Update' :
+                        'Add'}}</button>
+                </div>
+
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Close</button>
+        </div>
+    </ng-template>
+</div>

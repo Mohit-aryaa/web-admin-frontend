@@ -1,8 +1,0 @@
-::ng-deep .iti--allow-dropdown {
-    width: 100%!important;
-}
-::ng-deep .iti__flag-box, .iti__country-name,
-::ng-deep .iti__country-name,
-::ng-deep .iti__flag {
-    display: none;
-}

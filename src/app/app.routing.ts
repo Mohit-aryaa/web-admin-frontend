@@ -74,8 +74,14 @@ export const appRoutes: Route[] = [
         },
         children   : [
             {path: 'example', loadChildren: () => import('app/modules/admin/example/example.module').then(m => m.ExampleModule)},
-            {path: 'users', loadChildren: () => import('app/modules/admin/users/users.module').then(m => m.UsersModule)},
-            
+            {path: 'users-roles', loadChildren: () => import('app/modules/admin/user/user.module').then(m => m.UserModule)},
+            {path: 'products', loadChildren: () => import('app/modules/admin/products/products.module').then(m => m.ProductsModule)},
+            {path: 'add-product', loadChildren: () => import('app/modules/admin/add-product/add-product.module').then(m => m.AddProductModule)},
+            {path: 'edit-product', loadChildren: () => import('app/modules/admin/edit-product/edit-product.module').then(m => m.EditProductModule)},
+            {path: 'categories', loadChildren: () => import('app/modules/admin/categories/categories.module').then(m => m.CategoriesModule)},
+            {path: 'brands', loadChildren: () => import('app/modules/admin/brand/brand.module').then(m => m.BrandModule)},
+            {path: 'vendors', loadChildren: () => import('app/modules/admin/vendor/vendor.module').then(m => m.VendorModule)},
+            {path: 'sub-categories', loadChildren: () => import('app/modules/admin/sub-categories/sub-categories.module').then(m => m.SubCategoriesModule)},
         ]
     }
 ];

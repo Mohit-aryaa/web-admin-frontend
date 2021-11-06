@@ -1,0 +1,130 @@
+<div class="flex flex-col flex-auto min-w-0" style="max-height: 90vh; overflow-y: scroll;">
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:p-10">
+        <div class="row">
+            <div class="col-lg-6 col-md-8 mx-auto col-12">
+                <div class="p-4 shadow bg-white products-form-wrapper position-relative" >
+                    <img src="assets/images/logo/logo.svg" alt="" class="position-absolute" style="width: 35px; top: 40px;">
+                    <form  id="productsForm" [formGroup]="productsForm">
+                        <div class="row">
+                            <div class="col-md-12 mb-4">
+                                <div class="mt-3 mb-2 fw-bold h4 text-center">Add Product</div>
+                                <div class="mx-auto bg-primary" style="height: 2px; width: 120px;"></div>
+                            </div>
+                            <div class="form-group mb-3  col-12">
+                                <label for="" class="mb-1"> Name</label>
+                                <input type="text" class="form-control" id="productName" name="productName" [formControlName]="'productName'" placeholder="John doe">
+                            </div>
+                            <div class="form-group mb-3  col-12">
+                                <label for="" class="mb-1"> Description</label>
+                                <textarea  class="form-control" id="productDescription" name="productDescription" [formControlName]="'productDescription'" placeholder="John doe">
+                                    </textarea>
+                            </div>
+                            <div class="form-group mb-3  col-12">
+                                <label for="" class="mb-1"> Image</label>
+                                <input type="file" class="form-control"  [formControlName]="'productImagepicture'" (change)="uploadProductImage($event)">
+                                <input type="text" class="form-control d-none"  [formControlName]="'productImage'" placeholder="John doe">
+                                <div [ngClass]="previewImg? 'd-block' : 'd-none'" class="mt-3">
+                                    <img [src]="previewImg" alt="" class="">
+                                </div>
+                            </div>
+                            <div class="form-group mb-3  col-12">
+                                <label for="" class="mb-1"> Product Code</label>
+                                <input type="text" class="form-control" id="productCode" name="productCode" [formControlName]="'productCode'" placeholder="John doe">
+                            </div>
+                            <div class="form-group mb-3  col-12">
+                                <label for="" class="mb-1"> Product Model</label>
+                                <input type="text" class="form-control" id="productModel" name="productModel" [formControlName]="'productModel'" placeholder="John doe">
+                            </div>
+                            <div class="form-group mb-3 col-12">
+                                <label for="" class="mb-1"> Category</label>
+                                <select class="form-select" aria-label="Default select example" [formControlName]="'productCategory'">
+                                    <option value="" selected hidden disabled>Select</option>
+                                    <option *ngFor="let item of getCategoriesList; let i = index" [value]="item._id" >{{item.categoryName}}</option>
+                                </select>    
+                            </div>
+                            <div class="form-group mb-3 col-12">
+                                <label for="" class="mb-1"> Brand</label>
+                                <select class="form-select" aria-label="Default select example" [formControlName]="'productBrand'">
+                                    <option value="" selected hidden disabled>Select</option>
+                                    <option *ngFor="let item2 of getBrandsList; let i = index" [value]="item2._id" >{{item2.brandName}}</option>
+                                </select>    
+                            </div>
+                            <div class="form-group mb-3  col-12">
+                                <label for="" class="mb-1"> Vendor</label>
+                                <select class="form-select" aria-label="Default select example" [formControlName]="'vendor'">
+                                    <option value="" selected hidden disabled>Select</option>
+                                    <option *ngFor="let item3 of getVendorsList; let i = index" [value]="item3._id" >{{item3.name}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group  col-12">
+                                
+                                <label for="" class="mb-1"> Tags</label>
+                                <mat-form-field class="example-chip-list" appearance="fill">
+                                    <mat-chip-list #chipList aria-label="Fruit selection">
+                                      <mat-chip *ngFor="let tag of tags" [selectable]="selectable"
+                                               [removable]="removable" (removed)="remove(tag)">
+                                        {{tag.name}}
+                                        <button matChipRemove *ngIf="removable">
+                                          <mat-icon>cancel</mat-icon>
+                                        </button>
+                                      </mat-chip>
+                                      <input placeholder="New tags..."
+                                             [matChipInputFor]="chipList"
+                                             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                             [matChipInputAddOnBlur]="addOnBlur"
+                                             (matChipInputTokenEnd)="add($event)">
+                                    </mat-chip-list>
+                                  </mat-form-field>
+                            </div>
+                            <div class="form-group mb-3  col-12">
+                                <label for="" class="mb-1"> Country of origin</label>
+                                <input type="text" class="form-control" id="productCountry" name="productCountry" [formControlName]="'productCountry'" placeholder="country name">
+                            </div>
+                            <div class="form-group mb-3  col-12">
+                                <label for="" class="mb-1"> Manfacture Date</label>
+                                <input type="date" class="form-control" id="manfactureDate" name="manfactureDate" [formControlName]="'manfactureDate'" placeholder="">
+                            </div>
+                            <div class="form-group mb-3  col-12">
+                                <label for="" class="mb-1"> Price</label>
+                                <input type="text" class="form-control" id="price" name="price" [formControlName]="'price'" (keypress)="numberOnly($event)" placeholder="$50">
+                            </div>
+                            <div class="form-group mb-3 col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" [formControlName]="'todaysDeal'">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                    Today's Deal
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3 col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault1" [formControlName]="'publish'">
+                                    <label class="form-check-label" for="flexCheckDefault1">
+                                    Publish
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3  col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault1" [formControlName]="'featured'">
+                                    <label class="form-check-label" for="flexCheckDefault1">
+                                    feature
+                                    </label>
+                                </div>
+                            </div>
+                            
+                        </div>
+            
+                        <div class="form-group mb-3">
+                            <button type="submit" class="btn btn-primary py-2 w-100 rounded-pill"  (click)="postData()">Add Product</button>
+                        </div>
+            
+                    </form>
+                </div>
+            </div>
+
+          
+        </div>
+    </div>
+</div>

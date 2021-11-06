@@ -46,6 +46,7 @@
                             ]
                         },
                         "styles": [
+                            "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
                             "src/@fuse/styles/tailwind.scss",
                             "src/@fuse/styles/themes.scss",
                             "src/styles/vendors.scss",
@@ -53,12 +54,20 @@
                             "src/styles/styles.scss",
                             "src/styles/tailwind.scss",
                             "node_modules/intl-tel-input/build/css/intlTelInput.css",
-                            "node_modules/bootstrap/dist/css/bootstrap.min.css"
+                            "node_modules/bootstrap/dist/css/bootstrap.min.css",
+                            "node_modules/datatables.net-dt/css/jquery.dataTables.css",
+                            "./node_modules/@swimlane/ngx-datatable/index.css",
+                            "./node_modules/@swimlane/ngx-datatable/themes/material.scss",
+                            "./node_modules/@swimlane/ngx-datatable/themes/dark.scss",
+                            "./node_modules/@swimlane/ngx-datatable/themes/bootstrap.scss",
+                            "./node_modules/@swimlane/ngx-datatable/assets/icons.css"
 
                         ],
                         "scripts": [
                             "node_modules/intl-tel-input/build/js/intlTelInput.min.js",
-                            "node_modules/intl-tel-input/build/js/utils.js"
+                            "node_modules/intl-tel-input/build/js/utils.js",
+                            "node_modules/jquery/dist/jquery.js",
+                            "node_modules/datatables.net/js/jquery.dataTables.js"
                         ]
                     },
                     "configurations": {
@@ -126,6 +135,7 @@
                             "src/assets"
                         ],
                         "styles": [
+                            "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
                             "src/styles/styles.scss"
                         ],
                         "scripts": []

@@ -152,21 +152,9 @@ export class AuthService
          return this._httpClient.delete('http://18.221.25.167:3000/admin/product-subcategory/'+del._id, del);    
      }
 
-     //Seller Profile queries
-     addNewSellerProfile(data: any){
-        return this._httpClient.post('http://18.221.25.167:3000/admin/seller-profile', data)  
-     }
-     getSellerProfiley(): Observable <any>
-     {
-         return this._httpClient.get('http://18.221.25.167:3000/admin/seller-profile')
-     }
-     updateSellerProfile(id, data: any) {
-         return this._httpClient.put(`http://18.221.25.167:3000/admin/seller-profile/${id}`, data)
-     }
-     deleteSellerProfile(del:any ) {
-         //console.log(info.Id)
-         return this._httpClient.delete('http://18.221.25.167:3000/admin/seller-profile/'+del._id, del);    
-     }
+   
+
+
 
 
     signInOtp(credentials: any): Observable<any>

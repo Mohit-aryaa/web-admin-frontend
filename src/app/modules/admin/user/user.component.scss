@@ -1,0 +1,43 @@
+
+.ng-invalid.ng-touched {
+    border-color: #dc3545 !important
+}
+::ng-deep .mat-form-field {
+    .mat-input-element {
+        padding: 5px 5px;
+        border-radius: 50%;
+    }
+    .mat-form-field-label {
+        color: slategray;
+    }
+    .mat-form-field-underline {
+        background-color: slategray;
+    }
+    .mat-form-field-ripple {
+        background-color: slategray;
+    }
+    .mat-form-field-required-marker {
+        color: slategray;
+    }
+}
+.btn-rounded {
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mat-flat-button {
+    border-radius: 4px!important;
+
+}
+#inviteBtn {
+    background: #46C35F!important;
+}
+#addBtn {
+    background: #4466F2!important;
+}
+mat-spinner {
+    zoom: 0.4
+}
+
