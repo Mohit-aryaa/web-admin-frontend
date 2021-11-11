@@ -17,35 +17,36 @@ import { VendorService } from '../vendor.service';
 export class AddProductComponent implements OnInit {
   productsForm:FormGroup;
   selectedProduct: any;
-  storeImg: File;
+  storeImg :any = FileList;
   imgUploading: boolean = false;
-  previewImg: any;
+  showPreview: boolean = false;
   getCategoriesList: any[];
   getSubCategoriesList: any[];
   getBrandsList : any [];
   getVendorsList : any [];
-  
+  getCategoryId: any;
 
   constructor(private productsService: ProductsService,private categoriesService: CategoriesService , private subCategoriesService: SubCategoriesService, private _formBuilder: FormBuilder, private _snackBar: MatSnackBar,private brandsService: BrandService,private vendorsService: VendorService) { }
 
   ngOnInit(): void {
     this.getCategories();
-    this.getSubCategories();
     this.getBrands();
     this.getVendors();
     this.productsForm = this._formBuilder.group({
       productName:['', [Validators.required]],
       productDescription:['', [Validators.required]],
       productImagepicture: ['', [Validators.required]],
-      productImage:['',[Validators.required]],
+      productImages:[''],
       productCode:['',[Validators.required]],
       productModel: ['', [Validators.required]],
       productCategory:['', [Validators.required]],
+      productSubCategory: ['', [Validators.required]],
       productBrand:['', [Validators.required]],
       vendor: ['', [Validators.required]],
       tags:['', [Validators.required]],
       productCountry:['', [Validators.required]],
       manfactureDate:['', [Validators.required]],
+      stock: ['', [Validators.required]],
       todaysDeal:[false, ],
       publish:[false, ],
       featured:[false, ],
@@ -91,10 +92,15 @@ export class AddProductComponent implements OnInit {
     })
   }
 
-  getSubCategories() {
-    this.subCategoriesService.listSubCategories().subscribe((res: any) => {
-      this.getSubCategoriesList = res.SubCategories
-      console.log('getBrands',this.getBrandsList)
+  getCategoryValue(e:any) {
+    console.log(e.target.value)
+    this.getSubCategories(e.target.value)
+  }
+
+  getSubCategories(data: any) {
+    this.subCategoriesService.getDataByCategoryId(data).subscribe((res: any) => {
+      this.getSubCategoriesList = res.SubCategory
+      console.log('getSubCategoriesList',this.getSubCategoriesList)
     }, (errors:any) => {
       console.log(errors)
     })
@@ -117,29 +123,27 @@ export class AddProductComponent implements OnInit {
     })
   }
 
-  uploadProductImage(e:any) {
-    this.previewImg = "";
-    //console.log(e.target.files[0].name)
-    this.previewImg
-    const that = this;
-    //this.isUploading = true;
-    if (e.target.files && e.target.files[0]) {
-      const reader = new FileReader();
-      reader.onload = function() {
-        that.previewImg = reader.result;
-        //console.log(that.previewImg)
+  urls = [];
+  uploadProductImage(event:any) {
+    this.showPreview = true
+    this.urls = [];
+    let files = event.target.files;
+    if (files) {
+      for (let file of files) {
+        let reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.urls.push(e.target.result);
+        }
+        reader.readAsDataURL(file);
       }
-      reader.readAsDataURL(e.target.files[0]);
-    }
-    this.storeImg = e.target.files[0];
-    console.log(this.storeImg)
+    }    
     
+    this.storeImg = event.target.files; 
   }
 
   postFormInput() {
     console.log(this.productsForm.value)
-    
-    if(this.productsForm.invalid || this.imgUploading) {
+    if(this.productsForm.invalid || this.imgUploading ) {
       console.log(this.productsForm.value)
       //alert('error')
       return false;
@@ -149,8 +153,10 @@ export class AddProductComponent implements OnInit {
       console.log(res);
         
       this.productsForm.reset();
-      this.tags = undefined;
-      this.previewImg = undefined
+      this.tags = [];
+      this.urls = undefined
+      this.showPreview = false
+      this.storeImg = undefined;
       this._snackBar.open(res.message, '', {
         duration: 2000,
         verticalPosition: 'top'
@@ -168,27 +174,27 @@ export class AddProductComponent implements OnInit {
 
   postData() {
     this.productsForm.markAllAsTouched();
-    console.log(this.productsForm.value)
+    console.log(this.storeImg)
     const formData = new FormData();
-    formData.append('productImage', this.storeImg);
-    //console.log(formData)
+    for (let i = 0; i < this.storeImg.length; i++) { 
+      formData.append('images[]', this.storeImg[i]) 
+    }
+    console.log(formData)
     this.imgUploading = true
-    
-    if (this.productsForm.value.productName !== '' && this.productsForm.value.productCode !== ''  && this.productsForm.value.productCategory !== ''  && this.productsForm.value.productSubCategory !== ''  && this.productsForm.value.productImagepicture !== '' && this.productsForm.value.price !== '' ) {
+    if (this.productsForm.invalid) {
+      console.log('error');
+      return false;
+    } 
     this.productsService.uploadProductImage(formData).subscribe((res:any)=> {
-      console.log('path',res.path)
+      console.log('path', res)
         this.productsForm.patchValue({
-          'productImage': res.path
+          'productImages': res.imagePath
         })
         this.imgUploading = false
         this.postFormInput();
       },(errors: any) => {
         console.log(errors)
       })
-    } else{
-      console.log('error')
-    } 
-    
   }
   
 

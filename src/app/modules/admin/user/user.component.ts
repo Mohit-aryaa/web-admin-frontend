@@ -127,7 +127,7 @@ export class UserComponent implements OnInit {
   }
   tablePaging = {
     offset: 0,
-    limit: 5,
+    limit: 20,
     previousSize: 0
   };
  

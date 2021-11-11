@@ -19,6 +19,10 @@ export class BrandService {
     return this._http.get(this.api_url);
    }
 
+   showBrand(data: any) {
+    return this._http.get(this.api_url+'/'+data)
+   }
+
   addBrands(data: any) {
    return this._http.post(this.api_url, data);
   }
@@ -29,6 +33,10 @@ export class BrandService {
   
   deleteBrands(data: any) {
     return this._http.delete(this.api_url+'/'+data._id, data);
+  }
+
+  bulkDelete(data: any) {
+    return this._http.post(this.api_url+'/bulkDelete', data)
   }
 
 

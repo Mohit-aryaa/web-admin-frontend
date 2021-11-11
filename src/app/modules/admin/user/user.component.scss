@@ -40,4 +40,7 @@
 mat-spinner {
     zoom: 0.4
 }
+::ng-deep .mat-simple-snackbar {
+    justify-content: center!important;
+}
 

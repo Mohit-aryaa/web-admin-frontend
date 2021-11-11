@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -21,10 +22,11 @@ export class SubCategoriesComponent implements OnInit {
   dataSource = new MatTableDataSource<any>();
   @ViewChild('Paginator') Paginator!: MatPaginator;
   subCategoriesForm:FormGroup;
-  selectedCategory: any;
+  seletedSubCategory: any;
   previewImg: any;
   loading: boolean = false;
   subCategories: any[];
+  setBulkDeleteItems = [];
   getCategoriesList :any[];
   tablePaging = {
     offset: 0,
@@ -32,9 +34,9 @@ export class SubCategoriesComponent implements OnInit {
     previousSize: 0
   };
   userDataPromise: any;
-  constructor(private http: HttpClient, private modalService: NgbModal, private _formBuilder: FormBuilder, private categoriesService: CategoriesService , private subCategoriesService: SubCategoriesService) { }
+  constructor(private http: HttpClient, private modalService: NgbModal, private _formBuilder: FormBuilder, private categoriesService: CategoriesService , private subCategoriesService: SubCategoriesService, private _snackBar: MatSnackBar) { }
 
-  displayedColumnsOne: string[] = ['name', 'description', 'action'];
+  displayedColumnsOne: string[] = ['check','name', 'description', 'category', 'action'];
   ngOnInit(): void {
     this.subCategoriesForm = this._formBuilder.group({
       subCategoryName:['', [Validators.required]],
@@ -62,7 +64,7 @@ export class SubCategoriesComponent implements OnInit {
       //console.log('getdata', res);
       this.loading = false;
       this.subCategories = res.SubCategories;
-      console.log('this.users', this.subCategories)
+      console.log('this.subCategories', this.subCategories)
       this.subCategories.length = res.total;
       this.dataSource = new MatTableDataSource<any>(this.subCategories);
       this.dataSource.paginator = this.Paginator;
@@ -116,7 +118,7 @@ export class SubCategoriesComponent implements OnInit {
   }
 
   openModal(id = null) {
-    this.selectedCategory = id;
+    this.seletedSubCategory = id;
     //console.log(data);
     this.modalService.open(this.content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
       // this.closeResult = `Closed with: ${result}`;
@@ -131,6 +133,9 @@ export class SubCategoriesComponent implements OnInit {
     console.log(data);
     this.openModal(data._id);
     this.subCategoriesForm.patchValue(data);
+    this.subCategoriesForm.patchValue({
+      'category': data.category._id
+    })
   }
 
   postData() {
@@ -139,8 +144,8 @@ export class SubCategoriesComponent implements OnInit {
       console.log('this.subCategoriesForm', this.subCategoriesForm.value)
       return false;
     }
-    if (this.selectedCategory) {
-      this.subCategoriesService.updateSubCategories(this.selectedCategory, this.subCategoriesForm.value).subscribe(
+    if (this.seletedSubCategory) {
+      this.subCategoriesService.updateSubCategories(this.seletedSubCategory, this.subCategoriesForm.value).subscribe(
         (results: any) => {
           //console.log(results);
           this.modalService.dismissAll();
@@ -171,15 +176,82 @@ export class SubCategoriesComponent implements OnInit {
     }
   }
 
-  deleteCategory(deleteUser: any) {
+  deleteCategory(deleteCategory: any) {
     //console.log(delsubsubCategories);
     if (confirm("Are you sure to delete ?")) {
       //console.log("Implement delete functionality here");
-      this.subCategoriesService.deleteSubCategories(deleteUser).subscribe(
+      this.subCategoriesService.deleteSubCategories(deleteCategory).subscribe(
         (res: any) => {
          this.getNextData()
         }
       )
+    }
+  }
+
+  checkAllDeleteItems(e:any) {
+    //console.log(e)
+    var items:any =  document.getElementsByClassName("deleteChecks");
+    if(e.target.checked) {
+      for (let i = 0; i < items.length; i++) {
+        let element = items[i];
+        element.checked = true
+        let getId = element.getAttribute('id')
+        //console.log(element);
+        this.setBulkDeleteItems.push(getId)
+      
+      }
+    } else {
+      for (let i = 0; i < items.length; i++) {
+        let element = items[i];
+        element.checked = false
+        //console.log(element);
+        this.setBulkDeleteItems = []
+      }
+   }
+
+   
+  }
+
+  getDeleteItems(event: any, index:any) {
+    let checkElement = <HTMLInputElement> document.getElementById('deleteAll');
+    checkElement.checked = false
+    var element = <HTMLInputElement> document.getElementById(event._id);
+    var isChecked = element.checked;  
+    console.log('index', this.setBulkDeleteItems)
+    //console.log('element', event)
+    if(isChecked) {
+      this.setBulkDeleteItems.push(event._id);
+    } else {
+
+      this.setBulkDeleteItems.splice(index, 1)
+    }
+      console.log(this.setBulkDeleteItems) 
+  }
+
+
+  BulkDelete() {
+    //console.log('bulkDelete')
+    if(typeof this.setBulkDeleteItems !== undefined && this.setBulkDeleteItems.length > 0) {
+      if (confirm("Are you sure to delete ?")) {
+        this.subCategoriesService.bulkDelete(this.setBulkDeleteItems).subscribe((res:any) => {
+          console.log('response', res)
+          let element = <HTMLInputElement> document.getElementById('deleteAll');
+          element.checked = false
+          this._snackBar.open(res.message, '', {
+            duration: 2000,
+            verticalPosition: 'top'
+          });
+          this.getNextData();
+        }, (errors:any) => {
+          console.log(errors)
+        })
+      }
+    }
+    else {
+      this._snackBar.open('No product selected', '', {
+        duration: 2000,
+        verticalPosition: 'top'
+      });
     }
   }
 

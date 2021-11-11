@@ -15,6 +15,7 @@ import { MatTableModule } from '@angular/material/table';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { DataTablesModule } from 'angular-datatables';
 import { SharedModule } from 'app/shared/shared.module';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 
@@ -42,7 +43,8 @@ import { SharedModule } from 'app/shared/shared.module';
     MatInputModule,
     DataTablesModule,
     NgxDatatableModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSnackBarModule
   ]
 })
 export class CategoriesModule { }

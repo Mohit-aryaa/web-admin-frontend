@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -24,13 +25,15 @@ export class CategoriesComponent implements OnInit {
   categories: any[];
   tablePaging = {
     offset: 0,
-    limit: 5,
+    limit: 20,
     previousSize: 0
   };
   userDataPromise: any;
-  constructor(private http: HttpClient, private modalService: NgbModal, private _formBuilder: FormBuilder, private categoryService: CategoriesService) { }
+  setBulkDeleteItems = [];
+  setCheckInputs: any[];
+  constructor(private http: HttpClient, private modalService: NgbModal, private _formBuilder: FormBuilder, private categoryService: CategoriesService,private _snackBar: MatSnackBar) { }
 
-  displayedColumnsOne: string[] = ['name', 'description', 'action'];
+  displayedColumnsOne: string[] = ['check','name', 'description', 'action'];
   ngOnInit(): void {
     this.categoriesForm = this._formBuilder.group({
       categoryName:['', [Validators.required]],
@@ -167,6 +170,73 @@ export class CategoriesComponent implements OnInit {
          this.getNextData()
         }
       )
+    }
+  }
+
+  checkAllDeleteItems(e:any) {
+    //console.log(e)
+    var items:any =  document.getElementsByClassName("deleteChecks");
+    if(e.target.checked) {
+      for (let i = 0; i < items.length; i++) {
+        let element = items[i];
+        element.checked = true
+        let getId = element.getAttribute('id')
+        console.log(element);
+        this.setBulkDeleteItems.push(getId)
+      
+      }
+    } else {
+      for (let i = 0; i < items.length; i++) {
+        let element = items[i];
+        element.checked = false
+        console.log(element);
+        this.setBulkDeleteItems = []
+      }
+   }
+
+   
+  }
+
+  getDeleteItems(event: any, index:any) {
+    let checkElement = <HTMLInputElement> document.getElementById('deleteAll');
+    checkElement.checked = false
+    var element = <HTMLInputElement> document.getElementById(event._id);
+    var isChecked = element.checked;  
+    console.log('index', this.setBulkDeleteItems)
+    //console.log('element', event)
+    if(isChecked) {
+      this.setBulkDeleteItems.push(event._id);
+    } else {
+
+      this.setBulkDeleteItems.splice(index, 1)
+    }
+      console.log(this.setBulkDeleteItems) 
+  }
+
+
+  BulkDelete() {
+    //console.log('bulkDelete')
+    if(typeof this.setBulkDeleteItems !== undefined && this.setBulkDeleteItems.length > 0) {
+      if (confirm("Are you sure to delete ?")) {
+        this.categoryService.bulkDelete(this.setBulkDeleteItems).subscribe((res:any) => {
+          console.log('response', res)
+          let element = <HTMLInputElement> document.getElementById('deleteAll');
+          element.checked = false
+          this._snackBar.open(res.message, '', {
+            duration: 2000,
+            verticalPosition: 'top'
+          });
+          this.getNextData();
+        }, (errors:any) => {
+          console.log(errors)
+        })
+      }
+    }
+    else {
+      this._snackBar.open('No product selected', '', {
+        duration: 2000,
+        verticalPosition: 'top'
+      });
     }
   }
 

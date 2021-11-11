@@ -30,6 +30,10 @@ export class VendorService {
     return this._http.delete(this.api_url+'/'+data._id, data);
   }
 
+  bulkDelete(data: any) {
+    return this._http.post(this.api_url+'/bulkDelete', data)
+  }
+
   uploadVendors(data:any) {
     return this._http.post(this.api_url+'/store', data);
   }

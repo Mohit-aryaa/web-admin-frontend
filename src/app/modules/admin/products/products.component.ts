@@ -6,9 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CategoriesService } from '../categories.service';
 import { ProductsService } from '../products.service';
-import { SubCategoriesService } from '../sub-Categories.service';
 import { VendorService } from '../vendor.service';
 
 @Component({
@@ -26,7 +24,7 @@ export class ProductsComponent implements OnInit {
   products: any[];
   tablePaging = {
     offset: 0,
-    limit: 5,
+    limit: 20,
     previousSize: 0
   };
   userDataPromise: any;
@@ -34,7 +32,7 @@ export class ProductsComponent implements OnInit {
   setBulkDeleteItems = [];
 
   constructor(private http: HttpClient, private productsService: ProductsService, private modalService: NgbModal, private _formBuilder: FormBuilder, private _snackBar: MatSnackBar, private vendorsService: VendorService) { }
-  displayedColumnsOne: string[] = ['check','name', 'image',  'productCode', 'category', 'subCategory', 'price', 'action'];
+  displayedColumnsOne: string[] = ['check','name', 'image',  'productCode', 'stock', 'category', 'subCategory', 'brand', 'price', 'action'];
   ngOnInit(): void {
     
   }
@@ -45,12 +43,37 @@ export class ProductsComponent implements OnInit {
   
   
 
+  checkAllDeleteItems(e:any) {
+    //console.log(e)
+    var items:any =  document.getElementsByClassName("deleteChecks");
+    if(e.target.checked) {
+      for (let i = 0; i < items.length; i++) {
+        let element = items[i];
+        element.checked = true
+        let getId = element.getAttribute('id')
+        console.log(element);
+        this.setBulkDeleteItems.push(getId)
+      
+      }
+    } else {
+      for (let i = 0; i < items.length; i++) {
+        let element = items[i];
+        element.checked = false
+        console.log(element);
+        this.setBulkDeleteItems = []
+      }
+   }
+ 
+  }
+
   getDeleteItems(event: any, index:any) {
+    let checkElement = <HTMLInputElement> document.getElementById('deleteAll');
+    checkElement.checked = false
     var element = <HTMLInputElement> document.getElementById(event._id);
     var isChecked = element.checked;  
     //console.log('index', id)
     //console.log('element', event)
-    if(element.checked) {
+    if(isChecked) {
       this.setBulkDeleteItems.push(event._id);
     } else {
 
@@ -62,16 +85,20 @@ export class ProductsComponent implements OnInit {
   BulkDelete() {
     //console.log('bulkDelete')
     if(typeof this.setBulkDeleteItems !== undefined && this.setBulkDeleteItems.length > 0) {
-      this.productsService.bulkDelete(this.setBulkDeleteItems).subscribe((res:any) => {
-        console.log('response', res)
-        this._snackBar.open(res.message, '', {
-          duration: 2000,
-          verticalPosition: 'top'
-        });
-        this.getNextData();
-      }, (errors:any) => {
-        console.log(errors)
-      })
+      if (confirm("Are you sure to delete ?")) {
+          this.productsService.bulkDelete(this.setBulkDeleteItems).subscribe((res:any) => {
+          console.log('response', res)
+          let element = <HTMLInputElement> document.getElementById('deleteAll');
+          element.checked = false
+          this._snackBar.open(res.message, '', {
+            duration: 2000,
+            verticalPosition: 'top'
+          });
+          this.getNextData();
+        }, (errors:any) => {
+          console.log(errors)
+        })
+      }
     }
     else {
       this._snackBar.open('No product selected', '', {
@@ -80,7 +107,6 @@ export class ProductsComponent implements OnInit {
       });
     }
   }
-
   
   getData() {
     this.productsService.getProducts({ params: this.tablePaging }).subscribe((res: any) => {
@@ -142,6 +168,7 @@ export class ProductsComponent implements OnInit {
 
   deleteProduct(deleteProduct: any) {
     if (confirm("Are you sure to delete ?")) {
+      console.log(deleteProduct)
       //console.log("Implement delete functionality here");
       this.productsService.deleteProducts(deleteProduct).subscribe(
         (res: any) => {

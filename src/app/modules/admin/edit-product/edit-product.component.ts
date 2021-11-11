@@ -3,12 +3,14 @@ import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material/chips';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BrandService } from '../brand.service';
 import { CategoriesService } from '../categories.service';
 import { ProductsService } from '../products.service';
 import { SubCategoriesService } from '../sub-Categories.service';
 import { VendorService } from '../vendor.service';
+import { of } from 'rxjs';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-edit-product',
@@ -16,47 +18,50 @@ import { VendorService } from '../vendor.service';
   styleUrls: ['./edit-product.component.scss']
 })
 export class EditProductComponent implements OnInit {
-  productId: any;
+  getId: any;
   getBrandsList: any[];
   productsEditForm:FormGroup;
-  storeImg: File;
+  storeImg :any = File;
   imgUploading: boolean = false;
   previewImg: any;
   getCategoriesList: any[];
+  getEditData: any;
   getSubCategoriesList: any[];
   getVendorsList: any [];
   getRes: any;
-  constructor(private productsService: ProductsService,private categoriesService: CategoriesService , private subCategoriesService: SubCategoriesService, private _formBuilder: FormBuilder, private _snackBar: MatSnackBar, private router: Router, private brandsService: BrandService, private vendorsService: VendorService) { }
+  urls = [];
+  getProductImages = [];
+  showPreview: boolean;
+  constructor(private http: HttpClient, private productsService: ProductsService,private categoriesService: CategoriesService , private subCategoriesService: SubCategoriesService, private _formBuilder: FormBuilder, private _snackBar: MatSnackBar, private router: Router, private brandsService: BrandService, private vendorsService: VendorService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.getCategories();
-    this.getSubCategories();
     this.getVendors();
     this.getBrands();
     this.productsEditForm = this._formBuilder.group({
       productName:['', [Validators.required]],
       productDescription:['', [Validators.required]],
-      productImagepicture: ['', [Validators.required]],
-      productImage:['',[Validators.required]],
+      productImagepicture: [''],
+      productImage:[''],
       productCode:['',[Validators.required]],
       productModel: ['', [Validators.required]],
       productCategory:['', [Validators.required]],
+      productSubCategory:['', [Validators.required]],
       productBrand:['', [Validators.required]],
       vendor: ['', [Validators.required]],
       tags:['', [Validators.required]],
       productCountry:['', [Validators.required]],
       manfactureDate:['', [Validators.required]],
+      stock: ['', [Validators.required]],
       todaysDeal:[false, ],
       publish:[false, ],
       featured:[false, ],
       price:['',[Validators.required]]
     })
     
-    var url = new URL('localhost:4200/'+this.router.url);
-    this.productId = url.searchParams.get('id')
-    console.log(this.productId)
-    console.log(this.router.url);
-    this.getData(this.productId)
+    
+    this.getId = this.route.snapshot.paramMap.get('id');
+    this.getData(this.getId)
   }
 
   
@@ -80,6 +85,23 @@ export class EditProductComponent implements OnInit {
     })
   }
 
+  getCategoryValue(e:any) {
+    console.log(e.target.value)
+    this.getSubCategories(e.target.value)
+    this.productsEditForm.patchValue({
+      'productSubCategory' : ''
+    })
+  }
+
+  getSubCategories(data: any) {
+    this.subCategoriesService.getDataByCategoryId(data).subscribe((res: any) => {
+      this.getSubCategoriesList = res.SubCategory
+      console.log('getSubCategoriesList',this.getSubCategoriesList)
+    }, (errors:any) => {
+      console.log(errors)
+    })
+  }
+
   getVendors() {
     this.vendorsService.listVendors().subscribe((res:any) => {
       this.getVendorsList = res.Vendors
@@ -88,23 +110,16 @@ export class EditProductComponent implements OnInit {
     })
   }
 
-  getSubCategories() {
-    this.subCategoriesService.listSubCategories().subscribe((res: any) => {
-      this.getSubCategoriesList = res.SubCategories
-      console.log('subcat',this.getSubCategoriesList)
-    }, (errors:any) => {
-      console.log(errors)
-    })
-  }
+  
 
   getData(data:any) {
     this.productsService.showProduct(data).subscribe((res:any) =>{
       console.log(res);
-      this.getRes = res;
-      console.log(this.getRes.tags)
+      this.getEditData = res;
+      //this.getRes = res;
       this.tags = res.tags
-      delete res.productImage;
-
+      this.getProductImages =  res.productImages;
+      this.getSubCategories(res.productCategory);
       this.productsEditForm.patchValue(res)
     })
   }
@@ -139,7 +154,10 @@ export class EditProductComponent implements OnInit {
   } 
   
   uploadProductImage(e:any) {
+    
+    this.showPreview = true
     this.previewImg = "";
+
     //console.log(e.target.files[0].name)
     this.previewImg
     const that = this;
@@ -164,9 +182,8 @@ export class EditProductComponent implements OnInit {
       return false;
     } 
 
-    this.productsService.updateProducts( this.productId,this.productsEditForm.value).subscribe((res:any) => {
+    this.productsService.updateProducts( this.getId,this.productsEditForm.value).subscribe((res:any) => {
       console.log(res); 
-      
       this.tags = undefined;
       this.productsEditForm.reset();
       this.previewImg = undefined
@@ -195,29 +212,53 @@ export class EditProductComponent implements OnInit {
     formData.append('productImage', this.storeImg);
     console.log(formData)
     this.imgUploading = true
-    
-    if (this.productsEditForm.value.productName !== '' && this.productsEditForm.value.productCode !== '' && this.productsEditForm.value.productCategory !== ''  && this.productsEditForm.value.productSubCategory !== ''  && this.productsEditForm.value.productImagepicture !== '' && this.productsEditForm.value.price !== '' ) {
-    this.productsService.uploadProductImage(formData).subscribe((res:any)=> {
-      console.log(res)
-        this.productsEditForm.patchValue({
-          'productImage': res.path
-        })
-        this.imgUploading = false
-        this.postFormInput();
-      },(errors) => {
-        console.log(errors)
-      })
-    } else{
-      console.log('error')
+    const filename = this.storeImg.name.split('.').pop();
+    if (this.productsEditForm.invalid) {
+      console.log('error');
+      return false;
     } 
+    
+    if(this.productsEditForm.value.productImagepicture !==  '') {
+      if(filename !== 'png'  && filename !== 'jpeg' && filename !== 'jpg') {
+        this._snackBar.open('Only jpg, png and jpeg formats are allowed',  '', {
+          duration: 2000,
+          verticalPosition: 'top'
+        })
+        console.log('Only jpg, png and jpeg formats are allowed')
+        return false
+      } 
+      this.productsService.uploadProductImage(formData).subscribe((res:any)=> {
+        console.log(res)
+          this.productsEditForm.patchValue({
+            'productImage': res.path
+          })
+          this.imgUploading = false
+          this.postFormInput();
+        },(errors) => {
+          console.log(errors)
+      })
+    } else {
+      this.imgUploading = false
+      this.postFormInput();
+    }
     
   }
   
 
-  uppercaseOnly(e: any) {
-    var getResult = e.key
-    console.log(getResult.toUpperCase( ))
-  } 
+  removeImage(e: any, data:any) {
+    console.log(e, this.getId)
+    const removeImageData: any = {
+      id : this.getId,
+      image: e
+    }
+    if (confirm("Are you sure to delete ?")) {
+      this.http.post('http://localhost:3000/products/removeImage/', removeImageData).subscribe((res:any) => {
+        console.log(res)
+      },(errors:any) => {
+        console.log(errors)
+      })
+    }
+  }
 
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;

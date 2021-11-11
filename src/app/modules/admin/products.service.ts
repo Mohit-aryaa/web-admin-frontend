@@ -19,6 +19,10 @@ export class ProductsService {
      return this._http.get(this.api_url+'/'+Id)
    }
 
+  listProduct() {
+    return this._http.get(this.api_url)
+  }
+
   addProducts(data: any) {
    return this._http.post(this.api_url, data);
   }

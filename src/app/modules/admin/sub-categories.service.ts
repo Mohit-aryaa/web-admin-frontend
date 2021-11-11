@@ -19,6 +19,11 @@ export class SubCategoriesService {
     return this._http.get(this.api_url);
    }
 
+   getDataByCategoryId(data: any)
+   {
+    return this._http.get(this.api_url+'/getDataByCategoryId/'+data);
+   }
+
   addSubCategories(data: any) {
    return this._http.post(this.api_url, data);
   }
@@ -29,6 +34,10 @@ export class SubCategoriesService {
 
   filterSubCategories(data) {
     return this._http.get(this.api_url+'?filter='+ data);
+  }
+
+  bulkDelete(data: any) {
+    return this._http.post(this.api_url+'/bulkDelete', data)
   }
 
   deleteSubCategories(data: any) {

@@ -77,11 +77,19 @@ export const appRoutes: Route[] = [
             {path: 'users-roles', loadChildren: () => import('app/modules/admin/user/user.module').then(m => m.UserModule)},
             {path: 'products', loadChildren: () => import('app/modules/admin/products/products.module').then(m => m.ProductsModule)},
             {path: 'add-product', loadChildren: () => import('app/modules/admin/add-product/add-product.module').then(m => m.AddProductModule)},
-            {path: 'edit-product', loadChildren: () => import('app/modules/admin/edit-product/edit-product.module').then(m => m.EditProductModule)},
+            {path: 'edit-product/:id', loadChildren: () => import('app/modules/admin/edit-product/edit-product.module').then(m => m.EditProductModule)},
             {path: 'categories', loadChildren: () => import('app/modules/admin/categories/categories.module').then(m => m.CategoriesModule)},
             {path: 'brands', loadChildren: () => import('app/modules/admin/brand/brand.module').then(m => m.BrandModule)},
             {path: 'vendors', loadChildren: () => import('app/modules/admin/vendor/vendor.module').then(m => m.VendorModule)},
             {path: 'sub-categories', loadChildren: () => import('app/modules/admin/sub-categories/sub-categories.module').then(m => m.SubCategoriesModule)},
+            {path: 'stocklow', loadChildren: () => import('app/modules/admin/stocklow/stocklow.module').then(m => m.StocklowModule)},
+            {path: 'stock-logs', loadChildren: () => import('app/modules/admin/stock-logs/stock-logs.module').then(m => m.StockLogsModule)},
+            {path: 'bundle-products', loadChildren: () => import('app/modules/admin/bundle-products/bundle-products.module').then(m => m.BundleProductsModule)},
+            {path: 'add-bundle-product', loadChildren: () => import('app/modules/admin/add-bundle-product/add-bundle-product.module').then(m => m.AddBundleProductModule)},
+            {path: 'edit-bundle-product/:id', loadChildren: () => import('app/modules/admin/edit-bundle-product/edit-bundle-product.module').then(m => m.EditBundleProductModule)},
+            {path: 'shipping', loadChildren: () => import('app/modules/admin/shipping/shipping.module').then(m => m.ShippingModule)},
+            {path: 'questions', loadChildren: () => import('app/modules/admin/questions/questions.module').then(m => m.QuestionsModule)},
+            
         ]
     }
 ];
