@@ -21,7 +21,7 @@ export class EditProductComponent implements OnInit {
   getId: any;
   getBrandsList: any[];
   productsEditForm:FormGroup;
-  storeImg :any = File;
+  storeImg :any = FileList;
   imgUploading: boolean = false;
   previewImg: any;
   getCategoriesList: any[];
@@ -31,7 +31,7 @@ export class EditProductComponent implements OnInit {
   getRes: any;
   urls = [];
   getProductImages = [];
-  showPreview: boolean;
+  showPreview: boolean = false;
   constructor(private http: HttpClient, private productsService: ProductsService,private categoriesService: CategoriesService , private subCategoriesService: SubCategoriesService, private _formBuilder: FormBuilder, private _snackBar: MatSnackBar, private router: Router, private brandsService: BrandService, private vendorsService: VendorService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -42,7 +42,7 @@ export class EditProductComponent implements OnInit {
       productName:['', [Validators.required]],
       productDescription:['', [Validators.required]],
       productImagepicture: [''],
-      productImage:[''],
+      productImages:[''],
       productCode:['',[Validators.required]],
       productModel: ['', [Validators.required]],
       productCategory:['', [Validators.required]],
@@ -119,7 +119,8 @@ export class EditProductComponent implements OnInit {
       //this.getRes = res;
       this.tags = res.tags
       this.getProductImages =  res.productImages;
-      this.getSubCategories(res.productCategory);
+      this.getSubCategories(this.getEditData.productCategory);
+      delete res.productImages;
       this.productsEditForm.patchValue(res)
     })
   }
@@ -153,26 +154,19 @@ export class EditProductComponent implements OnInit {
     }
   } 
   
-  uploadProductImage(e:any) {
-    
+  uploadProductImage(event:any) {
     this.showPreview = true
-    this.previewImg = "";
-
-    //console.log(e.target.files[0].name)
-    this.previewImg
-    const that = this;
-    //this.isUploading = true;
-    if (e.target.files && e.target.files[0]) {
-      const reader = new FileReader();
-      reader.onload = function() {
-        that.previewImg = reader.result;
-        //console.log(that.previewImg)
+    let files = event.target.files;
+    if (files) {
+      for (let file of files) {
+        let reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.urls.push(e.target.result);
+        }
+        reader.readAsDataURL(file);
       }
-      reader.readAsDataURL(e.target.files[0]);
-    }
-    this.storeImg = e.target.files[0];
-    console.log(this.storeImg)
-    
+    }      
+    this.storeImg = event.target.files; 
   }
 
   postFormInput() {
@@ -209,34 +203,43 @@ export class EditProductComponent implements OnInit {
     this.productsEditForm.markAllAsTouched();
     console.log(this.productsEditForm.value)
     const formData = new FormData();
-    formData.append('productImage', this.storeImg);
-    console.log(formData)
+    var filename = [];
+    for (let i = 0; i < this.storeImg.length; i++) { 
+      formData.append('images[]', this.storeImg[i]) 
+      filename.push(this.storeImg[i].name.split('.').pop()) 
+      
+    }
+    const file = filename.toString();
     this.imgUploading = true
-    const filename = this.storeImg.name.split('.').pop();
     if (this.productsEditForm.invalid) {
-      console.log('error');
+      this._snackBar.open('All fields are required',  '', {
+        duration: 2000,
+        verticalPosition: 'top'
+      })
       return false;
     } 
-    
     if(this.productsEditForm.value.productImagepicture !==  '') {
-      if(filename !== 'png'  && filename !== 'jpeg' && filename !== 'jpg') {
+      if(file.match(/png/g)  || file.match(/jpeg/g) || file.match(/jpg/g)) {
+        this.productsService.uploadProductImage(formData).subscribe((res:any)=> {
+          console.log(res)
+            this.productsEditForm.patchValue({
+              'productImages': res.imagePath
+            })
+            this.imgUploading = false
+            this.postFormInput();
+            console.log(this.productsEditForm.value)
+          },(errors) => {
+            console.log(errors)
+        })
+      } else {
         this._snackBar.open('Only jpg, png and jpeg formats are allowed',  '', {
           duration: 2000,
           verticalPosition: 'top'
         })
         console.log('Only jpg, png and jpeg formats are allowed')
+        console.log(file)
         return false
       } 
-      this.productsService.uploadProductImage(formData).subscribe((res:any)=> {
-        console.log(res)
-          this.productsEditForm.patchValue({
-            'productImage': res.path
-          })
-          this.imgUploading = false
-          this.postFormInput();
-        },(errors) => {
-          console.log(errors)
-      })
     } else {
       this.imgUploading = false
       this.postFormInput();
@@ -252,8 +255,9 @@ export class EditProductComponent implements OnInit {
       image: e
     }
     if (confirm("Are you sure to delete ?")) {
-      this.http.post('http://localhost:3000/products/removeImage/', removeImageData).subscribe((res:any) => {
+      this.productsService.removeImage(removeImageData).subscribe((res:any) => {
         console.log(res)
+        this.getProductImages = res.images;
       },(errors:any) => {
         console.log(errors)
       })

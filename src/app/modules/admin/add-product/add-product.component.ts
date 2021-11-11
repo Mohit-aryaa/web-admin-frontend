@@ -25,6 +25,7 @@ export class AddProductComponent implements OnInit {
   getBrandsList : any [];
   getVendorsList : any [];
   getCategoryId: any;
+  urls = [];
 
   constructor(private productsService: ProductsService,private categoriesService: CategoriesService , private subCategoriesService: SubCategoriesService, private _formBuilder: FormBuilder, private _snackBar: MatSnackBar,private brandsService: BrandService,private vendorsService: VendorService) { }
 
@@ -123,7 +124,6 @@ export class AddProductComponent implements OnInit {
     })
   }
 
-  urls = [];
   uploadProductImage(event:any) {
     this.showPreview = true
     this.urls = [];
@@ -176,25 +176,49 @@ export class AddProductComponent implements OnInit {
     this.productsForm.markAllAsTouched();
     console.log(this.storeImg)
     const formData = new FormData();
+    var filename = [];
+    if (this.showPreview == false ) {
+      this._snackBar.open('At least one image is required',  '', {
+        duration: 2000,
+        verticalPosition: 'top'
+      })
+      return false
+    } 
     for (let i = 0; i < this.storeImg.length; i++) { 
       formData.append('images[]', this.storeImg[i]) 
+      filename.push(this.storeImg[i].name.split('.').pop()) 
     }
+    const file = filename.toString();
     console.log(formData)
     this.imgUploading = true
     if (this.productsForm.invalid) {
-      console.log('error');
+      this._snackBar.open('All fields are required',  '', {
+        duration: 2000,
+        verticalPosition: 'top'
+      })
       return false;
     } 
-    this.productsService.uploadProductImage(formData).subscribe((res:any)=> {
-      console.log('path', res)
-        this.productsForm.patchValue({
-          'productImages': res.imagePath
-        })
-        this.imgUploading = false
-        this.postFormInput();
-      },(errors: any) => {
-        console.log(errors)
+    if(file.match(/png/g)  || file.match(/jpeg/g) || file.match(/jpg/g)) {
+      this.productsService.uploadProductImage(formData).subscribe((res:any)=> {
+        console.log(res)
+          this.productsForm.patchValue({
+            'productImages': res.imagePath
+          })
+          this.imgUploading = false
+          this.postFormInput();
+          console.log(this.productsForm.value)
+        },(errors) => {
+          console.log(errors)
       })
+    } else {
+      this._snackBar.open('Only jpg, png and jpeg formats are allowed',  '', {
+        duration: 2000,
+        verticalPosition: 'top'
+      })
+      console.log('Only jpg, png and jpeg formats are allowed')
+      console.log(file)
+      return false
+    } 
   }
   
 

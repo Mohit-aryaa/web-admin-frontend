@@ -26,8 +26,8 @@ export class AddBundleProductComponent implements OnInit {
   getSubCategoriesList: any[];
   getBrandsList : any [];
   getVendorsList : any [];
-  
-
+  showPreview:boolean = false;
+  urls = [];
   constructor(private productsService: ProductsService,private categoriesService: CategoriesService , private subCategoriesService: SubCategoriesService, private _formBuilder: FormBuilder, private _snackBar: MatSnackBar,private brandsService: BrandService,private vendorsService: VendorService, private bundleProductsService: BundleProductService) { }
 
   
@@ -42,7 +42,7 @@ export class AddBundleProductComponent implements OnInit {
       products: ['', [Validators.required]],
       productDescription:['', [Validators.required]],
       productImagepicture: ['', [Validators.required]],
-      productImage:[''],
+      productImages:[''],
       productCode:['',[Validators.required]],
       productModel: ['', [Validators.required]],
       productCategory:['', [Validators.required]],
@@ -136,23 +136,21 @@ export class AddBundleProductComponent implements OnInit {
     })
   }
 
-  uploadProductImage(e:any) {
-    this.previewImg = "";
-    //console.log(e.target.files[0].name)
-    this.previewImg
-    const that = this;
-    //this.isUploading = true;
-    if (e.target.files && e.target.files[0]) {
-      const reader = new FileReader();
-      reader.onload = function() {
-        that.previewImg = reader.result;
-        //console.log(that.previewImg)
+  uploadProductImage(event:any) {
+    this.showPreview = true
+    this.urls = [];
+    let files = event.target.files;
+    if (files) {
+      for (let file of files) {
+        let reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.urls.push(e.target.result);
+        }
+        reader.readAsDataURL(file);
       }
-      reader.readAsDataURL(e.target.files[0]);
-    }
-    this.storeImg = e.target.files[0];
-    console.log(this.storeImg)
+    }    
     
+    this.storeImg = event.target.files; 
   }
 
   postFormInput() {
@@ -168,7 +166,9 @@ export class AddBundleProductComponent implements OnInit {
         
       this.addBundleProductsForm.reset();
       this.tags = [];
-      this.previewImg = undefined
+      this.urls = [];
+      this.showPreview = false;
+
       this._snackBar.open(res.message, '', {
         duration: 2000,
         verticalPosition: 'top'
@@ -186,25 +186,50 @@ export class AddBundleProductComponent implements OnInit {
 
   postData() {
     this.addBundleProductsForm.markAllAsTouched();
-    console.log(this.addBundleProductsForm.value)
+    console.log(this.storeImg)
     const formData = new FormData();
-    formData.append('productImage', this.storeImg);
-    //console.log(formData)
+    var filename = [];
+    if (this.showPreview == false ) {
+      this._snackBar.open('At least one image is required',  '', {
+        duration: 2000,
+        verticalPosition: 'top'
+      })
+      return false
+    } 
+    for (let i = 0; i < this.storeImg.length; i++) { 
+      formData.append('images[]', this.storeImg[i]) 
+      filename.push(this.storeImg[i].name.split('.').pop()) 
+    }
+    const file = filename.toString();
+    console.log(formData)
     this.imgUploading = true
     if (this.addBundleProductsForm.invalid) {
-      console.log('error');
+      this._snackBar.open('All fields are required',  '', {
+        duration: 2000,
+        verticalPosition: 'top'
+      })
       return false;
     } 
-    this.bundleProductsService.uploadBundleProductImage(formData).subscribe((res:any)=> {
-      console.log('path', res.path)
-        this.addBundleProductsForm.patchValue({
-          'productImage': res.path
-        })
-        this.imgUploading = false
-        this.postFormInput();
-      },(errors: any) => {
-        console.log(errors)
+    if(file.match(/png/g)  || file.match(/jpeg/g) || file.match(/jpg/g)) {
+      this.productsService.uploadProductImage(formData).subscribe((res:any)=> {
+        console.log(res.imagePath)
+          this.addBundleProductsForm.patchValue({
+            'productImages': res.imagePath
+          })
+          this.imgUploading = false
+          this.postFormInput();
+          console.log(this.addBundleProductsForm.value)
+        },(errors) => {
+          console.log(errors)
       })
+    } else {
+      this._snackBar.open('Only jpg, png and jpeg formats are allowed',  '', {
+        duration: 2000,
+        verticalPosition: 'top'
+      })
+      console.log(file)
+      return false
+    } 
   }
 
   applyProductFilter(filterValue: string) {

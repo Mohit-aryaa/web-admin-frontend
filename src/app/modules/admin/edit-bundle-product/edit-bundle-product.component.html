@@ -12,7 +12,7 @@
                                 </div>
                                <div style="width: fit-content">
                                     <div class="mt-3 mb-2 fw-bold h4 text-center">Edit Bundle Product</div>
-                                    <div class="mx-auto bg-primary" style="height: 2px; width: 120px;"></div>
+                                    <div class="mx-auto bg-primary" style="height: 2px; width: 200px;"></div>
                                </div>
                             </div>
                             <div class="form-group mb-3 col-md-6  col-12">
@@ -37,15 +37,31 @@
                             </div>
                             <div class="form-group mb-3 col-md-6 col-12">
                                 <label for="" class="mb-1"> Image</label>
-                                <input type="file" class="form-control"  [formControlName]="'productImagepicture'" (change)="uploadProductImage($event)">
-                                <input type="text" class="form-control d-none"  [formControlName]="'productImage'" placeholder="John doe">
+                                <input type="file" class="form-control" multiple  [formControlName]="'productImagepicture'" (change)="uploadProductImage($event)">
+                                <input type="text" class="form-control d-none"  [formControlName]="'productImages'" placeholder="John doe">
                                 
                             </div>
-                            <div [ngClass]="previewImg? 'd-block' : 'd-none'" class="my-3 col-12 form-group">
-                                <div class="col-md-6 col-12 px-0 mx-auto">
-                                    <img [src]="previewImg" alt="" class="w-100">
+                            <div [ngClass]="showPreview? 'd-block' : 'd-none' " class="my-3 col-12 form-group">
+                                <div class="row">
+                                     <div class="col-lg-4 col-md-6 my-2" *ngFor="let imgList of urls" >
+                                        <div class="col-12 rounded border-3 border-info p-2">
+                                             <img  [src]="imgList"  alt="" class="w-100">
+                                        </div>
+                                     </div>
                                 </div>
-                            </div>
+                             </div>
+                             <div class="form-group col-12">
+                                 <div class="row">
+                                    <div class="col-lg-4 col-md-6 my-3 position-relative" *ngFor="let images of getProductImages; let i = index" >
+                                        <button mat-mini-fab color="warn" class="remove-images" aria-label="Example icon button with a home icon" (click)="removeImage(getProductImages[i] )">
+                                            <mat-icon >remove_circle_outline</mat-icon>
+                                          </button>
+                                        <div class="col-12 rounded border-3 border-info p-2">
+                                             <img  src="http://localhost:3000/{{images}}"  alt="" class="w-100">
+                                        </div>
+                                     </div>
+                                 </div>
+                             </div>
                             <div class="form-group mb-3 col-md-6 col-12">
                                 <label for="" class="mb-1"> Product Code</label>
                                 <input type="text" class="form-control" id="productCode" name="productCode" [formControlName]="'productCode'" placeholder="John doe">
@@ -104,14 +120,7 @@
                                     </mat-chip-list>
                                   </mat-form-field>
                             </div>
-                            <div class="form-group mb-3 col-md-6 col-12">
-                                <label for="" class="mb-1"> Country of origin</label>
-                                <input type="text" class="form-control" id="productCountry" name="productCountry" [formControlName]="'productCountry'" placeholder="country name">
-                            </div>
-                            <div class="form-group mb-3 col-md-6 col-12">
-                                <label for="" class="mb-1"> Manfacture Date</label>
-                                <input type="date" class="form-control" id="manfactureDate" name="manfactureDate" [formControlName]="'manfactureDate'" placeholder="">
-                            </div>
+                           
                             <div class="form-group mb-3 col-md-6 col-12">
                                 <label for="" class="mb-1"> Price</label>
                                 <input type="text" class="form-control" id="proce" name="price" [formControlName]="'price'" (keypress)="numberOnly($event)" placeholder="$50">

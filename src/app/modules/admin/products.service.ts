@@ -35,6 +35,10 @@ export class ProductsService {
     return this._http.delete(this.api_url+'/'+data._id, data);
   }
 
+  removeImage(data: any) {
+    return this._http.post(this.api_url+'/removeImage/', data)
+  }
+
   bulkDelete(data: any) {
     return this._http.post(this.api_url+'/bulkDelete', data)
   }
