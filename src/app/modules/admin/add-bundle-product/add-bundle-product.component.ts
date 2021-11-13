@@ -9,6 +9,9 @@ import { ProductsService } from '../products.service';
 import { SubCategoriesService } from '../sub-Categories.service';
 import { VendorService } from '../vendor.service';
 import { BundleProductService } from '../bundle-product.service';
+import { MatTabChangeEvent } from '@angular/material/tabs';
+import { colors } from "../colors";
+
 @Component({
   selector: 'app-add-bundle-product',
   templateUrl: './add-bundle-product.component.html',
@@ -28,11 +31,16 @@ export class AddBundleProductComponent implements OnInit {
   getVendorsList : any [];
   showPreview:boolean = false;
   urls = [];
+  color: any;
+  similarProducts: any = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
+  blogPosts: any = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
+  selectedIndex: number = 0;
   constructor(private productsService: ProductsService,private categoriesService: CategoriesService , private subCategoriesService: SubCategoriesService, private _formBuilder: FormBuilder, private _snackBar: MatSnackBar,private brandsService: BrandService,private vendorsService: VendorService, private bundleProductsService: BundleProductService) { }
 
   
 
   ngOnInit(): void {
+    this.color = colors;
     this.getCategories();
     this.getBrands();
     this.getVendors();
@@ -54,7 +62,45 @@ export class AddBundleProductComponent implements OnInit {
       todaysDeal:[false, ],
       publish:[false, ],
       featured:[false, ],
-      price:['',[Validators.required]]
+      price:['',[Validators.required]],
+      mrp : ['',[Validators.required]],
+      purchasePrice: ['',[Validators.required]],
+      shippingCost: ['',[Validators.required]],
+      productTax: ['',[Validators.required]],
+      productDiscount: ['',[Validators.required]],
+      maxQuantity: ['',[Validators.required]],
+      minimumQuantity: ['',[Validators.required]],
+      customersOptions: this._formBuilder.group({
+        color:['', [Validators.required]],
+        choiceStyle:['', [Validators.required]]
+      }),
+      seoKeyWords: ['',[Validators.required]],
+      metaTagKeywords: ['',[Validators.required]],
+      metaTagDescription: ['',[Validators.required]],
+      metaTagTitle: ['',[Validators.required]],
+      imageAltTag: ['',[Validators.required]],
+      seoUrl : ['',[Validators.required]],
+      youtubeVideoId : ['',[Validators.required]],
+      question: this._formBuilder.group({
+        productQuestion: ['',[Validators.required]],
+        productAnswer: ['',[Validators.required]],
+      }),
+      blogPost: ['',[Validators.required]],
+      similarProduct: ['',[Validators.required]],
+      delivery:  this._formBuilder.group({
+        pincode: ['',[Validators.required]],
+        description: ['',[Validators.required]],
+      }),
+      bulkDiscount : this._formBuilder.group({
+        quantity: ['', [Validators.required]],
+        discountAmount: ['',[Validators.required]],
+        discountType: ['',[Validators.required]],
+      }),
+      cashBack : this._formBuilder.group({
+        cashBackAmount: ['',[Validators.required]],
+        customerGroup: ['',[Validators.required]],
+      }),
+      variant : ['',[Validators.required]],
     })
   }
 
@@ -136,7 +182,7 @@ export class AddBundleProductComponent implements OnInit {
     })
   }
 
-  uploadProductImage(event:any) {
+  onSelectdProductImage(event:any) {
     this.showPreview = true
     this.urls = [];
     let files = event.target.files;
@@ -151,6 +197,26 @@ export class AddBundleProductComponent implements OnInit {
     }    
     
     this.storeImg = event.target.files; 
+  }
+
+  tabChanged(tabChangeEvent: MatTabChangeEvent): void {
+    this.selectedIndex = tabChangeEvent.index;
+    console.log(this.selectedIndex)
+  }
+
+  nextStep() {
+    const maxNumberOfTabs = 11
+    if (this.selectedIndex != maxNumberOfTabs) {
+      this.selectedIndex = this.selectedIndex + 1;
+    }
+    console.log(this.selectedIndex);
+  }
+
+  previousStep() {
+    if (this.selectedIndex != 0) {
+      this.selectedIndex = this.selectedIndex - 1;
+    }
+    console.log(this.selectedIndex);
   }
 
   postFormInput() {
@@ -203,6 +269,13 @@ export class AddBundleProductComponent implements OnInit {
     const file = filename.toString();
     console.log(formData)
     this.imgUploading = true
+    if (this.addBundleProductsForm.invalid) {
+      this._snackBar.open('All fields are required',  '', {
+        duration: 2000,
+        verticalPosition: 'top'
+      })
+      return false;
+    }
     if (this.addBundleProductsForm.invalid) {
       this._snackBar.open('All fields are required',  '', {
         duration: 2000,

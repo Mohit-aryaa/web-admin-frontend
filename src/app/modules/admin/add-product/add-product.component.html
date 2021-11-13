@@ -3,151 +3,577 @@
     <div class="flex-auto p-6 sm:p-10">
         <div class="row">
             <div class=" mx-auto col-12">
-                <div class="p-4 shadow bg-white products-form-wrapper position-relative" >
-                    <form  id="productsForm" [formGroup]="productsForm">
-                        <div class="row">
-                            <div class="col-md-12 mb-4 d-flex align-items-end">
-                                <div class="me-3">
-                                    <img src="assets/images/logo/logo.svg" alt="" class="" style="width: 35px; top: 40px;">
-                                </div>
-                               <div style="width: fit-content">
-                                    <div class="mt-3 mb-2 fw-bold h4 text-center">Add Product</div>
-                                    <div class="mx-auto bg-primary" style="height: 2px; width: 120px;"></div>
-                               </div>
-                            </div>
-                            <div class="form-group mb-3 col-md-6  col-12">
-                                <label for="" class="mb-1"> Name</label>
-                                <input type="text" class="form-control" id="productName" name="productName" formControlName="productName" placeholder="John doe">
-                            </div>
-                            <div class="form-group mb-3 col-md-6 col-12">
-                                <label for="" class="mb-1"> Description</label>
-                                <textarea style="height: 20px;" class="form-control" id="productDescription" name="productDescription" formControlName="productDescription" placeholder="John doe">
-                                    </textarea>
-                            </div>
-                            <div class="form-group mb-3 col-md-6 col-12">
-                                <label for="" class="mb-1"> Image</label>
-                                <input type="file" class="form-control" multiple  formControlName="productImagepicture" (change)="uploadProductImage($event)">
-                                <input type="text" class="form-control d-none"  formControlName="productImages" placeholder="John doe">
-                                
-                            </div>
-                            
-                            <div class="form-group mb-3 col-md-6 col-12">
-                                <label for="" class="mb-1"> Product Code</label>
-                                <input type="text" class="form-control" id="productCode" name="productCode" formControlName="productCode" placeholder="John doe">
-                            </div>
-
-                            <div [ngClass]="showPreview? 'd-block' : 'd-none' " class="my-3 col-12 form-group">
-                                <div class="row">
-                                     <div class="col-lg-4 col-md-6 my-2" *ngFor="let imgList of urls" >
-                                        <div class="col-12 rounded border-3 border-info p-2">
-                                             <img  [src]="imgList"  alt="" class="w-100">
+                <form  [formGroup]="productsForm">
+                    <mat-tab-group [(selectedIndex)]="selectedIndex" (selectedTabChange)="tabChanged($event)">
+                        <mat-tab label=" Product Details" class="matTab">
+                            <div class="p-4 shadow bg-white products-form-wrapper position-relative" >
+                                <div  id="productsForm">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-4 d-flex align-items-end">
+                                            <div class="me-3">
+                                                <img src="assets/images/logo/logo.svg" alt="" class="" style="width: 35px; top: 40px;">
+                                            </div>
+                                            <div style="width: fit-content">
+                                                    <div class="mt-3 mb-2 fw-bold h4 text-center"> Product Details</div>
+                                                    <div class="mx-auto bg-primary" style="height: 2px; width: 120px;"></div>
+                                            </div>
                                         </div>
-                                     </div>
-                                </div>
-                             </div>
-                            
-                            <div class="form-group mb-3 col-md-6 col-12">
-                                <label for="" class="mb-1"> Product Model</label>
-                                <input type="text" class="form-control" id="productModel" name="productModel" formControlName="productModel" placeholder="John doe">
-                            </div>
-                            <div class="form-group mb-3 col-md-6 col-12">
-                                <label for="" class="mb-1"> Category</label>
-                                <select class="form-select" aria-label="Default select example" formControlName="productCategory" (change)="getCategoryValue($event)">
-                                    <option value="" selected hidden disabled>Select</option>
-                                    <option *ngFor="let item of getCategoriesList; let i = index" [value]="item._id" >{{item.categoryName}}</option>
-                                </select>    
-                            </div>
-                            <div class="form-group mb-3 col-md-6 col-12">
-                                <label for="" class="mb-1"> Sub Category</label>
-                                <select class="form-select" aria-label="Default select example" formControlName="productSubCategory" > 
-                                    <option value="" selected hidden disabled>Select</option>
-                                    <option *ngFor="let item2 of getSubCategoriesList; let i = index" [value]="item2._id" >{{item2.subCategoryName}}</option>
-                                </select>    
-                            </div>
-                            <div class="form-group mb-3 col-md-6 col-12">
-                                <label for="" class="mb-1"> Brand</label>
-                                <select class="form-select" aria-label="Default select example" formControlName="productBrand">
-                                    <option value="" selected hidden disabled>Select</option>
-                                    <option *ngFor="let item3 of getBrandsList; let i = index" [value]="item3._id" >{{item3.brandName}}</option>
-                                </select>    
-                            </div>
-                            <div class="form-group mb-3 col-md-6 col-12">
-                                <div class="form-group mb-3 col-12">
-                                    <label for="" class="mb-1"> Vendor</label>
-                                    <select class="form-select" aria-label="Default select example" formControlName="vendor">
-                                        <option value="" selected hidden disabled>Select</option>
-                                        <option *ngFor="let item4 of getVendorsList; let i = index" [value]="item4._id" >{{item4.name}}</option>
-                                    </select>    
-                                </div>
-                            </div>
-                            <div class="form-group mb-3 col-md-6 col-12">
-                                <label for="" class="mb-1"> Tags</label>
-                                <mat-form-field class="example-chip-list" appearance="fill">
-                                    <mat-chip-list #chipList aria-label="Fruit selection">
-                                      <mat-chip *ngFor="let tag of tags" [selectable]="selectable"
-                                               [removable]="removable" (removed)="remove(tag)">
-                                        {{tag.name}}
-                                        <button matChipRemove *ngIf="removable">
-                                          <mat-icon>cancel</mat-icon>
-                                        </button>
-                                      </mat-chip>
-                                      <input placeholder="New tags..."
-                                             [matChipInputFor]="chipList"
-                                             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                                             [matChipInputAddOnBlur]="addOnBlur"
-                                             (matChipInputTokenEnd)="add($event)">
-                                    </mat-chip-list>
-                                  </mat-form-field>
-                            </div>
-                            <div class="form-group mb-3 col-md-6 col-12">
-                                <label for="" class="mb-1"> Country of origin</label>
-                                <input type="text" class="form-control" id="productCountry" name="productCountry" formControlName="productCountry" placeholder="country name">
-                            </div>
-                            <div class="form-group mb-3 col-md-6 col-12">
-                                <label for="" class="mb-1"> Manfacture Date</label>
-                                <input type="date" class="form-control" id="manfactureDate" name="manfactureDate" formControlName="manfactureDate" placeholder="">
-                            </div>
-                            <div class="form-group mb-3 col-md-6 col-12">
-                                <label for="" class="mb-1"> Price</label>
-                                <input type="text" class="form-control" id="proce" name="price" formControlName="price" (keypress)="numberOnly($event)" placeholder="$50">
-                            </div>
-                            <div class="form-group mb-3 col-md-6 col-12">
-                                <label for="" class="mb-1"> Stock</label>
-                                <input type="number" class="form-control" id="stock" name="stock" formControlName="stock" (keypress)="numberOnly($event)" placeholder="$50">
-                            </div>
-                            <div class="form-group mb-3 col-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" formControlName="todaysDeal">
-                                    <label class="form-check-label" for="flexCheckDefault">
-                                    Today's Deal
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="form-group mb-3  col-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault1" formControlName="publish">
-                                    <label class="form-check-label" for="flexCheckDefault1">
-                                    Publish
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="form-group mb-3  col-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault1" formControlName="featured">
-                                    <label class="form-check-label" for="flexCheckDefault1">
-                                    feature
-                                    </label>
-                                </div>
-                            </div>
-                            
-                        </div>
+                                        <div class="form-group mb-3 col-md-6  col-12">
+                                            <label for="" class="mb-1"> Name</label>
+                                            <input type="text" class="form-control" id="productName" name="productName" formControlName="productName" placeholder="John doe">
+                                        </div>
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Description</label>
+                                            <textarea style="height: 20px;" class="form-control" id="productDescription" name="productDescription" formControlName="productDescription" placeholder="John doe">
+                                                </textarea>
+                                        </div>
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Image</label>
+                                            <input type="file" class="form-control" multiple  formControlName="productImagepicture" (change)="onSelectdProductImage($event)">
+                                            <input type="text" class="form-control d-none"  formControlName="productImages" placeholder="John doe">
+                                            
+                                        </div>
+                                        
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Product Code</label>
+                                            <input type="text" class="form-control" id="productCode" name="productCode" formControlName="productCode" placeholder="John doe">
+                                        </div>
             
-                        <div class="form-group mb-3">
-                            <button type="submit" class="btn btn-primary py-2"  (click)="postData()">Add Product</button>
-                        </div>
-            
-                    </form>
-                </div>
+                                        <div [ngClass]="showPreview? 'd-block' : 'd-none' " class="my-3 col-12 form-group">
+                                            <div class="row">
+                                                <div class="col-lg-4 col-md-6 my-2" *ngFor="let imgList of urls" >
+                                                    <div class="col-12 rounded-lg shadow-lg p-2 border-4 border-blue-200 border-opacity-100">
+                                                        <img  [src]="imgList"  alt="" class="w-100">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Product Model</label>
+                                            <input type="text" class="form-control" id="productModel" name="productModel" formControlName="productModel" placeholder="John doe">
+                                        </div>
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Category</label>
+                                            <select class="form-select" aria-label="Default select example" formControlName="productCategory" (change)="getCategoryValue($event)">
+                                                <option value="" selected hidden disabled>Select</option>
+                                                <option *ngFor="let item of getCategoriesList; let i = index" [value]="item._id" >{{item.categoryName}}</option>
+                                            </select>    
+                                        </div>
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Sub Category</label>
+                                            <select class="form-select" aria-label="Default select example" formControlName="productSubCategory" > 
+                                                <option value="" selected hidden disabled>Select</option>
+                                                <option *ngFor="let item2 of getSubCategoriesList; let i = index" [value]="item2._id" >{{item2.subCategoryName}}</option>
+                                            </select>    
+                                        </div>
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Brand</label>
+                                            <select class="form-select" aria-label="Default select example" formControlName="productBrand">
+                                                <option value="" selected hidden disabled>Select</option>
+                                                <option *ngFor="let item3 of getBrandsList; let i = index" [value]="item3._id" >{{item3.brandName}}</option>
+                                            </select>    
+                                        </div>
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <div class="form-group mb-3 col-12">
+                                                <label for="" class="mb-1"> Vendor</label>
+                                                <select class="form-select" aria-label="Default select example" formControlName="vendor">
+                                                    <option value="" selected hidden disabled>Select</option>
+                                                    <option *ngFor="let item4 of getVendorsList; let i = index" [value]="item4._id" >{{item4.name}}</option>
+                                                </select>    
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Tags</label>
+                                            <mat-form-field class="example-chip-list" appearance="fill">
+                                                <mat-chip-list #chipList aria-label="Fruit selection">
+                                                <mat-chip *ngFor="let tag of tags" [selectable]="selectable"
+                                                        [removable]="removable" (removed)="remove(tag)">
+                                                    {{tag.name}}
+                                                    <button matChipRemove *ngIf="removable">
+                                                    <mat-icon>cancel</mat-icon>
+                                                    </button>
+                                                </mat-chip>
+                                                <input placeholder="New tags..."
+                                                        [matChipInputFor]="chipList"
+                                                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                                        [matChipInputAddOnBlur]="addOnBlur"
+                                                        (matChipInputTokenEnd)="add($event)">
+                                                </mat-chip-list>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Country of origin</label>
+                                            <input type="text" class="form-control" id="productCountry" name="productCountry" formControlName="productCountry" placeholder="country name">
+                                        </div>
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Manfacture Date</label>
+                                            <input type="date" class="form-control" id="manfactureDate" name="manfactureDate" formControlName="manfactureDate" placeholder="">
+                                        </div>
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Price</label>
+                                            <input type="text" class="form-control" id="proce" name="price" formControlName="price" (keypress)="numberOnly($event)" placeholder="$50">
+                                        </div>
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Stock</label>
+                                            <input type="number" class="form-control" id="stock" name="stock" formControlName="stock" (keypress)="numberOnly($event)" placeholder="$50">
+                                        </div>
+                                        <div class="form-group mb-3 col-12">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" formControlName="todaysDeal">
+                                                <label class="form-check-label" for="flexCheckDefault">
+                                                Today's Deal
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-3  col-12">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault1" formControlName="publish">
+                                                <label class="form-check-label" for="flexCheckDefault1">
+                                                Publish
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-3  col-12">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault1" formControlName="featured">
+                                                <label class="form-check-label" for="flexCheckDefault1">
+                                                feature
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                        
+                                    <div class="form-group col-12 d-flex">
+                                        <button mat-raised-button color="primary" class="ms-auto" (click)="nextStep()">next</button>
+                                    </div>
+
+                        
+                                </div>
+                            </div>
+                        </mat-tab>
+
+                        <mat-tab label="Business Details" class="matTab" id="businessDetailsTab">
+                            <div class="p-4 shadow bg-white products-form-wrapper position-relative" >
+                                <div class="productsForms">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-4 d-flex align-items-end">
+                                            <div class="me-3">
+                                                <img src="assets/images/logo/logo.svg" alt="" class="" style="width: 35px; top: 40px;">
+                                            </div>
+                                            <div style="width: fit-content">
+                                                <div class="mt-3 mb-2 fw-bold h4 text-center">Business Details</div>
+                                                <div class="mx-auto bg-primary" style="height: 2px; width: 120px;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-3 col-md-6  col-12">
+                                            <label for="" class="mb-1"> Mrp</label>
+                                            <input type="text" class="form-control" id="mrp" name="mrp" formControlName="mrp" placeholder="mrp" (keypress)="numberOnly($event)">
+                                        </div>
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Purchase Price</label>
+                                            <textarea style="height: 20px;" class="form-control" id="purchasePrice" name="productDescription" formControlName="purchasePrice" (keypress)="numberOnly($event)" placeholder="Purchase Price">
+                                            </textarea>
+                                        </div>                                        
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Shipping Cost</label>
+                                            <input type="text" class="form-control" id="shippingCost" name="shippingCost" formControlName="shippingCost" (keypress)="numberOnly($event)" placeholder="Shipping Cost">
+                                        </div>
+                                        
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1">Product Tax</label>
+                                            <input type="text" class="form-control" id="productTax" name="productTax" formControlName="productTax" (keypress)="numberOnly($event)" placeholder="Product Tax">
+                                        </div>
+                                        
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Product Discount</label>
+                                            <input type="text" class="form-control" id="productDiscount" name="productDiscount" formControlName="productDiscount" (keypress)="numberOnly($event)" placeholder="Product Discount">
+                                        </div>
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Max Quantity</label>
+                                            <input type="text" class="form-control" id="maxQuantity" name="maxQuantity" formControlName="maxQuantity" (keypress)="numberOnly($event)" placeholder="Max Quantity">
+                                        </div>
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Minimum Quantity</label>
+                                            <input type="text" class="form-control" id="minimumQuantity" name="minimumQuantity" formControlName="minimumQuantity" (keypress)="numberOnly($event)" placeholder="Minimum Quantit">
+                                        </div>   
+                                        <div class="form-group col-12 d-flex">
+                                            <button mat-raised-button color="primary" class="ms-auto" (click)="previousStep()">back</button>
+                                            <button mat-raised-button color="primary" class="ms-2" (click)="nextStep()">next</button>
+                                        </div>                                    
+                                    </div>
+                        
+                        
+                                </div>
+                            </div>
+                        </mat-tab>
+
+                        <mat-tab label="Customer Choice Options" class="matTab" id="customersTab">
+                            <div class="p-4 shadow bg-white products-form-wrapper position-relative" >
+                                <div class="productsForms" >
+                                    <div class="row">
+                                        <div class="col-md-12 mb-4 d-flex align-items-end">
+                                            <div class="me-3">
+                                                <img src="assets/images/logo/logo.svg" alt="" class="" style="width: 35px; top: 40px;">
+                                            </div>
+                                        <div style="width: fit-content">
+                                                <div class="mt-3 mb-2 fw-bold h4 text-center">Customer Choice Options</div>
+                                                <div class="mx-auto bg-primary" style="height: 2px; width: 250px;"></div>
+                                        </div>
+                                        </div>
+                                        <div formGroupName="customersOptions" class="row">
+                                            <<div class="form-group mb-3 col-md-6  col-12">
+                                                <label for="" class="mb-1"> Display Style</label>
+                                                <mat-form-field appearance="fill">
+                                                   <mat-select  formControlName="choiceStyle" >
+                                                        <mat-option value="btns">Buttons</mat-option>
+                                                        <mat-option value="radioBtn">Radio Btns</mat-option>
+                                                        <mat-option value="dropdown">Dropdown</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                            
+                                            <div class="form-group mb-3 col-md-6  col-12">
+                                                <label for="" class="mb-1"> Select Color</label>
+                                                <mat-form-field appearance="fill">
+                                                <mat-select multiple formControlName="color" >
+                                                    <mat-option *ngFor="let getColor of color" [value]="getColor.name">
+                                                        <div class="d-flex align-items-center ">
+                                                            <div style="width: 15px; height:15px;" [style.background]="getColor.hexString"  class="me-2"></div>
+                                                            <div>{{getColor.name}}</div>
+                                                        </div>
+                                                    </mat-option>
+                                                  </mat-select>
+                                                  </mat-form-field>
+                                            </div>
+                                            <div class="form-group col-12 d-flex">
+                                                <button mat-raised-button color="primary" class="ms-auto" (click)="previousStep()">back</button>
+                                                <button mat-raised-button color="primary" class="ms-2" (click)="nextStep()">next</button>
+                                            </div> 
+                                        </div>
+                                        
+        
+                                    </div>
+                        
+                                </div>
+                            </div>
+                        </mat-tab>
+
+                        <mat-tab label="Seo" id="seoTab" class="matTab">
+                            <div class="p-4 shadow bg-white products-form-wrapper position-relative" >
+                                <div class="productsForms">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-4 d-flex align-items-end">
+                                            <div class="me-3">
+                                                <img src="assets/images/logo/logo.svg" alt="" class="" style="width: 35px; top: 40px;">
+                                            </div>
+                                            <div style="width: fit-content">
+                                                <div class="mt-3 mb-2 fw-bold h4 text-center">SEO Details</div>
+                                                <div class="mx-auto bg-primary" style="height: 2px; width: 120px;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-3 col-md-6  col-12">
+                                            <label for="" class="mb-1"> Seo KeyWords</label>
+                                            <input type="text" class="form-control"  formControlName="seoKeyWords" placeholder="Seo KeyWords" >
+                                        </div>
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1">Meta Tag Keywords</label>
+                                            <input type="text" class="form-control" formControlName="metaTagKeywords"  placeholder="Meta Tag Keywords">
+                                        </div>                                        
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Meta Tag Description</label>
+                                            <input type="text" class="form-control"  formControlName="metaTagDescription"  placeholder="Meta Tag Description">
+                                        </div>
+                                        
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1">Meta Tag Title</label>
+                                            <input type="text" class="form-control" formControlName="metaTagTitle"  placeholder="Meta Tag Title">
+                                        </div>
+                                        
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Image Alt Tag</label>
+                                            <input type="text" class="form-control" formControlName="imageAltTag"  placeholder="Image Alt Tag">
+                                        </div>
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Seo Url</label>
+                                            <input type="text" class="form-control" formControlName="seoUrl"  placeholder=" Seo Url">
+                                        </div>   
+                                        <div class="form-group col-12 d-flex">
+                                            <button mat-raised-button color="primary" class="ms-auto" (click)="previousStep()">back</button>
+                                            <button mat-raised-button color="primary" class="ms-2" (click)="nextStep()">next</button>
+                                        </div>                                     
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-tab>
+
+                        <mat-tab label="Video" id="videoTab" class="matTab">
+                            <div class="p-4 shadow bg-white products-form-wrapper position-relative" >
+                                <div class="productsForms">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-4 d-flex align-items-end">  
+                                            <div class="me-3">
+                                                <img src="assets/images/logo/logo.svg" alt="" class="" style="width: 35px; top: 40px;">
+                                            </div> 
+                                            <div style="width: fit-content">
+                                                <div class="mt-3 mb-2 fw-bold h4 text-center">Video Details</div>
+                                                <div class="mx-auto bg-primary" style="height: 2px; width: 120px;"></div>
+                                            </div>
+                                        </div>                                        
+                                        <div class="form-group mb-3 col-12">
+                                            <label for="" class="mb-1">Youtube Video Id</label>
+                                            <input type="text" class="form-control" formControlName="youtubeVideoId"  placeholder="Youtube Video Id">
+                                        </div>  
+                                        <div class="form-group col-12 d-flex">
+                                            <button mat-raised-button color="primary" class="ms-auto" (click)="previousStep()">back</button>
+                                            <button mat-raised-button color="primary" class="ms-2" (click)="nextStep()">next</button>
+                                        </div>                                
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-tab>
+
+                        <mat-tab label="Q&A" id="qna" class="matTab">
+                             <div class="p-4 shadow bg-white products-form-wrapper position-relative" >
+                                <div class="productsForms">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-4 d-flex align-items-end"> 
+                                            <div class="me-3">
+                                                <img src="assets/images/logo/logo.svg" alt="" class="" style="width: 35px; top: 40px;">
+                                            </div>  
+                                            <div style="width: fit-content">
+                                                <div class="mt-3 mb-2 fw-bold h4 text-center">Q&A Details</div>
+                                                <div class="mx-auto bg-primary" style="height: 2px; width: 120px;"></div>
+                                            </div>
+                                        </div>       
+                                        <div formGroupName="question" class="row">
+                                            <div class="form-group mb-3 col-md-6 col-12">
+                                                <label for="" class="mb-1">Question</label>
+                                                <input type="text" class="form-control" formControlName="productQuestion"  placeholder="Add your question">
+                                            </div> 
+                                            <div class="form-group mb-3 col-md-6 col-12">
+                                                <label for="" class="mb-1">Answer</label>
+                                                <input type="text" class="form-control" formControlName="productAnswer"  placeholder="Add your answer">
+                                            </div>
+                                            <div class="form-group col-12 d-flex">
+                                                <button mat-raised-button color="primary" class="ms-auto" (click)="previousStep()">back</button>
+                                                <button mat-raised-button color="primary" class="ms-2" (click)="nextStep()">next</button>
+                                            </div> 
+                                        </div>                                 
+                                                                         
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-tab>
+
+                        <mat-tab label="Blogs" id="blogs" class="matTab">
+                           <div class="p-4 shadow bg-white products-form-wrapper position-relative" >
+                                <div class="productsForms">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-4 d-flex align-items-end">
+                                            <div class="me-3">
+                                                <img src="assets/images/logo/logo.svg" alt="" class="" style="width: 35px; top: 40px;">
+                                            </div>   
+                                            <div style="width: fit-content">
+                                                <div class="mt-3 mb-2 fw-bold h4 text-center">Blog Posts</div>
+                                                <div class="mx-auto bg-primary" style="height: 2px; width: 120px;"></div>
+                                            </div>
+                                        </div>                                        
+                                        <div class="form-group mb-3 col-12">
+                                            <label class="mb-1">Select blog Posts</label>
+                                            <mat-form-field appearance="fill">
+                                                <mat-select multiple [formControlName]="'blogPost'" >
+                                                  <mat-option *ngFor="let blog of blogPosts" [value]="blog">{{blog}}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div> 
+                                        <div class="form-group col-12 d-flex">
+                                            <button mat-raised-button color="primary" class="ms-auto" (click)="previousStep()">back</button>
+                                            <button mat-raised-button color="primary" class="ms-2" (click)="nextStep()">next</button>
+                                        </div>                                
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-tab>
+
+                        <mat-tab label="Similar" id="similar" class="matTab">
+                            <div class="p-4 shadow bg-white products-form-wrapper position-relative" >
+                                <div class="productsForms">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-4 d-flex align-items-end">
+                                            <div class="me-3">
+                                                <img src="assets/images/logo/logo.svg" alt="" class="" style="width: 35px; top: 40px;">
+                                            </div>   
+                                            <div style="width: fit-content">
+                                                <div class="mt-3 mb-2 fw-bold h4 text-center">Similar Products</div>
+                                                <div class="mx-auto bg-primary" style="height: 2px; width: 160px;"></div>
+                                            </div>
+                                        </div>                                        
+                                        <div class="form-group mb-3  col-12">
+                                            <label for="" class="mb-1">Similar Product</label>
+                                            <mat-form-field appearance="fill">
+                                                <mat-select multiple [formControlName]="'similarProduct'" >
+                                                <mat-option *ngFor="let product of similarProducts" [value]="product">{{product}}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>   
+                                        <div class="form-group col-12 d-flex">
+                                            <button mat-raised-button color="primary" class="ms-auto" (click)="previousStep()">back</button>
+                                            <button mat-raised-button color="primary" class="ms-2" (click)="nextStep()">next</button>
+                                        </div>                              
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-tab>
+
+                        <mat-tab label="Delivery" id="delivery" class="matTab">
+                            <div class="p-4 shadow bg-white products-form-wrapper position-relative" >
+                                <div class="productsForms">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-4 d-flex align-items-end">
+                                            <div class="me-3">
+                                                <img src="assets/images/logo/logo.svg" alt="" class="" style="width: 35px; top: 40px;">
+                                            </div>   
+                                            <div style="width: fit-content">
+                                                <div class="mt-3 mb-2 fw-bold h4 text-center">Delivery Details</div>
+                                                <div class="mx-auto bg-primary" style="height: 2px; width: 120px;"></div>
+                                            </div>
+                                        </div>                                        
+                                        <div formGroupName="delivery" class="row">
+                                            <div class="form-group mb-3 col-md-6 col-12">
+                                                <label for="" class="mb-1">Pincode</label>
+                                                <input type="text" class="form-control" formControlName="pincode"  placeholder="Add your question">
+                                            </div> 
+                                            <div class="form-group mb-3 col-md-6 col-12">
+                                                <label for="" class="mb-1">Description</label>
+                                                <input type="text" class="form-control" formControlName="description"  placeholder="Add your answer">
+                                            </div>
+                                        </div>  
+                                        <div class="form-group col-12 d-flex">
+                                            <button mat-raised-button color="primary" class="ms-auto" (click)="previousStep()">back</button>
+                                            <button mat-raised-button color="primary" class="ms-2" (click)="nextStep()">next</button>
+                                        </div>                               
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-tab>
+
+                        <mat-tab label="Bulk Discount" id="bulkDiscount" class="matTab">
+                            <div class="p-4 shadow bg-white products-form-wrapper position-relative" >
+                                <div class="productsForms">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-4 d-flex align-items-end">
+                                            <div class="me-3">
+                                                <img src="assets/images/logo/logo.svg" alt="" class="" style="width: 35px; top: 40px;">
+                                            </div>   
+                                            <div style="width: fit-content">
+                                                <div class="mt-3 mb-2 fw-bold h4 text-center">Bulk Discount </div>
+                                                <div class="mx-auto bg-primary" style="height: 2px; width: 120px;"></div>
+                                            </div>
+                                        </div>     
+                                        
+                                        <div formGroupName="bulkDiscount" class="row">
+                                            <div class="form-group mb-3 col-md-6 col-12">
+                                                <label for="" class="mb-1">Quantity</label>
+                                                <input type="text" class="form-control" formControlName="quantity"  placeholder="Min Quantity to order">
+                                            </div> 
+                                            <div class="form-group mb-3 col-md-6 col-12">
+                                                <label for="" class="mb-1">Discount Amount</label>
+                                                <input type="text" class="form-control" formControlName="discountAmount"  placeholder="Add your answer">
+                                            </div>
+                                            <div class="form-group mb-3 col-md-6 col-12">
+                                                <label for="" class="mb-1">Type of discount</label>
+                                                <select class="form-select" aria-label="Default select example" formControlName="discountType">
+                                                    <option value="" selected hidden disabled>Select </option>
+                                                    <option value="percent">Percent</option>
+                                                  </select>
+                                            </div>
+                                            <div class="form-group col-12 d-flex">
+                                                <button mat-raised-button color="primary" class="ms-auto" (click)="previousStep()">back</button>
+                                                <button mat-raised-button color="primary" class="ms-2" (click)="nextStep()">next</button>
+                                            </div> 
+                                        </div>
+                                                                   
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-tab>
+
+                        <mat-tab label="CashBacks" id="cashBacks" class="matTab">
+                           <div class="p-4 shadow bg-white products-form-wrapper position-relative" >
+                                <div class="productsForms">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-4 d-flex align-items-end">
+                                            <div class="me-3">
+                                                <img src="assets/images/logo/logo.svg" alt="" class="" style="width: 35px; top: 40px;">
+                                            </div>   
+                                            <div style="width: fit-content">
+                                                <div class="mt-3 mb-2 fw-bold h4 text-center">CashBacks </div>
+                                                <div class="mx-auto bg-primary" style="height: 2px; width: 120px;"></div>
+                                            </div>
+                                        </div>     
+                                        
+                                        <div formGroupName="cashBack" class="row">
+                                            <div class="form-group mb-3 col-md-6 col-12">
+                                                <label for="" class="mb-1">CashBack</label>
+                                                <input type="text" class="form-control" formControlName="cashBackAmount"  placeholder="Reward Amount">
+                                            </div> 
+                                            <div class="form-group mb-3 col-md-6 col-12">
+                                                <label for="" class="mb-1">Type of discount</label>
+                                                <select class="form-select" aria-label="Default select example" formControlName="customerGroup">
+                                                    <option value="" selected hidden disabled>Select </option>
+                                                    <option value="consultant">Consultant</option>
+                                                    <option value="customer">Customer</option>
+                                                  </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-12 d-flex">
+                                            <button mat-raised-button color="primary" class="ms-auto" (click)="previousStep()">back</button>
+                                            <button mat-raised-button color="primary" class="ms-2" (click)="nextStep()">next</button>
+                                        </div>                      
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Variant" id="variant" class="matTab">
+                            <div class="p-4 shadow bg-white products-form-wrapper position-relative" >
+                                <div class="productsForms">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-4 d-flex align-items-end">
+                                            <div class="me-3">
+                                                <img src="assets/images/logo/logo.svg" alt="" class="" style="width: 35px; top: 40px;">
+                                            </div>   
+                                            <div style="width: fit-content">
+                                                <div class="mt-3 mb-2 fw-bold h4 text-center">Variants </div>
+                                                <div class="mx-auto bg-primary" style="height: 2px; width: 90px;"></div>
+                                            </div>
+                                        </div>     
+                                        
+                                        <div class="form-group mb-3 col-12">
+                                            <label for="" class="mb-1">This Product is a variant of</label>
+                                            <select class="form-select" aria-label="Default select example" formControlName="variant">
+                                                <option value="" selected hidden disabled>Select </option>
+                                                <option value="variant1">variant 1</option>
+                                                <option value="variant2">variant 2</option>
+                                                <option value="variant3">variant 3</option>
+                                                </select>
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                           <div class="d-flex">
+                                            <button mat-raised-button color="primary"  (click)="postData()">Add Product</button>
+                                            <button mat-raised-button color="primary" class="ms-auto" (click)="previousStep()">Back</button>
+                                           </div>
+                                        </div>
+                                    
+                                                                   
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
+                </form>
             </div>
 
           

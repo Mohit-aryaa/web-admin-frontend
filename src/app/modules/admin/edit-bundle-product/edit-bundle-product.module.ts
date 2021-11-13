@@ -19,6 +19,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { DataTablesModule } from 'angular-datatables';
 import { SharedModule } from 'app/shared/shared.module';
 import { EditProductComponent } from '../edit-product/edit-product.component';
+import { MatTabsModule } from '@angular/material/tabs';
 
 
 
@@ -48,8 +49,9 @@ import { EditProductComponent } from '../edit-product/edit-product.component';
     NgxDatatableModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    MatChipsModule,
-    MatSelectModule
+    MatTabsModule,
+    MatSelectModule,
+    MatChipsModule
   ]
 })
 export class EditBundleProductModule { }

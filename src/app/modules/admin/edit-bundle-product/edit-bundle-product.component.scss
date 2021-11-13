@@ -12,6 +12,11 @@
     color: #817777!important;
     
 }
+.remove-images {
+    position: absolute;
+    right: -10px;
+    top: -17px;
+}
 .example-chip-list {
     width: 100%;
 }
@@ -22,4 +27,107 @@
     position: absolute;
     right: -10px;
     top: -17px;
+}
+
+:host {
+    >.container {
+        max-width: 1264px;
+        width: 100%;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        background: none;
+    }
+    ::ng-deep {
+        .mat-tab-group {
+            flex-direction: row;
+        }
+        .mat-tab-header {
+          border-bottom: none;
+        }
+        // .mat-tab-header-pagination {
+        //     display: none !important;
+        // }
+        .mat-tab-labels {
+            flex-direction: column;
+        }
+        .mat-ink-bar {
+            height: 100%;
+            left: 98% !important;
+        }
+        .mat-tab-body-wrapper {
+            flex: 1 1 auto;
+        }
+    }
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    flex: 1 0 auto;
+    margin: 0 auto;
+    text-align: left;
+}
+
+#content {
+    box-sizing: content-box;
+    margin: 0 auto;
+    padding: 15px;
+    width: 1264px;
+    background-color: #ffffff;
+}
+
+#content {
+    max-width: 1100px;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+#content,
+#main-content {
+    &::before,
+    &::after {
+        content: "";
+        display: table;
+    }
+    &::after {
+        clear: both;
+    }
+}
+::ng-deep .mat-tab-label {
+    justify-content: flex-start!important;
+}
+::ng-deep .mat-tab-label-container {
+    margin-top: 24px!important;
+    padding-top: 2rem!important;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important;
+}
+
+@media only screen and (max-width: 991px) {
+    .mat-tab-group {
+         flex-direction: column!important;
+    }
+    ::ng-deep .mat-tab-labels {
+        flex-direction: row!important;
+    }
+    ::ng-deep .mat-tab-header-pagination {
+        box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important;
+        width: 30pc!important;
+        height: 40px!important;
+        display: grid!important;
+        align-content: center;
+        background: #DDE3E9!important;
+        box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important;
+    }
+    ::ng-deep .mat-tab-label-container {
+        margin-top: 0!important;
+        padding-top: 0!important;
+        border-radius: 0px;
+        background: unset;
+        box-shadow: none!important;
+    }
 }

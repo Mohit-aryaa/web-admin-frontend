@@ -18,6 +18,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { DataTablesModule } from 'angular-datatables';
 import { SharedModule } from 'app/shared/shared.module';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
 
 
 
@@ -49,7 +50,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatChipsModule,
-    MatSelectModule
+    MatSelectModule,
+    MatTabsModule
   ]
 })
 export class AddBundleProductModule { }

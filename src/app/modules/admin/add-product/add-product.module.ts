@@ -17,6 +17,8 @@ import { DataTablesModule } from 'angular-datatables';
 import { SharedModule } from 'app/shared/shared.module';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSelectModule } from '@angular/material/select';
 
 
 @NgModule({
@@ -45,7 +47,10 @@ import { MatChipsModule } from '@angular/material/chips';
     NgxDatatableModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    MatChipsModule
+    MatChipsModule,
+    MatTabsModule,
+    MatInputModule,
+    MatSelectModule
   ]
 })
 export class AddProductModule { }

@@ -8,6 +8,9 @@ import { CategoriesService } from '../categories.service';
 import { ProductsService } from '../products.service';
 import { SubCategoriesService } from '../sub-Categories.service';
 import { VendorService } from '../vendor.service';
+import { HttpClient } from '@angular/common/http';
+import { colors } from "../colors";
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-add-product',
@@ -26,10 +29,14 @@ export class AddProductComponent implements OnInit {
   getVendorsList : any [];
   getCategoryId: any;
   urls = [];
-
-  constructor(private productsService: ProductsService,private categoriesService: CategoriesService , private subCategoriesService: SubCategoriesService, private _formBuilder: FormBuilder, private _snackBar: MatSnackBar,private brandsService: BrandService,private vendorsService: VendorService) { }
+  color: any;
+  similarProducts: any = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
+  blogPosts: any = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
+  selectedIndex: number = 0;
+  constructor(private http: HttpClient, private productsService: ProductsService,private categoriesService: CategoriesService , private subCategoriesService: SubCategoriesService, private _formBuilder: FormBuilder, private _snackBar: MatSnackBar,private brandsService: BrandService,private vendorsService: VendorService) { }
 
   ngOnInit(): void {
+    this.color = colors;
     this.getCategories();
     this.getBrands();
     this.getVendors();
@@ -51,9 +58,49 @@ export class AddProductComponent implements OnInit {
       todaysDeal:[false, ],
       publish:[false, ],
       featured:[false, ],
-      price:['',[Validators.required]]
+      price:['',[Validators.required]],
+      mrp : ['',[Validators.required]],
+      purchasePrice: ['',[Validators.required]],
+      shippingCost: ['',[Validators.required]],
+      productTax: ['',[Validators.required]],
+      productDiscount: ['',[Validators.required]],
+      maxQuantity: ['',[Validators.required]],
+      minimumQuantity: ['',[Validators.required]],
+      customersOptions: this._formBuilder.group({
+        color:['', [Validators.required]],
+        choiceStyle:['', [Validators.required]]
+      }),
+      seoKeyWords: ['',[Validators.required]],
+      metaTagKeywords: ['',[Validators.required]],
+      metaTagDescription: ['',[Validators.required]],
+      metaTagTitle: ['',[Validators.required]],
+      imageAltTag: ['',[Validators.required]],
+      seoUrl : ['',[Validators.required]],
+      youtubeVideoId : ['',[Validators.required]],
+      question: this._formBuilder.group({
+        productQuestion: ['',[Validators.required]],
+        productAnswer: ['',[Validators.required]],
+      }),
+      blogPost: ['',[Validators.required]],
+      similarProduct: ['',[Validators.required]],
+      delivery:  this._formBuilder.group({
+        pincode: ['',[Validators.required]],
+        description: ['',[Validators.required]],
+      }),
+      bulkDiscount : this._formBuilder.group({
+        quantity: ['', [Validators.required]],
+        discountAmount: ['',[Validators.required]],
+        discountType: ['',[Validators.required]],
+      }),
+      cashBack : this._formBuilder.group({
+        cashBackAmount: ['',[Validators.required]],
+        customerGroup: ['',[Validators.required]],
+      }),
+      variant : ['',[Validators.required]],
     })
   }
+
+  
 
   selectable = true;
   removable = true;
@@ -124,7 +171,28 @@ export class AddProductComponent implements OnInit {
     })
   }
 
-  uploadProductImage(event:any) {
+  tabChanged(tabChangeEvent: MatTabChangeEvent): void {
+      this.selectedIndex = tabChangeEvent.index;
+      console.log(this.selectedIndex)
+  }
+
+  nextStep() {
+    const maxNumberOfTabs = 11
+    if (this.selectedIndex != maxNumberOfTabs) {
+      this.selectedIndex = this.selectedIndex + 1;
+    }
+    console.log(this.selectedIndex);
+  }
+
+  previousStep() {
+    if (this.selectedIndex != 0) {
+      this.selectedIndex = this.selectedIndex - 1;
+    }
+    console.log(this.selectedIndex);
+  }
+
+
+  onSelectdProductImage(event:any) {
     this.showPreview = true
     this.urls = [];
     let files = event.target.files;
@@ -177,6 +245,13 @@ export class AddProductComponent implements OnInit {
     console.log(this.storeImg)
     const formData = new FormData();
     var filename = [];
+    if(this.productsForm.invalid) {
+      this._snackBar.open('All field are required',  '', {
+        duration: 2000,
+        verticalPosition: 'top'
+      })
+      return false
+    }
     if (this.showPreview == false ) {
       this._snackBar.open('At least one image is required',  '', {
         duration: 2000,
@@ -221,7 +296,7 @@ export class AddProductComponent implements OnInit {
     } 
   }
   
-
+  
   
 
   numberOnly(event): boolean {
@@ -231,6 +306,8 @@ export class AddProductComponent implements OnInit {
     }
     return true;
   }
+
+  
 
 }
 

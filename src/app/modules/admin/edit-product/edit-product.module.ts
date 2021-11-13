@@ -17,6 +17,8 @@ import { DataTablesModule } from 'angular-datatables';
 import { SharedModule } from 'app/shared/shared.module';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSelectModule } from '@angular/material/select';
 
 
 
@@ -46,6 +48,8 @@ import { MatChipsModule } from '@angular/material/chips';
     NgxDatatableModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
+    MatTabsModule,
+    MatSelectModule,
     MatChipsModule
   ]
 })

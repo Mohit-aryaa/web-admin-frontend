@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DasnboardComponent } from './dasnboard.component';
+import { DashboardComponent } from './dashboard.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -16,17 +16,18 @@ import { RouterModule } from '@angular/router';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { DataTablesModule } from 'angular-datatables';
 import { SharedModule } from 'app/shared/shared.module';
+import { MatMenuModule } from '@angular/material/menu';
 
 
 
 @NgModule({
   declarations: [
-    DasnboardComponent
+    DashboardComponent
   ],
   imports: [
     RouterModule.forChild(
       [
-        {path: '', component: DasnboardComponent}
+        {path: '', component: DashboardComponent}
       ]
     ),
     SharedModule,
@@ -43,7 +44,8 @@ import { SharedModule } from 'app/shared/shared.module';
     DataTablesModule,
     NgxDatatableModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatMenuModule
   ]
 })
 export class DashboardModule { }
