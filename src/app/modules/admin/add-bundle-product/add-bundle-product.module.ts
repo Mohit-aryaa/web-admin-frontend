@@ -19,6 +19,7 @@ import { DataTablesModule } from 'angular-datatables';
 import { SharedModule } from 'app/shared/shared.module';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
+import { QuillModule } from 'ngx-quill';
 
 
 
@@ -51,7 +52,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatSnackBarModule,
     MatChipsModule,
     MatSelectModule,
-    MatTabsModule
+    MatTabsModule,
+    QuillModule
   ]
 })
 export class AddBundleProductModule { }

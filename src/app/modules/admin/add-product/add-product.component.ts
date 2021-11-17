@@ -11,7 +11,8 @@ import { VendorService } from '../vendor.service';
 import { HttpClient } from '@angular/common/http';
 import { colors } from "../colors";
 import { MatTabChangeEvent } from '@angular/material/tabs';
-
+import { countries } from "../country";
+import { SubChildCategoryService } from '../sub-child-category.service';
 @Component({
   selector: 'app-add-product',
   templateUrl: './add-product.component.html',
@@ -25,18 +26,21 @@ export class AddProductComponent implements OnInit {
   showPreview: boolean = false;
   getCategoriesList: any[];
   getSubCategoriesList: any[];
+  getSubChildCategoriesList: any[];
   getBrandsList : any [];
   getVendorsList : any [];
   getCategoryId: any;
   urls = [];
   color: any;
+  country: any;
   similarProducts: any = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
   blogPosts: any = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
   selectedIndex: number = 0;
-  constructor(private http: HttpClient, private productsService: ProductsService,private categoriesService: CategoriesService , private subCategoriesService: SubCategoriesService, private _formBuilder: FormBuilder, private _snackBar: MatSnackBar,private brandsService: BrandService,private vendorsService: VendorService) { }
+  constructor(private http: HttpClient, private productsService: ProductsService,private categoriesService: CategoriesService , private subCategoriesService: SubCategoriesService, private _formBuilder: FormBuilder, private _snackBar: MatSnackBar,private brandsService: BrandService,private vendorsService: VendorService, private subChildCategoriesService: SubChildCategoryService) { }
 
   ngOnInit(): void {
     this.color = colors;
+    this.country = countries;
     this.getCategories();
     this.getBrands();
     this.getVendors();
@@ -49,8 +53,16 @@ export class AddProductComponent implements OnInit {
       productModel: ['', [Validators.required]],
       productCategory:['', [Validators.required]],
       productSubCategory: ['', [Validators.required]],
+      productSubChildCategory: ['', [Validators.required]],
       productBrand:['', [Validators.required]],
       vendor: ['', [Validators.required]],
+      unit: ['', [Validators.required]],
+      dimensions: this._formBuilder.group({
+        length:['', [Validators.required]],
+        breadth:['', [Validators.required]],
+        height: ['', [Validators.required]]
+      }),
+      weight: ['', [Validators.required]],
       tags:['', [Validators.required]],
       productCountry:['', [Validators.required]],
       manfactureDate:['', [Validators.required]],
@@ -149,6 +161,20 @@ export class AddProductComponent implements OnInit {
     this.subCategoriesService.getDataByCategoryId(data).subscribe((res: any) => {
       this.getSubCategoriesList = res.SubCategory
       console.log('getSubCategoriesList',this.getSubCategoriesList)
+    }, (errors:any) => {
+      console.log(errors)
+    })
+  }
+
+  getSubCategoryValue(e:any) {
+    console.log(e.target.value)
+    this.getSubChildCategories(e.target.value)
+  }
+
+  getSubChildCategories(data: any) {
+    this.subChildCategoriesService.getDataBySubCategoryId(data).subscribe((res: any) => {
+      this.getSubChildCategoriesList = res.SubChildCategory
+      console.log('getSubChildCategoriesList',this.getSubChildCategoriesList)
     }, (errors:any) => {
       console.log(errors)
     })
@@ -266,13 +292,7 @@ export class AddProductComponent implements OnInit {
     const file = filename.toString();
     console.log(formData)
     this.imgUploading = true
-    if (this.productsForm.invalid) {
-      this._snackBar.open('All fields are required',  '', {
-        duration: 2000,
-        verticalPosition: 'top'
-      })
-      return false;
-    } 
+     
     if(file.match(/png/g)  || file.match(/jpeg/g) || file.match(/jpg/g)) {
       this.productsService.uploadProductImage(formData).subscribe((res:any)=> {
         console.log(res)
@@ -305,6 +325,57 @@ export class AddProductComponent implements OnInit {
       return false;
     }
     return true;
+  }
+
+  hasFocus = false;
+
+  quillConfig={
+    //toolbar: '.toolbar',
+    toolbar: {
+      container: [
+        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+        ['blockquote', 'code-block'],
+    
+        [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+        [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+        [{ 'direction': 'rtl' }],                         // text direction
+    
+        [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+    
+        [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+        [{ 'font': [] }],
+        [{ 'align': [] }],
+    
+        ['clean'],                                         // remove formatting button
+    
+        ['link', 'image', 'video']                         // link and image, video
+      ]
+      
+    },
+  }
+
+  onSelectionChanged = (event: any) =>{
+    console.log(this.productsForm.value.productDescription)
+    if(event.oldRange == null){
+      this.onFocus();
+    }
+    if(event.range == null){
+      this.onBlur();
+    }
+  }
+
+  onContentChanged = (event) =>{
+    //console.log(event.html);
+  }
+
+  onFocus = () =>{
+    console.log("On Focus");
+  }
+  onBlur = () =>{
+    console.log("Blurred");
   }
 
   

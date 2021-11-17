@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EditBundleProductComponent } from './edit-bundle-product.component';
-import { MatSelectModule } from '@angular/material/select';
+import { EditVendorComponent } from './edit-vendor.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -11,30 +10,30 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { DataTablesModule } from 'angular-datatables';
 import { SharedModule } from 'app/shared/shared.module';
-import { EditProductComponent } from '../edit-product/edit-product.component';
-import { MatTabsModule } from '@angular/material/tabs';
 import { QuillModule } from 'ngx-quill';
 
 
 
 @NgModule({
   declarations: [
-    EditBundleProductComponent
+    EditVendorComponent
   ],
   imports: [
     CommonModule,
-    RouterModule.forChild([
-      {
-        path:'', component: EditBundleProductComponent
-      }
-    ]),
+    RouterModule.forChild(
+      [
+        {path: '', component: EditVendorComponent}
+      ]
+    ),
     SharedModule,
     MatTableModule,
     MatButtonModule,
@@ -50,10 +49,11 @@ import { QuillModule } from 'ngx-quill';
     NgxDatatableModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    MatTabsModule,
-    MatSelectModule,
     MatChipsModule,
+    MatTabsModule,
+    MatInputModule,
+    MatSelectModule,
     QuillModule
   ]
 })
-export class EditBundleProductModule { }
+export class EditVendorModule { }

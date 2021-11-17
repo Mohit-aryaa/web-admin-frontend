@@ -11,7 +11,8 @@ import { VendorService } from '../vendor.service';
 import { BundleProductService } from '../bundle-product.service';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { colors } from "../colors";
-
+import { countries } from '../country';
+import { SubChildCategoryService } from '../sub-child-category.service';
 @Component({
   selector: 'app-add-bundle-product',
   templateUrl: './add-bundle-product.component.html',
@@ -27,20 +28,23 @@ export class AddBundleProductComponent implements OnInit {
   getProductList: any[];
   getCategoriesList: any[];
   getSubCategoriesList: any[];
+  getSubChildCategoriesList: any[];
   getBrandsList : any [];
   getVendorsList : any [];
   showPreview:boolean = false;
   urls = [];
   color: any;
+  country: any;
   similarProducts: any = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
   blogPosts: any = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
   selectedIndex: number = 0;
-  constructor(private productsService: ProductsService,private categoriesService: CategoriesService , private subCategoriesService: SubCategoriesService, private _formBuilder: FormBuilder, private _snackBar: MatSnackBar,private brandsService: BrandService,private vendorsService: VendorService, private bundleProductsService: BundleProductService) { }
+  constructor(private productsService: ProductsService,private categoriesService: CategoriesService , private subCategoriesService: SubCategoriesService, private _formBuilder: FormBuilder, private _snackBar: MatSnackBar,private brandsService: BrandService,private vendorsService: VendorService, private bundleProductsService: BundleProductService, private subChildCategoriesService : SubChildCategoryService) { }
 
   
 
   ngOnInit(): void {
     this.color = colors;
+    this.country = countries;
     this.getCategories();
     this.getBrands();
     this.getVendors();
@@ -55,9 +59,12 @@ export class AddBundleProductComponent implements OnInit {
       productModel: ['', [Validators.required]],
       productCategory:['', [Validators.required]],
       productSubCategory: ['',[Validators.required]],
+      productSubChildCategory: ['',[Validators.required]],
       productBrand:['', [Validators.required]],
       vendor: ['', [Validators.required]],
       tags:['', [Validators.required]],
+      productCountry:['', [Validators.required]],
+      manfactureDate:['', [Validators.required]],
       stock: ['', [Validators.required]],
       todaysDeal:[false, ],
       publish:[false, ],
@@ -151,6 +158,20 @@ export class AddBundleProductComponent implements OnInit {
     this.subCategoriesService.getDataByCategoryId(data).subscribe((res: any) => {
       this.getSubCategoriesList = res.SubCategory
       console.log('getSubCategoriesList',this.getSubCategoriesList)
+    }, (errors:any) => {
+      console.log(errors)
+    })
+  }
+
+  getSubCategoryValue(e:any) {
+    console.log(e.target.value)
+    this.getSubChildCategories(e.target.value)
+  }
+
+  getSubChildCategories(data: any) {
+    this.subChildCategoriesService.getDataBySubCategoryId(data).subscribe((res: any) => {
+      this.getSubChildCategoriesList = res.SubChildCategory
+      console.log('getSubChildCategoriesList',this.getSubChildCategoriesList)
     }, (errors:any) => {
       console.log(errors)
     })
@@ -316,15 +337,63 @@ export class AddBundleProductComponent implements OnInit {
 
   }
   
-
-  
-
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
       return false;
     }
     return true;
+  }
+
+  hasFocus = false;
+
+  quillConfig={
+    //toolbar: '.toolbar',
+    toolbar: {
+      container: [
+        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+        ['blockquote', 'code-block'],
+    
+        [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+        [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+        [{ 'direction': 'rtl' }],                         // text direction
+    
+        [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+    
+        [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+        [{ 'font': [] }],
+        [{ 'align': [] }],
+    
+        ['clean'],                                         // remove formatting button
+    
+        ['link', 'image', 'video']                         // link and image, video
+      ]
+      
+    },
+  }
+
+  onSelectionChanged = (event: any) =>{
+    console.log(this.addBundleProductsForm.value.productDescription)
+    if(event.oldRange == null){
+      this.onFocus();
+    }
+    if(event.range == null){
+      this.onBlur();
+    }
+  }
+
+  onContentChanged = (event) =>{
+    //console.log(event.html);
+  }
+
+  onFocus = () =>{
+    console.log("On Focus");
+  }
+  onBlur = () =>{
+    console.log("Blurred");
   }
 
 }

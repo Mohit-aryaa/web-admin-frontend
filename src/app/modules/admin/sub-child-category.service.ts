@@ -4,47 +4,41 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class BrandService {
-
+export class SubChildCategoryService {
   constructor(private _http: HttpClient) { }
 
-  api_url = 'http://localhost:3000/brands';
+  api_url = 'http://localhost:3000/subChildCategories';
 
-   getBrands(data:any) {
+   getSubChildCategories(data:any) {
     //console.log(data.params.offset)
     return this._http.get(this.api_url+'?offset='+data.params.offset+'&limit='+data.params.limit+'&previousSize='+data.params.previousSize);
    }
 
-   listBrands() {
+  listSubChildCategories() {
     return this._http.get(this.api_url);
+  }
+
+   getDataBySubCategoryId(data: any) {
+    return this._http.get(this.api_url+'/getDataBySubCategoryId/'+data);
    }
 
-   showBrand(data: any) {
-    return this._http.get(this.api_url+'/'+data)
-   }
-
-   uploadBrandBanner(data: any) {
-     return this._http.post(this.api_url+'/store', data)
-   }
-
-  addBrands(data: any) {
+  addSubChildCategories(data: any) {
    return this._http.post(this.api_url, data);
   }
 
-  updateBrands(dataId:any, data: any) {
+  updateSubChildCategories(dataId:any, data: any) {
     return this._http.put(this.api_url+'/'+dataId, data);
   }
-  
-  deleteBrands(data: any) {
-    return this._http.delete(this.api_url+'/'+data._id, data);
+
+  filterSubChildCategories(data) {
+    return this._http.get(this.api_url+'?filter='+ data);
   }
 
   bulkDelete(data: any) {
     return this._http.post(this.api_url+'/bulkDelete', data)
   }
 
-
-  filterBrands(data:any) {
-    return this._http.get(this.api_url+'?filter='+ data);
+  deleteSubChildCategories(data: any) {
+    return this._http.delete(this.api_url+'/'+data._id, data);
   }
 }

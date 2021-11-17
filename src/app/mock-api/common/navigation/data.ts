@@ -124,17 +124,17 @@ export const defaultNavigation: FuseNavigationItem[] = [
             },
             {
                 id: 'subCategories',
-                title: 'Sub-Categories',
+                title: 'Sub Categories',
                 type: 'basic',
                 icon: '',
                 link: '/sub-categories'
             },
             {
-                id: 'childCategory',
-                title: 'Child Categorys',
+                id: 'subChildCategories',
+                title: 'Sub Child Categories',
                 type: 'basic',
                 icon: '',
-                link: '',
+                link: '/sub-child-Category',
             },
             {
                 id: 'brands',

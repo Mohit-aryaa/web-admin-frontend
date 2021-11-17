@@ -17,6 +17,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { DataTablesModule } from 'angular-datatables';
 import { SharedModule } from 'app/shared/shared.module';
 import { VendorPipe } from 'app/pipe/vendor.pipe';
+import { MatTabsModule } from '@angular/material/tabs';
 
 
 
@@ -47,6 +48,7 @@ import { VendorPipe } from 'app/pipe/vendor.pipe';
     NgxDatatableModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
+    MatTabsModule
   ]
 })
 export class VendorModule { }

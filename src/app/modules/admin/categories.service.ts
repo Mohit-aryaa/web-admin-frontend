@@ -35,6 +35,10 @@ export class CategoriesService {
     return this._http.post(this.api_url+'/bulkDelete', data)
   }
 
+  uploadCategoryBanner(data:any) {
+    return this._http.post(this.api_url+'/store', data);
+  }
+
 
   filterCategories(data:any) {
     return this._http.get(this.api_url+'?filter='+ data);

@@ -19,6 +19,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSelectModule } from '@angular/material/select';
+import { QuillModule } from 'ngx-quill';
 
 
 
@@ -50,7 +51,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatSnackBarModule,
     MatTabsModule,
     MatSelectModule,
-    MatChipsModule
+    MatChipsModule,
+    QuillModule
   ]
 })
 export class EditProductModule { }

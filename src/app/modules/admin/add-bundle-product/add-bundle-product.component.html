@@ -64,6 +64,13 @@
                                             <label for="" class="mb-1"> Product Model</label>
                                             <input type="text" class="form-control" id="productModel" name="productModel" formControlName="productModel" placeholder="John doe">
                                         </div>
+                                        
+
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Product Code</label>
+                                            <input type="text" class="form-control" id="productCode" name="productCode" formControlName="productCode" placeholder="John doe">
+                                        </div>
+
                                         <div class="form-group mb-3 col-md-6 col-12">
                                             <label for="" class="mb-1"> Category</label>
                                             <select class="form-select" aria-label="Default select example" formControlName="productCategory" (change)="getCategoryValue($event)">
@@ -73,15 +80,17 @@
                                         </div>
 
                                         <div class="form-group mb-3 col-md-6 col-12">
-                                            <label for="" class="mb-1"> Product Code</label>
-                                            <input type="text" class="form-control" id="productCode" name="productCode" formControlName="productCode" placeholder="John doe">
-                                        </div>
-
-                                        <div class="form-group mb-3 col-md-6 col-12">
                                             <label for="" class="mb-1"> Sub Category</label>
-                                            <select class="form-select" aria-label="Default select example" formControlName="productSubCategory" > 
+                                            <select class="form-select" aria-label="Default select example" formControlName="productSubCategory" (change)="getSubCategoryValue($event)"> 
                                                 <option value="" selected hidden disabled>Select</option>
                                                 <option *ngFor="let item2 of getSubCategoriesList; let i = index" [value]="item2._id" >{{item2.subCategoryName}}</option>
+                                            </select>    
+                                        </div>
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Sub Child Category</label>
+                                            <select class="form-select" aria-label="Default select example" formControlName="productSubChildCategory" > 
+                                                <option value="" selected hidden disabled>Select</option>
+                                                <option *ngFor="let getItem of getSubChildCategoriesList; let i = index" [value]="getItem._id" >{{getItem.subChildCategoryName}}</option>
                                             </select>    
                                         </div>
                                         <div class="form-group mb-3 col-md-6 col-12">
@@ -121,7 +130,10 @@
                                         </div>
                                         <div class="form-group mb-3 col-md-6 col-12">
                                             <label for="" class="mb-1"> Country of origin</label>
-                                            <input type="text" class="form-control" id="productCountry" name="productCountry" formControlName="productCountry" placeholder="country name">
+                                            <select class="form-select" aria-label="Default select example" formControlName="productCountry">
+                                                <option value="" selected hidden disabled>Select</option>
+                                                <option *ngFor="let countryName of country; let i = index" [value]="countryName.name" >{{countryName.name}}</option>
+                                            </select>
                                         </div>
                                         <div class="form-group mb-3 col-md-6 col-12">
                                             <label for="" class="mb-1"> Manfacture Date</label>

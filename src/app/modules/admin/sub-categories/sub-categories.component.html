@@ -37,6 +37,10 @@
                                 </div>
                             </td>
                         </ng-container>
+                        <ng-container matColumnDef="banner">
+                            <th mat-header-cell *matHeaderCellDef> Banner</th>
+                            <td mat-cell *matCellDef="let element"><img src="http://localhost:3000/{{element.subCategoryBanner}}" style="width:100px;" class="py-1" alt=""></td>
+                        </ng-container>
                         <ng-container matColumnDef="name">
                             <th mat-header-cell *matHeaderCellDef> Name</th>
                             <td mat-cell *matCellDef="let element">{{element.subCategoryName}}</td>
@@ -91,20 +95,65 @@
         <div class="modal-body">
             <form class="px-4" [formGroup]="subCategoriesForm" (ngSubmit)="postData()">
                 <div class="row">
-                    <div class="form-group mb-3 col-12">
+                    <div class="form-group mb-3 col-md-6 col-12">
                         <label for="" class="mb-1"> Name</label>
                         <input type="text" class="form-control" id="subCategoryName" name="subCategoryName" formControlName="subCategoryName" placeholder="John doe">
                     </div>
-                    <div class="form-group mb-3 col-12">
-                        <label for="" class="mb-1"> Description</label>
-                        <input type="text" class="form-control" id="subCategoryDescription" name="subCategoryDescription" formControlName="subCategoryDescription" placeholder="John doe">
+                    
+                    <div class="form-group mb-3 col-md-6 col-12">
+                        <label for="" class="mb-1">Category Banner</label>
+                        <input type="file" class="form-control" id="subCategoryBannerPicture" name="subCategoryBannerPicture" formControlName="subCategoryBannerPicture" placeholder="John doe" (change)="onSelectedImage($event)">
+                        <input type="text" class="form-control d-none" formControlName="subCategoryBanner">
                     </div>
-                    <div class="form-group mb-3 col-12">
+                    <div [ngClass]="showPreview? 'd-block' : 'd-none' " class="my-3 col-12 form-group">
+                        <label for="" class="mb-1 text-center">New Image</label>
+                        <div class="row">
+                            <div class=" col-md-6 mx-auto col-12 rounded-lg shadow-lg p-2 border-4 border-blue-200 border-opacity-100">
+                                <img  [src]="url"  alt="" class="w-100">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div [ngClass]="showImageBox? 'd-block' : 'd-none' " class="my-3 col-12 form-group">
+                        <label for="" class="mb-1 text-center">Old Image</label>
+                        <div class="row">
+                            <div class=" col-md-6 mx-auto col-12 rounded-lg shadow-lg p-2 border-4 border-blue-200 border-opacity-100">
+                                <img  src="http://localhost:3000/{{ImageBox}}"  alt="" class="w-100">
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                    <div class="form-group mb-3 col-12 position-relative">
+                        <label for="" class="mb-1">Subcategory Description</label>
+                        <quill-editor formControlName="subCategoryDescription"  
+                        placeholder="Enter Text"
+                        [modules]="quillConfig"
+                        (onSelectionChanged)="onSelectionChanged($event)"
+                        (onContentChanged)="onContentChanged($event)"></quill-editor>
+                        
+                    </div>
+
+                    <div class="form-group mb-3 col-md-6 col-12">
                         <label for="" class="mb-1"> Category</label>
                         <select class="form-select" aria-label="Default select example" formControlName="category">
                             <option value="" selected hidden disabled>Select</option>
                             <option *ngFor="let item of getCategoriesList; let i = index" [value]="item._id" >{{item.categoryName}}</option>
                           </select>    
+                    </div>
+                    
+                    <div class="form-group mb-3 col-md-6 col-12">
+                        <label for="" class="mb-1"> Meta Title</label>
+                        <input type="text" class="form-control" id="metaTitle" name="metaTitle" formControlName="metaTitle" placeholder="John doe">
+                    </div>
+                   
+                    <div class="form-group mb-3 col-md-6 col-12">
+                        <label for="" class="mb-1"> Meta Description</label>
+                        <input type="text" class="form-control" id="metaDescription" name="metaDescription" formControlName="metaDescription" placeholder="John doe">
+                    </div>
+                    <div class="form-group mb-3 col-md-6 col-12">
+                        <label for="" class="mb-1"> Seo Url</label>
+                        <input type="text" class="form-control" id="metaDescription" name="seoUrl" formControlName="seoUrl" placeholder="John doe">
                     </div>
                     
                 </div>

@@ -13,6 +13,7 @@ import { of } from 'rxjs';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { colors } from "../colors";
+import { countries } from "../country";
 @Component({
   selector: 'app-edit-product',
   templateUrl: './edit-product.component.html',
@@ -37,6 +38,7 @@ export class EditProductComponent implements OnInit {
   blogPosts: any = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
   selectedIndex: number = 0;
   color: any;
+  country: any;
   constructor(private http: HttpClient, private productsService: ProductsService,private categoriesService: CategoriesService , private subCategoriesService: SubCategoriesService, private _formBuilder: FormBuilder, private _snackBar: MatSnackBar, private router: Router, private brandsService: BrandService, private vendorsService: VendorService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -44,6 +46,7 @@ export class EditProductComponent implements OnInit {
     this.getVendors();
     this.getBrands();
     this.color = colors;
+    this.country = countries;
     this.productsEditForm = this._formBuilder.group({
       productName:['', [Validators.required]],
       productDescription:['', [Validators.required]],
@@ -55,6 +58,13 @@ export class EditProductComponent implements OnInit {
       productSubCategory: ['', [Validators.required]],
       productBrand:['', [Validators.required]],
       vendor: ['', [Validators.required]],
+      unit: ['', [Validators.required]],
+      dimensions: this._formBuilder.group({
+        length:['', [Validators.required]],
+        breadth:['', [Validators.required]],
+        height: ['', [Validators.required]]
+      }),
+      weight: ['', [Validators.required]],
       tags:['', [Validators.required]],
       productCountry:['', [Validators.required]],
       manfactureDate:['', [Validators.required]],
@@ -334,6 +344,61 @@ export class EditProductComponent implements OnInit {
       return false;
     }
     return true;
+  }
+
+  hasFocus = false;
+
+  
+
+  quillConfig={
+    //toolbar: '.toolbar',
+    toolbar: {
+      container: [
+        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+        ['blockquote', 'code-block'],
+    
+        [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+        [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+        [{ 'direction': 'rtl' }],                         // text direction
+    
+        [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+    
+        [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+        [{ 'font': [] }],
+        [{ 'align': [] }],
+    
+        ['clean'],                                         // remove formatting button
+    
+        ['link', 'image', 'video']                         // link and image, video
+      ]
+      
+    },
+
+    
+  }
+
+  onSelectionChanged = (event: any) =>{
+    console.log(this.productsEditForm.value.productDescription)
+    if(event.oldRange == null){
+      this.onFocus();
+    }
+    if(event.range == null){
+      this.onBlur();
+    }
+  }
+
+  onContentChanged = (event) =>{
+    //console.log(event.html);
+  }
+
+  onFocus = () =>{
+    console.log("On Focus");
+  }
+  onBlur = () =>{
+    console.log("Blurred");
   }
 
 }

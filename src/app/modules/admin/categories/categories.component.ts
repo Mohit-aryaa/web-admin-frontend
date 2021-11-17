@@ -19,6 +19,9 @@ export class CategoriesComponent implements OnInit {
   dataSource = new MatTableDataSource<any>();
   @ViewChild('Paginator') Paginator!: MatPaginator;
   categoriesForm:FormGroup;
+  storeImg :any = File;
+  showPreview : boolean = false;
+  showImageBox: boolean = false;
   selectedCategory: any;
   previewImg: any;
   loading: boolean = false;
@@ -31,13 +34,21 @@ export class CategoriesComponent implements OnInit {
   userDataPromise: any;
   setBulkDeleteItems = [];
   setCheckInputs: any[];
+  url:any;
+  imgUploading: boolean = false;
+  ImageBox: any;
   constructor(private http: HttpClient, private modalService: NgbModal, private _formBuilder: FormBuilder, private categoryService: CategoriesService,private _snackBar: MatSnackBar) { }
 
-  displayedColumnsOne: string[] = ['check','name', 'description', 'action'];
+  displayedColumnsOne: string[] = ['check','banner', 'name', 'description', 'action'];
   ngOnInit(): void {
     this.categoriesForm = this._formBuilder.group({
       categoryName:['', [Validators.required]],
-      categoryDescription: ['', [Validators.required]]
+      categoryBannerPicture: [''],
+      categoryBanner: [''],
+      categoryDescription: ['', [Validators.required]],
+      metaTitle: ['', [Validators.required]],
+      metaDescription: ['', [Validators.required]],
+      seoUrl: ['', [Validators.required]]
     })
   }
 
@@ -52,7 +63,7 @@ export class CategoriesComponent implements OnInit {
       //console.log('getdata', res);
       this.loading = false;
       this.categories = res.Categories;
-      console.log('this.users', this.categories)
+      console.log('this.categories', this.categories)
       this.categories.length = res.total;
       this.dataSource = new MatTableDataSource<any>(this.categories);
       this.dataSource.paginator = this.Paginator;
@@ -108,10 +119,13 @@ export class CategoriesComponent implements OnInit {
   openModal(id = null) {
     this.selectedCategory = id;
     //console.log(data);
-    this.modalService.open(this.content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+    this.modalService.open(this.content, {size:'lg', ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
       // this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.categoriesForm.reset();
+      this.url = '';
+      this.showPreview = false;
+      this.showImageBox = false;
       // this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
 
     });
@@ -121,20 +135,45 @@ export class CategoriesComponent implements OnInit {
     console.log(data);
     this.openModal(data._id);
     this.categoriesForm.patchValue(data);
+    this.showImageBox = true;
+    this.ImageBox = data.categoryBanner;
+    console.log(this.ImageBox)
   }
 
-  postData() {
+  onSelectedImage(e: any) {
+      this.showPreview = true
+      const that = this;
+    //this.isUploading = true;
+      if (e.target.files && e.target.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function() {
+          that.url = reader.result;
+          //console.log(that.previewImg)
+        }
+        reader.readAsDataURL(e.target.files[0]);
+      }
+      this.storeImg = e.target.files[0];
+    
+  }
+
+  postFormInput() {
     this.categoriesForm.markAllAsTouched();
     if (this.categoriesForm.invalid) {
       console.log('this.categoriesForm', this.categoriesForm.value)
       return false;
     }
     if (this.selectedCategory) {
+      if(this.categoriesForm.value.categoryBannerPicture == '') {
+        this.categoriesForm.patchValue({
+          'categoryBanner': undefined
+        })
+      }
       this.categoryService.updateCategories(this.selectedCategory, this.categoriesForm.value).subscribe(
         (results: any) => {
           //console.log(results);
           this.modalService.dismissAll();
           this.categoriesForm.reset();
+          this.showImageBox = false;
           console.log(this.categories.length)
           
           this.getNextData()
@@ -144,22 +183,76 @@ export class CategoriesComponent implements OnInit {
           console.log(errors);
         }
       )
-    } else {
-      this.categoryService.addCategories(this.categoriesForm.value).subscribe(
-        (res: any) => {
-          console.log(res);
-          this.modalService.dismissAll();
-          this.categoriesForm.reset();
-          console.log(this.categories.length)
-          this.getNextData();
-          
-        },
-        errors => {
-          console.log(errors);
-        }
-      )
+    } else  {
+      if (this.showPreview == false ) {
+        this._snackBar.open('Banner is required',  '', {
+          duration: 2000,
+          verticalPosition: 'top'
+        })
+        return false
+      } else {
+        this.categoryService.addCategories(this.categoriesForm.value).subscribe(
+          (res: any) => {
+            console.log(res);
+            this.modalService.dismissAll();
+            this.categoriesForm.reset();
+            console.log(this.categories.length)
+            this.getNextData();
+            
+          },
+          errors => {
+            console.log(errors);
+          }
+        ) 
+      }    
     }
   }
+
+  postData() {
+    this.categoriesForm.markAllAsTouched();
+    if(this.categoriesForm.invalid) {
+      this._snackBar.open('All fields are required',  '', {
+        duration: 2000,
+        verticalPosition: 'top'
+      })
+      return false
+    }
+    console.log(this.storeImg)
+    const formData = new FormData();
+    
+    formData.append('images', this.storeImg) 
+    const filename = this.storeImg.name.split('.').pop(); 
+    const file = filename.toLowerCase(); 
+    console.log(formData)
+    this.imgUploading = true
+    if(this.categoriesForm.value.categoryBannerPicture !==  '') {
+      if(file.match(/png/g)  || file.match(/jpeg/g) || file.match(/jpg/g)) {
+        this.categoryService.uploadCategoryBanner(formData).subscribe((res:any)=> {
+          console.log(res)
+            this.categoriesForm.patchValue({
+              'categoryBanner': res.imagePath
+            })
+            this.imgUploading = false
+            this.postFormInput();
+            console.log(this.categoriesForm.value)
+          },(errors) => {
+            console.log(errors)
+        })
+      } else {
+        this._snackBar.open('Only jpg, png and jpeg formats are allowed',  '', {
+          duration: 2000,
+          verticalPosition: 'top'
+        })
+        console.log('Only jpg, png and jpeg formats are allowed')
+        console.log(file)
+        return false
+      } 
+    } else {
+      this.imgUploading = false;
+      this.postFormInput();
+    }
+  }
+  
 
   deleteCategory(deleteCategory: any) {
     //console.log(delSubCategory);
@@ -238,6 +331,57 @@ export class CategoriesComponent implements OnInit {
         verticalPosition: 'top'
       });
     }
+  }
+
+  hasFocus = false;
+
+  quillConfig={
+    //toolbar: '.toolbar',
+    toolbar: {
+      container: [
+        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+        ['blockquote', 'code-block'],
+    
+        [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+        [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+        [{ 'direction': 'rtl' }],                         // text direction
+    
+        [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+    
+        [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+        [{ 'font': [] }],
+        [{ 'align': [] }],
+    
+        ['clean'],                                         // remove formatting button
+    
+        ['link', 'image', 'video']                         // link and image, video
+      ]
+      
+    },
+  }
+
+  onSelectionChanged = (event: any) =>{
+    console.log(this.categoriesForm.value.categoryDescription)
+    if(event.oldRange == null){
+      this.onFocus();
+    }
+    if(event.range == null){
+      this.onBlur();
+    }
+  }
+
+  onContentChanged = (event) =>{
+    //console.log(event.html);
+  }
+
+  onFocus = () =>{
+    console.log("On Focus");
+  }
+  onBlur = () =>{
+    console.log("Blurred");
   }
 
 

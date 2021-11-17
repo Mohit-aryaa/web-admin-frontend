@@ -36,10 +36,7 @@ export class VendorComponent implements OnInit {
 
   displayedColumnsOne: string[] = ['check','name', 'status', 'action'];
   ngOnInit(): void {
-    this.vendorsForm = this._formBuilder.group({
-      name:['', [Validators.required]],
-      status: ['', [Validators.required]],
-    })
+    
     this.getData();
   }
 
@@ -190,43 +187,7 @@ export class VendorComponent implements OnInit {
     this.vendorsForm.patchValue(data);
   }
 
-  postData() {
-    this.vendorsForm.markAllAsTouched();
-    if (this.vendorsForm.invalid) {
-      console.log('this.vendors', this.vendorsForm.value)
-      return false;
-    }
-    if (this.selectedVendor) {
-      this.vendorsService.updateVendors(this.selectedVendor, this.vendorsForm.value).subscribe(
-        (results: any) => {
-          //console.log(results);
-          this.modalService.dismissAll();
-          this.vendorsForm.reset();
-          console.log(this.Vendors.length)
-          
-          this.getNextData()
-          
-        },
-        errors => {
-          console.log(errors);
-        }
-      )
-    } else {
-      this.vendorsService.addVendors(this.vendorsForm.value).subscribe(
-        (res: any) => {
-          console.log(res);
-          this.modalService.dismissAll();
-          this.vendorsForm.reset();
-          console.log(this.Vendors.length)
-          this.getNextData();
-          
-        },
-        errors => {
-          console.log(errors);
-        }
-      )
-    }
-  }
+  
 
   deleteVendors(deleteVendors: any) {
     //console.log(delsubsubCategories);

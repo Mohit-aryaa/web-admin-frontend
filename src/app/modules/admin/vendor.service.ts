@@ -18,6 +18,10 @@ export class VendorService {
      return this._http.get(this.api_url)
    }
 
+   showVendor(data:any) {
+     return this._http.get(this.api_url+'/'+data)
+   }
+
   addVendors(data: any) {
    return this._http.post(this.api_url, data);
   }

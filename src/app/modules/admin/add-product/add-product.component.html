@@ -22,23 +22,14 @@
                                             <label for="" class="mb-1"> Name</label>
                                             <input type="text" class="form-control" id="productName" name="productName" formControlName="productName" placeholder="John doe">
                                         </div>
-                                        <div class="form-group mb-3 col-md-6 col-12">
-                                            <label for="" class="mb-1"> Description</label>
-                                            <textarea style="height: 20px;" class="form-control" id="productDescription" name="productDescription" formControlName="productDescription" placeholder="John doe">
-                                                </textarea>
-                                        </div>
+                                       
                                         <div class="form-group mb-3 col-md-6 col-12">
                                             <label for="" class="mb-1"> Image</label>
                                             <input type="file" class="form-control" multiple  formControlName="productImagepicture" (change)="onSelectdProductImage($event)">
                                             <input type="text" class="form-control d-none"  formControlName="productImages" placeholder="John doe">
                                             
                                         </div>
-                                        
-                                        <div class="form-group mb-3 col-md-6 col-12">
-                                            <label for="" class="mb-1"> Product Code</label>
-                                            <input type="text" class="form-control" id="productCode" name="productCode" formControlName="productCode" placeholder="John doe">
-                                        </div>
-            
+
                                         <div [ngClass]="showPreview? 'd-block' : 'd-none' " class="my-3 col-12 form-group">
                                             <div class="row">
                                                 <div class="col-lg-4 col-md-6 my-2" *ngFor="let imgList of urls" >
@@ -47,6 +38,22 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                        
+
+                                        <div class="form-group mb-3 col-12 position-relative">
+                                            <label for="" class="mb-1"> Description</label>
+                                            <quill-editor formControlName="productDescription"  
+                                            placeholder="Enter Text"
+                                            [modules]="quillConfig"
+                                            (onSelectionChanged)="onSelectionChanged($event)"
+                                            (onContentChanged)="onContentChanged($event)"></quill-editor>
+                                            
+                                        </div>
+
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Product Code</label>
+                                            <input type="text" class="form-control" id="productCode" name="productCode" formControlName="productCode" placeholder="John doe">
                                         </div>
                                         
                                         <div class="form-group mb-3 col-md-6 col-12">
@@ -62,9 +69,16 @@
                                         </div>
                                         <div class="form-group mb-3 col-md-6 col-12">
                                             <label for="" class="mb-1"> Sub Category</label>
-                                            <select class="form-select" aria-label="Default select example" formControlName="productSubCategory" > 
+                                            <select class="form-select" aria-label="Default select example" formControlName="productSubCategory" (change)="getSubCategoryValue($event)"> 
                                                 <option value="" selected hidden disabled>Select</option>
                                                 <option *ngFor="let item2 of getSubCategoriesList; let i = index" [value]="item2._id" >{{item2.subCategoryName}}</option>
+                                            </select>    
+                                        </div>
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Sub Child Category</label>
+                                            <select class="form-select" aria-label="Default select example" formControlName="productSubChildCategory" > 
+                                                <option value="" selected hidden disabled>Select</option>
+                                                <option *ngFor="let getItem of getSubChildCategoriesList; let i = index" [value]="getItem._id" >{{getItem.subChildCategoryName}}</option>
                                             </select>    
                                         </div>
                                         <div class="form-group mb-3 col-md-6 col-12">
@@ -75,15 +89,35 @@
                                             </select>    
                                         </div>
                                         <div class="form-group mb-3 col-md-6 col-12">
-                                            <div class="form-group mb-3 col-12">
-                                                <label for="" class="mb-1"> Vendor</label>
-                                                <select class="form-select" aria-label="Default select example" formControlName="vendor">
-                                                    <option value="" selected hidden disabled>Select</option>
-                                                    <option *ngFor="let item4 of getVendorsList; let i = index" [value]="item4._id" >{{item4.name}}</option>
-                                                </select>    
-                                            </div>
+                                            <label for="" class="mb-1"> Vendor</label>
+                                            <select class="form-select" aria-label="Default select example" formControlName="vendor">
+                                                <option value="" selected hidden disabled>Select</option>
+                                                <option *ngFor="let item4 of getVendorsList; let i = index" [value]="item4._id" >{{item4.name}}</option>
+                                            </select>
                                         </div>
                                         <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Unit</label>
+                                            <input type="text" class="form-control" id="unit" name="unit" formControlName="unit" placeholder="Unit (e.g. Kg, Pc Etc.)"> 
+                                        </div>
+                                        <div class="form-group mb-3 col-md-6 col-12">
+                                                <label for="" class="mb-1"> Weight</label>
+                                                <input type="text" class="form-control" id="weight" name="weight" formControlName="weight" placeholder="Weight of product">
+                                        </div>
+                                        <div class="form-group mb-3  col-12">
+                                            <label for="" class="mb-1"> Dimensions</label>
+                                            <div formGroupName="dimensions" class="row" >
+                                               <div class="col-md-4 col-12">
+                                                <input type="text" class="form-control" id="length" name="length" formControlName="length" placeholder="length">   
+                                               </div>
+                                               <div class="col-md-4 col-12">
+                                                <input type="text" class="form-control" id="breadth" name="breadth" formControlName="breadth" placeholder="breadth">   
+                                               </div>
+                                               <div class="col-md-4 col-12">
+                                                <input type="text" class="form-control" id="height" name="height" formControlName="height" placeholder="height">   
+                                               </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-3 col-12">
                                             <label for="" class="mb-1"> Tags</label>
                                             <mat-form-field class="example-chip-list" appearance="fill">
                                                 <mat-chip-list #chipList aria-label="Fruit selection">
@@ -104,7 +138,10 @@
                                         </div>
                                         <div class="form-group mb-3 col-md-6 col-12">
                                             <label for="" class="mb-1"> Country of origin</label>
-                                            <input type="text" class="form-control" id="productCountry" name="productCountry" formControlName="productCountry" placeholder="country name">
+                                            <select class="form-select" aria-label="Default select example" formControlName="productCountry">
+                                                <option value="" selected hidden disabled>Select</option>
+                                                <option *ngFor="let countryName of country; let i = index" [value]="countryName.name" >{{countryName.name}}</option>
+                                            </select>
                                         </div>
                                         <div class="form-group mb-3 col-md-6 col-12">
                                             <label for="" class="mb-1"> Manfacture Date</label>
@@ -217,14 +254,14 @@
                                             <div class="me-3">
                                                 <img src="assets/images/logo/logo.svg" alt="" class="" style="width: 35px; top: 40px;">
                                             </div>
-                                        <div style="width: fit-content">
-                                                <div class="mt-3 mb-2 fw-bold h4 text-center">Customer Choice Options</div>
-                                                <div class="mx-auto bg-primary" style="height: 2px; width: 250px;"></div>
+                                            <div style="width: fit-content">
+                                                    <div class="mt-3 mb-2 fw-bold h4 text-center">Customer Choice Options</div>
+                                                    <div class="mx-auto bg-primary" style="height: 2px; width: 250px;"></div>
+                                            </div>
                                         </div>
-                                        </div>
-                                        <div formGroupName="customersOptions" class="row">
-                                            <<div class="form-group mb-3 col-md-6  col-12">
-                                                <label for="" class="mb-1"> Display Style</label>
+                                        <div formGroupName="customersOptions" class="row" >
+                                            <div class="form-group mb-3 col-md-6  col-12">
+                                                <label for="" class="mb-1">Display Style</label>
                                                 <mat-form-field appearance="fill">
                                                    <mat-select  formControlName="choiceStyle" >
                                                         <mat-option value="btns">Buttons</mat-option>

@@ -21,45 +21,39 @@
                                         <label for="" class="mb-1"> Name</label>
                                         <input type="text" class="form-control" id="productName" name="productName" formControlName="productName" placeholder="John doe">
                                     </div>
-                                    <div class="form-group mb-3 col-md-6 col-12">
-                                        <label for="" class="mb-1"> Description</label>
-                                        <textarea style="height: 20px;" class="form-control" id="productDescription" name="productDescription" formControlName="productDescription" placeholder="John doe">
-                                            </textarea>
-                                    </div>
+                                   
                                     <div class="form-group mb-3 col-md-6 col-12">
                                         <label for="" class="mb-1"> Image</label>
                                         <input type="file" class="form-control" multiple  formControlName="productImagepicture" (change)="onSelectdProductImage($event)">
                                         <input type="text" class="form-control d-none"  formControlName="productImages" placeholder="John doe">
                                         
                                     </div>
+
+                                    <div [ngClass]="showPreview? 'd-block' : 'd-none' " class="my-3 col-12 form-group">
+                                        <div class="row">
+                                            <div class="col-lg-4 col-md-6 my-2" *ngFor="let imgList of urls" >
+                                                <div class="col-12 rounded-lg shadow-lg p-2 border-4 border-blue-200 border-opacity-100">
+                                                    <img  [src]="imgList"  alt="" class="w-100">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     
+
+                                    <div class="form-group mb-3 col-12 position-relative">
+                                        <label for="" class="mb-1"> Description</label>
+                                        <quill-editor formControlName="productDescription"  
+                                        placeholder="Enter Text"
+                                        [modules]="quillConfig"
+                                        (onSelectionChanged)="onSelectionChanged($event)"
+                                        (onContentChanged)="onContentChanged($event)"></quill-editor>
+                                        
+                                    </div>
+
                                     <div class="form-group mb-3 col-md-6 col-12">
                                         <label for="" class="mb-1"> Product Code</label>
                                         <input type="text" class="form-control" id="productCode" name="productCode" formControlName="productCode" placeholder="John doe">
                                     </div>
-
-                                    <div [ngClass]="showPreview? 'd-block' : 'd-none' " class="my-3 col-12 form-group">
-                                        <div class="row">
-                                             <div class="col-lg-4  col-md-6 my-2" *ngFor="let imgList of urls" >
-                                                <div class="col-12 rounded-lg shadow-lg p-2 border-4 border-blue-200 border-opacity-100">
-                                                     <img  [src]="imgList"  alt="" class="w-100">
-                                                </div>
-                                             </div>
-                                        </div>
-                                     </div>
-                                     <div class="form-group col-12">
-                                         <div class="mt-3 mb-1 h5">Product Images</div>
-                                         <div class="row">
-                                            <div class="col-lg-3 col-md-6 my-3 position-relative" *ngFor="let images of getProductImages; let i = index" >
-                                                <button mat-mini-fab color="warn" class="remove-images" aria-label="Example icon button with a home icon" (click)="removeImage(getProductImages[i] )">
-                                                    <mat-icon >remove_circle_outline</mat-icon>
-                                                  </button>
-                                                <div class="col-12 rounded-lg shadow-lg p-2 border-4 border-blue-200 border-opacity-100">
-                                                     <img  src="http://localhost:3000/{{images}}"  alt="" class="w-100">
-                                                </div>
-                                             </div>
-                                         </div>
-                                     </div>
                                     
                                     <div class="form-group mb-3 col-md-6 col-12">
                                         <label for="" class="mb-1"> Product Model</label>
@@ -87,15 +81,35 @@
                                         </select>    
                                     </div>
                                     <div class="form-group mb-3 col-md-6 col-12">
-                                        <div class="form-group mb-3 col-12">
-                                            <label for="" class="mb-1"> Vendor</label>
-                                            <select class="form-select" aria-label="Default select example" formControlName="vendor">
-                                                <option value="" selected hidden disabled>Select</option>
-                                                <option *ngFor="let item4 of getVendorsList; let i = index" [value]="item4._id" >{{item4.name}}</option>
-                                            </select>    
-                                        </div>
+                                        <label for="" class="mb-1"> Vendor</label>
+                                        <select class="form-select" aria-label="Default select example" formControlName="vendor">
+                                            <option value="" selected hidden disabled>Select</option>
+                                            <option *ngFor="let item4 of getVendorsList; let i = index" [value]="item4._id" >{{item4.name}}</option>
+                                        </select>
                                     </div>
                                     <div class="form-group mb-3 col-md-6 col-12">
+                                        <label for="" class="mb-1"> Unit</label>
+                                        <input type="text" class="form-control" id="unit" name="unit" formControlName="unit" placeholder="Unit (e.g. Kg, Pc Etc.)"> 
+                                    </div>
+                                    <div class="form-group mb-3 col-md-6 col-12">
+                                            <label for="" class="mb-1"> Weight</label>
+                                            <input type="text" class="form-control" id="weight" name="weight" formControlName="weight" placeholder="Weight of product">
+                                    </div>
+                                    <div class="form-group mb-3  col-12">
+                                        <label for="" class="mb-1"> Dimensions</label>
+                                        <div formGroupName="customersOptions" class="row" >
+                                           <div class="col-md-4 col-12">
+                                            <input type="text" class="form-control" id="length" name="length" formControlName="weight" placeholder="length">   
+                                           </div>
+                                           <div class="col-md-4 col-12">
+                                            <input type="text" class="form-control" id="breadth" name="breadth" formControlName="breadth" placeholder="breadth">   
+                                           </div>
+                                           <div class="col-md-4 col-12">
+                                            <input type="text" class="form-control" id="height" name="height" formControlName="height" placeholder="height">   
+                                           </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3 col-12">
                                         <label for="" class="mb-1"> Tags</label>
                                         <mat-form-field class="example-chip-list" appearance="fill">
                                             <mat-chip-list #chipList aria-label="Fruit selection">
@@ -116,7 +130,10 @@
                                     </div>
                                     <div class="form-group mb-3 col-md-6 col-12">
                                         <label for="" class="mb-1"> Country of origin</label>
-                                        <input type="text" class="form-control" id="productCountry" name="productCountry" formControlName="productCountry" placeholder="country name">
+                                        <select class="form-select" aria-label="Default select example" formControlName="productCountry">
+                                            <option value="" selected hidden disabled>Select</option>
+                                            <option *ngFor="let countryName of country; let i = index" [value]="countryName.name" >{{countryName.name}}</option>
+                                        </select>
                                     </div>
                                     <div class="form-group mb-3 col-md-6 col-12">
                                         <label for="" class="mb-1"> Manfacture Date</label>

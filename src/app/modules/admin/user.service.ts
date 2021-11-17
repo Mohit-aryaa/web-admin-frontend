@@ -26,4 +26,5 @@ export class UserService {
   filterUser(data:any) {
     return this._httpClient.get(this.api_url+'?filter='+ data);
   }
+  
 }

@@ -1,16 +1,4 @@
-@import "~quill/dist/quill.bubble.css";
-@import "~quill/dist/quill.snow.css";
-
-::ng-deep .ql-container {
-    height: auto!important;
-}
-::ng-deep .ql-container .ql-editor {
-    min-height: 200px!important;
-    max-height: 200px!important;
-    height: 200px!important;
-}
-
-.products-form-wrapper {
+vendors-form-wrapper {
     border-radius: 10px;
 }
 
@@ -20,7 +8,7 @@
 .ng-invalid.ng-touched {
     border-color: #dc3545 !important
 }
-.productsForms label {
+.venodorsForms label {
     color: #817777!important;
     
 }

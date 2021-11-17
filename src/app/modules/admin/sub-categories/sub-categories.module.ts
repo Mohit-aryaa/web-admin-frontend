@@ -16,6 +16,7 @@ import { DataTablesModule } from 'angular-datatables';
 import { SharedModule } from 'app/shared/shared.module';
 import { RouterModule } from '@angular/router';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { QuillModule } from 'ngx-quill';
 
 
 
@@ -44,7 +45,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     DataTablesModule,
     NgxDatatableModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    QuillModule
   ]
 })
 export class SubCategoriesModule { }

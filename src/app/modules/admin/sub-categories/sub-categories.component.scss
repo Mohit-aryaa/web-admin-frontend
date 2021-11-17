@@ -4,3 +4,15 @@
 ::ng-deep .mat-simple-snackbar {
     justify-content: center!important;
 }
+::ng-deep .cdk-overlay-container {
+    z-index: 100000!important;
+}
+
+::ng-deep .ql-container {
+    height: auto!important;
+}
+::ng-deep .ql-container .ql-editor {
+    min-height: 200px!important;
+    max-height: 200px!important;
+    height: 200px!important;
+}

@@ -1,10 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EditBundleProductComponent } from './edit-bundle-product.component';
-import { MatSelectModule } from '@angular/material/select';
+import { SubChildCategoryComponent } from './sub-child-category.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,23 +16,21 @@ import { RouterModule } from '@angular/router';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { DataTablesModule } from 'angular-datatables';
 import { SharedModule } from 'app/shared/shared.module';
-import { EditProductComponent } from '../edit-product/edit-product.component';
-import { MatTabsModule } from '@angular/material/tabs';
 import { QuillModule } from 'ngx-quill';
 
 
 
 @NgModule({
   declarations: [
-    EditBundleProductComponent
+    SubChildCategoryComponent
   ],
   imports: [
     CommonModule,
-    RouterModule.forChild([
-      {
-        path:'', component: EditBundleProductComponent
-      }
-    ]),
+    RouterModule.forChild(
+      [
+        {path: '', component: SubChildCategoryComponent}
+      ]
+    ),
     SharedModule,
     MatTableModule,
     MatButtonModule,
@@ -50,10 +46,7 @@ import { QuillModule } from 'ngx-quill';
     NgxDatatableModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    MatTabsModule,
-    MatSelectModule,
-    MatChipsModule,
     QuillModule
   ]
 })
-export class EditBundleProductModule { }
+export class SubChildCategoryModule { }

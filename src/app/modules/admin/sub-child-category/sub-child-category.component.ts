@@ -1,34 +1,36 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { lowerCase } from 'lodash';
 import { CategoriesService } from '../categories.service';
 import { SubCategoriesService } from '../sub-Categories.service';
+import { SubChildCategoryService } from '../sub-child-category.service';
 
 @Component({
-  selector: 'app-sub-Categories',
-  templateUrl: './sub-Categories.component.html',
-  styleUrls: ['./sub-Categories.component.scss']
+  selector: 'app-sub-child-category',
+  templateUrl: './sub-child-category.component.html',
+  styleUrls: ['./sub-child-category.component.scss']
 })
-export class SubCategoriesComponent implements OnInit {
+export class SubChildCategoryComponent implements OnInit {
 
+ 
 
   @ViewChild('content') content:any
   @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<any>();
   @ViewChild('Paginator') Paginator!: MatPaginator;
-  subCategoriesForm:FormGroup;
+  subChildCategoriesForm:FormGroup;
   seletedSubCategory: any;
   previewImg: any;
   loading: boolean = false;
-  subCategories: any[];
   setBulkDeleteItems = [];
   getCategoriesList :any[];
+  subChildCategories: any[];
+  getSubCategoriesList: any[];
   tablePaging = {
     offset: 0,
     limit: 5,
@@ -41,16 +43,17 @@ export class SubCategoriesComponent implements OnInit {
   url: any;
   ImageBox: any;
   imgUploading : boolean = false;
-  constructor(private http: HttpClient, private modalService: NgbModal, private _formBuilder: FormBuilder, private categoriesService: CategoriesService , private subCategoriesService: SubCategoriesService, private _snackBar: MatSnackBar) { }
+  constructor(private http: HttpClient, private modalService: NgbModal, private _formBuilder: FormBuilder, private categoriesService: CategoriesService , private subCategoriesService: SubCategoriesService, private subChildCategoryService: SubChildCategoryService, private _snackBar: MatSnackBar) { }
 
-  displayedColumnsOne: string[] = ['check', 'banner','name', 'description', 'category', 'action'];
+  displayedColumnsOne: string[] = ['check', 'banner', 'name', 'description', 'category', 'subCategory', 'action'];
   ngOnInit(): void {
-    this.subCategoriesForm = this._formBuilder.group({
-      subCategoryName:['', [Validators.required]],
+    this.subChildCategoriesForm = this._formBuilder.group({
+      subChildCategoryName:['', [Validators.required]],
       category: ['', [Validators.required]],
-      subCategoryBannerPicture: [''],
-      subCategoryBanner: [''],
-      subCategoryDescription: ['', [Validators.required]],
+      subCategory: ['', [Validators.required]],
+      subChildCategoryBannerPicture: [''],
+      subChildCategoryBanner: [''],
+      subChildCategoryDescription: ['', [Validators.required]],
       metaTitle: ['', [Validators.required]],
       metaDescription: ['', [Validators.required]],
       seoUrl: ['', [Validators.required]]
@@ -71,14 +74,29 @@ export class SubCategoriesComponent implements OnInit {
     })
   }
 
+  getCategoryValue(e:any) {
+    console.log(e.target.value)
+    this.getSubCategories(e.target.value)
+  }
+
+  getSubCategories(data: any) {
+    this.subCategoriesService.getDataByCategoryId(data).subscribe((res: any) => {
+      console.log(res)
+      this.getSubCategoriesList = res.SubCategory;
+      console.log('getSubCategoriesList',this.getSubCategoriesList)
+    }, (errors:any) => {
+      console.log(errors)
+    })
+  }
+
   getData() {
-    this.subCategoriesService.getSubCategories({ params: this.tablePaging }).subscribe((res: any) => {
+    this.subChildCategoryService.getSubChildCategories({ params: this.tablePaging }).subscribe((res: any) => {
       //console.log('getdata', res);
       this.loading = false;
-      this.subCategories = res.SubCategories;
-      console.log('this.subCategories', this.subCategories)
-      this.subCategories.length = res.total;
-      this.dataSource = new MatTableDataSource<any>(this.subCategories);
+      this.subChildCategories = res.SubChildCategories;
+      console.log('this.subCategories', this.subChildCategories)
+      this.subChildCategories.length = res.total;
+      this.dataSource = new MatTableDataSource<any>(this.subChildCategories);
       this.dataSource.paginator = this.Paginator;
     })
   }
@@ -88,14 +106,14 @@ export class SubCategoriesComponent implements OnInit {
     if(this.userDataPromise){
       this.userDataPromise.unsubscribe();
     }
-    this.userDataPromise = this.subCategoriesService.getSubCategories({ params: this.tablePaging }).subscribe((response: any) => {
+    this.userDataPromise = this.subChildCategoryService.getSubChildCategories({ params: this.tablePaging }).subscribe((response: any) => {
         this.loading = false;
-        console.log(response.SubCategories)
-        this.subCategories.length = this.tablePaging['previousSize'];
-        this.subCategories.push(...response.SubCategories);
+        console.log(response.SubChildCategories)
+        this.subChildCategories.length = this.tablePaging['previousSize'];
+        this.subChildCategories.push(...response.SubChildCategories);
 
-        this.subCategories.length = response.total;
-        this.dataSource = new MatTableDataSource<any>(this.subCategories);
+        this.subChildCategories.length = response.total;
+        this.dataSource = new MatTableDataSource<any>(this.subChildCategories);
         this.dataSource._updateChangeSubscription();
         this.dataSource.paginator = this.Paginator;
 
@@ -119,12 +137,12 @@ export class SubCategoriesComponent implements OnInit {
     console.log('this.tablePaging', this.tablePaging);
     var filterData = filterValue.trim().toLowerCase();
     //this.getNextData();
-    this.userDataPromise = this.subCategoriesService.filterSubCategories(filterData).subscribe((res: any) => {
+    this.userDataPromise = this.subChildCategoryService.filterSubChildCategories(filterData).subscribe((res: any) => {
       this.loading = false;
-      this.subCategories = res.SubCategories;
-      console.log('this.Products', this.subCategories)
-      this.subCategories.length = res.total;
-      this.dataSource = new MatTableDataSource<any>(this.subCategories);
+      this.subChildCategories = res.SubChildCategories;
+      console.log('this.subChildCategories', this.subChildCategories)
+      this.subChildCategories.length = res.total;
+      this.dataSource = new MatTableDataSource<any>(this.subChildCategories);
       this.dataSource.paginator = this.Paginator;
     })
   }
@@ -135,7 +153,7 @@ export class SubCategoriesComponent implements OnInit {
     this.modalService.open(this.content, {size: 'lg', ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
       // this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
-      this.subCategoriesForm.reset();
+      this.subChildCategoriesForm.reset();
       this.url = '';
       this.showPreview = false;
       this.showImageBox = false;
@@ -147,12 +165,15 @@ export class SubCategoriesComponent implements OnInit {
   openUpdateModal(data: any) {
     console.log(data);
     this.openModal(data._id);
-    this.subCategoriesForm.patchValue(data);
-    this.subCategoriesForm.patchValue({
+    this.subChildCategoriesForm.patchValue(data);
+    this.subChildCategoriesForm.patchValue({
       'category': data.category._id
     })
+    this.subChildCategoriesForm.patchValue({
+      'subCategory': data.subCategory._id
+    })
     this.showImageBox = true;
-    this.ImageBox = data.subCategoryBanner;
+    this.ImageBox = data.subChildCategoryBanner;
   }
 
   onSelectedImage(e: any) {
@@ -172,23 +193,23 @@ export class SubCategoriesComponent implements OnInit {
 }
 
 postFormInput() {
-    this.subCategoriesForm.markAllAsTouched();
-    if (this.subCategoriesForm.invalid) {
-      console.log('this.subCategoriesForm', this.subCategoriesForm.value)
+    this.subChildCategoriesForm.markAllAsTouched();
+    if (this.subChildCategoriesForm.invalid) {
+      console.log('this.subChildCategoriesForm', this.subChildCategoriesForm.value)
       return false;
     }
     if (this.seletedSubCategory) {
-      if(this.subCategoriesForm.value.subCategoryBannerPicture == '') {
-        this.subCategoriesForm.patchValue({
-          'subCategoryBanner': undefined
+      if(this.subChildCategoriesForm.value.subChildCategoryBannerPicture == '') {
+        this.subChildCategoriesForm.patchValue({
+          'subChildCategoryBanner': undefined
         })
       }
-      this.subCategoriesService.updateSubCategories(this.seletedSubCategory, this.subCategoriesForm.value).subscribe(
+      this.subChildCategoryService.updateSubChildCategories(this.seletedSubCategory, this.subChildCategoriesForm.value).subscribe(
         (results: any) => {
           //console.log(results);
           this.modalService.dismissAll();
-          this.subCategoriesForm.reset();
-          console.log(this.subCategories.length)
+          this.subChildCategoriesForm.reset();
+          console.log(this.subChildCategories.length) 
           this.getNextData()
           
         },
@@ -203,13 +224,13 @@ postFormInput() {
           verticalPosition: 'top'
         })
         return false
-      } else { 
-        this.subCategoriesService.addSubCategories(this.subCategoriesForm.value).subscribe(
+      } else {
+        this.subChildCategoryService.addSubChildCategories(this.subChildCategoriesForm.value).subscribe(
           (res: any) => {
             console.log(res);
             this.modalService.dismissAll();
-            this.subCategoriesForm.reset();
-            console.log(this.subCategories.length)
+            this.subChildCategoriesForm.reset();
+            console.log(this.subChildCategories.length)
             this.getNextData();
             
           },
@@ -222,8 +243,8 @@ postFormInput() {
   }
 
   postData() {
-    this.subCategoriesForm.markAllAsTouched();
-    if(this.subCategoriesForm.invalid) {
+    this.subChildCategoriesForm.markAllAsTouched();
+    if(this.subChildCategoriesForm.invalid) {
       this._snackBar.open('All fields are required',  '', {
         duration: 2000,
         verticalPosition: 'top'
@@ -232,22 +253,24 @@ postFormInput() {
     }
     console.log(this.storeImg)
     const formData = new FormData();
-       
+     
+    
+    
     formData.append('images', this.storeImg) 
     const filename = this.storeImg.name.split('.').pop(); 
-    const file = filename.toLowerCase()
+    const file = filename.toLowerCase();
     console.log(formData)
     this.imgUploading = true
-    if(this.subCategoriesForm.value.subCategoryBannerPicture !==  '') {
+    if(this.subChildCategoriesForm.value.subChildCategoryBannerPicture !==  '') {
       if(file.match(/png/g)  || file.match(/jpeg/g) || file.match(/jpg/g)) {
         this.subCategoriesService.uploadCategoryBanner(formData).subscribe((res:any)=> {
           console.log(res)
-            this.subCategoriesForm.patchValue({
-              'subCategoryBanner': res.imagePath
+            this.subChildCategoriesForm.patchValue({
+              'subChildCategoryBanner': res.imagePath
             })
             this.imgUploading = false
             this.postFormInput();
-            console.log(this.subCategoriesForm.value)
+            console.log(this.subChildCategoriesForm.value)
           },(errors) => {
             console.log(errors)
         })
@@ -261,7 +284,7 @@ postFormInput() {
         return false
       } 
     } else {
-      this.imgUploading = false
+      this.imgUploading = false;
       this.postFormInput();
     }
   }
@@ -376,7 +399,7 @@ postFormInput() {
   }
 
   onSelectionChanged = (event: any) =>{
-    console.log(this.subCategoriesForm.value.categoryDescription)
+    console.log(this.subChildCategoriesForm.value.categoryDescription)
     if(event.oldRange == null){
       this.onFocus();
     }

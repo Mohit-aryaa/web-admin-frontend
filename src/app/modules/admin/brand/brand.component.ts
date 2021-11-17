@@ -32,13 +32,24 @@ export class BrandComponent implements OnInit {
   };
   userDataPromise: any;
   setBulkDeleteItems = [];
+  showPreview: Boolean = false;
+  url: any;
+  storeImg :any = File;
+  imgUploading: Boolean = false;
+  ImageBox: any;
+  showImageBox: boolean = false;
   constructor(private http: HttpClient, private modalService: NgbModal, private _formBuilder: FormBuilder, private brandsService: BrandService, private _snackBar: MatSnackBar) { }
 
-  displayedColumnsOne: string[] = ['check','name', 'description', 'action'];
+  displayedColumnsOne: string[] = ['check','banner', 'name', 'description', 'action'];
   ngOnInit(): void {
     this.brandsForm = this._formBuilder.group({
       brandName:['', [Validators.required]],
       brandDescription: ['', [Validators.required]],
+      brandBannerPicture: [''],
+      brandBanner : [''],
+      metaTitle: ['', [Validators.required]],
+      metaDescription: ['', [Validators.required]],
+      seoUrl: ['', [Validators.required]],
     })
     this.getData();
   }
@@ -173,10 +184,13 @@ export class BrandComponent implements OnInit {
   openModal(id = null) {
     this.selectedBrand = id;
     //console.log(data);
-    this.modalService.open(this.content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+    this.modalService.open(this.content, {size: 'lg', ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
       // this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.brandsForm.reset();
+      this.url = '';
+      this.showPreview = false;
+      this.showImageBox = false;
       // this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
 
     });
@@ -186,15 +200,40 @@ export class BrandComponent implements OnInit {
     console.log(data);
     this.openModal(data._id);
     this.brandsForm.patchValue(data);
+    this.showImageBox = true;
+    this.ImageBox = data.brandBanner;
+    console.log(this.ImageBox)
   }
 
-  postData() {
+  onSelectedImage(e: any) {
+    this.showPreview = true
+    const that = this;
+  //this.isUploading = true;
+    if (e.target.files && e.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function() {
+        that.url = reader.result;
+        //console.log(that.previewImg)
+      }
+      reader.readAsDataURL(e.target.files[0]);
+    }
+    this.storeImg = e.target.files[0];
+  
+}
+
+  postFormInput() {
     this.brandsForm.markAllAsTouched();
     if (this.brandsForm.invalid) {
       console.log('this.subCategoriesForm', this.brandsForm.value)
       return false;
     }
     if (this.selectedBrand) {
+      if(this.brandsForm.value.brandBannerPicture == '') {
+        this.brandsForm.patchValue({
+          'brandBanner': undefined
+        })
+      }
+      console.log(this.brandsForm.value)
       this.brandsService.updateBrands(this.selectedBrand, this.brandsForm.value).subscribe(
         (results: any) => {
           //console.log(results);
@@ -210,19 +249,71 @@ export class BrandComponent implements OnInit {
         }
       )
     } else {
-      this.brandsService.addBrands(this.brandsForm.value).subscribe(
-        (res: any) => {
-          console.log(res);
-          this.modalService.dismissAll();
-          this.brandsForm.reset();
-          console.log(this.Brands.length)
-          this.getNextData();
-          
-        },
-        errors => {
-          console.log(errors);
-        }
-      )
+      if (this.showPreview == false ) {
+        this._snackBar.open('Banner is required',  '', {
+          duration: 2000,
+          verticalPosition: 'top'
+        })
+        return false
+      } else {
+        this.brandsService.addBrands(this.brandsForm.value).subscribe(
+          (res: any) => {
+            console.log(res);
+            this.modalService.dismissAll();
+            this.brandsForm.reset();
+            console.log(this.Brands.length)
+            this.getNextData();
+            
+          },
+          errors => {
+            console.log(errors);
+          }
+        )
+      }
+    }
+  }
+
+  postData() {
+    this.brandsForm.markAllAsTouched();
+    if(this.brandsForm.invalid) {
+      this._snackBar.open('All fields are required',  '', {
+        duration: 2000,
+        verticalPosition: 'top'
+      })
+      return false
+    }
+    console.log(this.storeImg)
+    const formData = new FormData();
+    formData.append('images', this.storeImg) 
+    const filename = this.storeImg.name.split('.').pop(); 
+    const file = filename.toLowerCase(); 
+    console.log(formData)
+    this.imgUploading = true
+    if(this.brandsForm.value.brandBannerPicture !==  '') {
+      if(file.match(/png/g)  || file.match(/jpeg/g) || file.match(/jpg/g)) {
+        this.brandsService.uploadBrandBanner(formData).subscribe((res:any)=> {
+          console.log(res)
+            this.brandsForm.patchValue({
+              'brandBanner': res.imagePath
+            })
+            this.imgUploading = false
+            this.postFormInput();
+            console.log(this.brandsForm.value)
+          },(errors) => {
+            console.log(errors)
+        })
+      } else {
+        this._snackBar.open('Only jpg, png and jpeg formats are allowed',  '', {
+          duration: 2000,
+          verticalPosition: 'top'
+        })
+        console.log('Only jpg, png and jpeg formats are allowed')
+        console.log(file)
+        return false
+      } 
+    } else {
+      this.imgUploading = false;
+      this.postFormInput();
     }
   }
 

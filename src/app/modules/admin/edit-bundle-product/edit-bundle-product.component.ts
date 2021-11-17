@@ -57,6 +57,13 @@ export class EditBundleProductComponent implements OnInit {
       productSubCategory: ['', [Validators.required]],
       productBrand:['', [Validators.required]],
       vendor: ['', [Validators.required]],
+      unit: ['', [Validators.required]],
+      dimensions: this._formBuilder.group({
+        length:['', [Validators.required]],
+        breadth:['', [Validators.required]],
+        height: ['', [Validators.required]]
+      }),
+      weight: ['', [Validators.required]],
       tags:['', [Validators.required]],
       stock: ['', [Validators.required]],
       todaysDeal:[false, ],
