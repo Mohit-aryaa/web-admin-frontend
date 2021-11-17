@@ -6,8 +6,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { StockLogsService } from '../stock-logs.service';
-import { StockService } from '../stock.service';
+import { StockLogsService } from '../../services/stock-logs.service';
+import { StockService } from '../../services//stock.service';
 
 @Component({
   selector: 'app-stock-logs',

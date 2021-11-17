@@ -3,16 +3,16 @@ import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material/chips';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BrandService } from '../brand.service';
-import { CategoriesService } from '../categories.service';
-import { ProductsService } from '../products.service';
-import { SubCategoriesService } from '../sub-Categories.service';
-import { VendorService } from '../vendor.service';
+import { BrandService } from '../../services/brand.service';
+import { CategoriesService } from '../../services//categories.service';
+import { ProductsService } from '../../services/products.service';
+import { SubCategoriesService } from '../../services//sub-Categories.service';
+import { VendorService } from '../../services/vendor.service';
 import { HttpClient } from '@angular/common/http';
 import { colors } from "../colors";
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { countries } from "../country";
-import { SubChildCategoryService } from '../sub-child-category.service';
+import { SubChildCategoryService } from '../../services/sub-child-category.service';
 @Component({
   selector: 'app-add-product',
   templateUrl: './add-product.component.html',

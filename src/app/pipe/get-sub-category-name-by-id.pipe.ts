@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Pipe, PipeTransform } from '@angular/core';
-import { CategoriesService } from 'app/modules/admin/categories.service';
-import { SubCategoriesService } from 'app/modules/admin/sub-Categories.service';
+import { SubCategoriesService } from '.././modules/services/sub-categories.service';
 
 @Pipe({
   name: 'getSubCategoryNameById'

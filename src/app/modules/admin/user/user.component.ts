@@ -6,8 +6,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from 'app/core/auth/auth.service';
-import { UserService } from 'app/modules/admin/user.service';
-import { RolesService } from '../roles.service';
+import { UserService } from '../../services//user.service';
+import { RolesService } from '../../services/roles.service';
 
 @Component({
   selector: 'app-user',

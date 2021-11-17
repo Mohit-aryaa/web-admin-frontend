@@ -15,6 +15,10 @@ export class BrandService {
     return this._http.get(this.api_url+'?offset='+data.params.offset+'&limit='+data.params.limit+'&previousSize='+data.params.previousSize);
    }
 
+   getImg(data: any) {
+     return this._http.get(this.api_url+`/file/${data}`)
+   }
+
    listBrands() {
     return this._http.get(this.api_url);
    }

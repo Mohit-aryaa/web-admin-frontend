@@ -6,9 +6,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CategoriesService } from '../categories.service';
-import { SubCategoriesService } from '../sub-Categories.service';
-import { SubChildCategoryService } from '../sub-child-category.service';
+import { CategoriesService } from '../../services/categories.service';
+import { SubCategoriesService } from '../../services/sub-Categories.service';
+import { SubChildCategoryService } from '../../services/sub-child-category.service';
 
 @Component({
   selector: 'app-sub-child-category',

@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { BrandService } from '../brand.service';
+import { BrandService } from '../../services/brand.service';
 
 @Component({
   selector: 'app-brand',
@@ -284,7 +284,7 @@ export class BrandComponent implements OnInit {
     }
     console.log(this.storeImg)
     const formData = new FormData();
-    formData.append('images', this.storeImg) 
+    formData.append('file', this.storeImg) 
     const filename = this.storeImg.name.split('.').pop(); 
     const file = filename.toLowerCase(); 
     console.log(formData)
@@ -292,7 +292,7 @@ export class BrandComponent implements OnInit {
     if(this.brandsForm.value.brandBannerPicture !==  '') {
       if(file.match(/png/g)  || file.match(/jpeg/g) || file.match(/jpg/g)) {
         this.brandsService.uploadBrandBanner(formData).subscribe((res:any)=> {
-          console.log(res)
+          console.log(res.imagePath)
             this.brandsForm.patchValue({
               'brandBanner': res.imagePath
             })

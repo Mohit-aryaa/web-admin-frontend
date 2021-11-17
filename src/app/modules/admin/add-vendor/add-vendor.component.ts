@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTabChangeEvent } from '@angular/material/tabs';
-import { VendorService } from '../vendor.service';
+import { VendorService } from '../../services/vendor.service';
 
 @Component({
   selector: 'app-add-vendor',

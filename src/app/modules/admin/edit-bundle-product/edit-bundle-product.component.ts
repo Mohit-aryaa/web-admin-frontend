@@ -4,12 +4,12 @@ import {MatChipInputEvent} from '@angular/material/chips';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BrandService } from '../brand.service';
-import { CategoriesService } from '../categories.service';
-import { ProductsService } from '../products.service';
-import { SubCategoriesService } from '../sub-Categories.service';
-import { VendorService } from '../vendor.service';
-import { BundleProductService } from '../bundle-product.service';
+import { BrandService } from '../../services/brand.service';
+import { CategoriesService } from '../../services/categories.service';
+import { ProductsService } from '../../services/products.service';
+import { SubCategoriesService } from '../../services/sub-Categories.service';
+import { VendorService } from '../../services/vendor.service';
+import { BundleProductService } from '../../services/bundle-product.service';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { colors } from "../colors";
 @Component({

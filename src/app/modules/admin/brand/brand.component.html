@@ -43,7 +43,7 @@
                         </ng-container>
                         <ng-container matColumnDef="banner">
                             <th mat-header-cell *matHeaderCellDef> Banner</th>
-                            <td mat-cell *matCellDef="let element"><img src="http://localhost:3000/{{element.brandBanner}}" style="width:100px;" class="py-1" alt=""></td>
+                            <td mat-cell *matCellDef="let element">{{element.brandBanner}}<img src="{{element.brandBanner}}" style="width:100px;" class="py-1" alt=""></td>
                         </ng-container>
                         <ng-container matColumnDef="name">
                             <th mat-header-cell *matHeaderCellDef> Name</th>

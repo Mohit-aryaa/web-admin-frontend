@@ -6,8 +6,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { BundleProductService } from '../bundle-product.service';
-import { ProductsService } from '../products.service';
+import { BundleProductService } from '../../services/bundle-product.service';
+import { ProductsService } from '../../services/products.service';
 
 @Component({
   selector: 'app-bundle-products',

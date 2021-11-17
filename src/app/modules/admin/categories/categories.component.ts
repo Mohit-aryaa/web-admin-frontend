@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CategoriesService } from '../categories.service';
+import { CategoriesService } from '../../services/categories.service';
 
 @Component({
   selector: 'app-categories',
