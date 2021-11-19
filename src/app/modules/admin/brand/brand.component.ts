@@ -59,6 +59,7 @@ export class BrandComponent implements OnInit {
   }
 
   checkAllDeleteItems(e:any) {
+    this.setBulkDeleteItems = [];
     var items:any =  document.getElementsByClassName("deleteChecks");
     if(e.target.checked) {
       for (let i = 0; i < items.length; i++) {
@@ -66,7 +67,7 @@ export class BrandComponent implements OnInit {
         element.checked = true
         let getId = element.getAttribute('id')
         this.setBulkDeleteItems.push(getId)
-      
+
       }
     } else {
       for (let i = 0; i < items.length; i++) {
@@ -196,7 +197,7 @@ export class BrandComponent implements OnInit {
       reader.readAsDataURL(e.target.files[0]);
     }
     this.storeImg = e.target.files[0];
-  
+
 }
 
   postFormInput() {
@@ -206,7 +207,7 @@ export class BrandComponent implements OnInit {
       return false;
     }
     if (this.selectedBrand) {
-      if(this.brandsForm.value.brandBannerPicture == '') {
+      if(this.showPreview == false) {
         this.brandsForm.patchValue({
           'brandBanner': undefined
         })
@@ -253,12 +254,13 @@ export class BrandComponent implements OnInit {
       })
       return false
     }
+
+    if(this.showPreview == true) {
     const formData = new FormData();
-    formData.append('banner', this.storeImg) 
-    const filename = this.storeImg.name.split('.').pop(); 
+    formData.append('banner', this.storeImg)
+    const filename = this.storeImg.name.split('.').pop();
     const file = filename.toLowerCase();
     this.imgUploading = true
-    if(this.brandsForm.value.brandBannerPicture !==  '') {
       if(file.match(/png/g)  || file.match(/jpeg/g) || file.match(/jpg/g)) {
         this.brandsService.uploadBrandBanner(formData).subscribe((res:any)=> {
           console.log(res.imagePath)
@@ -276,7 +278,7 @@ export class BrandComponent implements OnInit {
           verticalPosition: 'top'
         })
         return false
-      } 
+      }
     } else {
       this.imgUploading = false;
       this.postFormInput();

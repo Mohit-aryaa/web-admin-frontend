@@ -4,49 +4,49 @@ import { environment } from 'environments/environment';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class CategoriesService {
+    constructor(private _http: HttpClient) { }
 
-  constructor(private _http: HttpClient) { }
+    apiUrl: string = environment.apiUrl;
+    api_url = `${this.apiUrl}/categories`;
 
-  apiUrl: string = environment.apiUrl;
-  api_url = `${this.apiUrl}/categories`;
+    getCategories(payload: any): Observable<any> {
+        return this._http.get(
+            `${this.api_url}?offset=${payload.params.offset}&limit=${payload.params.limit}&previousSize=${payload.params.previousSize}`
+        );
+    }
 
-   getCategories (payload:any) :Observable<any> {
-    return this._http.get(`${this.api_url}?offset=${payload.params.offset}&limit=${payload.params.limit}&previousSize=${payload.params.previousSize}`);
-   }
+    listCategories(): Observable<any> {
+        return this._http.get(this.api_url);
+    }
 
-  listCategories() :Observable<any> {
-    return this._http.get(this.api_url);
-  }
+    showCategories(payload: any): Observable<any> {
+        return this._http.get(`${this.api_url}/${payload}`);
+    }
 
-  showCategories(payload: any) :Observable<any>{
-    return this._http.get(`${this.api_url}/${payload}`)
-  }
+    addCategories(payload: any) {
+        return this._http.post(this.api_url, payload);
+    }
 
-  addCategories(payload: any) {
-   return this._http.post(this.api_url, payload);
-  }
+    updateCategories(params: any, payload: any) {
+        return this._http.put(`${this.api_url}/${params}`, payload);
+    }
 
-  updateCategories(params:any, payload: any) {
-    return this._http.put(`${this.api_url}/${params}`, payload);
-  }
-  
-  deleteCategories(payload: any) {
-    return this._http.delete(this.api_url+'/'+payload._id, payload);
-  }
+    deleteCategories(payload: any) {
+        return this._http.delete(this.api_url + '/' + payload._id, payload);
+    }
 
-  bulkDelete(payload: any) {
-    return this._http.post(`${this.api_url}/bulkDelete`, payload)
-  }
+    bulkDelete(payload: any) {
+        return this._http.post(`${this.api_url}/bulkDelete`, payload);
+    }
 
-  uploadCategoryBanner(payload:any) {
-    return this._http.post(`${this.api_url}/upload`, payload);
-  }
+    uploadCategoryBanner(payload: any) {
+        return this._http.post(`${this.api_url}/upload`, payload);
+    }
 
-
-  filterCategories(payload:any) :Observable<any>{
-    return this._http.get(`${this.api_url}?filter=${payload}`);
-  }
+    filterCategories(payload: any): Observable<any> {
+        return this._http.get(`${this.api_url}?filter=${payload}`);
+    }
 }

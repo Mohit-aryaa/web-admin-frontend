@@ -3,7 +3,7 @@
     <div class="flex-auto p-6 sm:p-10">
         <div class="row mb-3">
             <div class="col-md-6">
-               
+
             </div>
             <div class="col-md-6 text-end">
                 <a routerLink="/add-bundle-product">
@@ -52,10 +52,10 @@
                             <th mat-header-cell *matHeaderCellDef> Name</th>
                             <td mat-cell *matCellDef="let element">{{element.productName}}</td>
                         </ng-container>
-                        
-                        <ng-container matColumnDef="productCode">
+
+                        <ng-container matColumnDef="productSku">
                             <th mat-header-cell *matHeaderCellDef> Sku</th>
-                            <td mat-cell *matCellDef="let element">{{element.productCode}}</td>
+                            <td mat-cell *matCellDef="let element">{{element.productSku}}</td>
                         </ng-container>
                         <ng-container matColumnDef="category">
                             <th mat-header-cell *matHeaderCellDef> Category</th>
@@ -80,24 +80,24 @@
                                 <a style="text-decoration: none;" routerLink="/edit-bundle-product/{{element._id}}">
                                     <button mat-icon-button>
                                     <mat-icon>edit</mat-icon>
-                               
+
                                     </button>
                                 </a>
-                                <button mat-icon-button color="warn"  (click)="deleteBundleProduct(element,i)"> 
+                                <button mat-icon-button color="warn"  (click)="deleteBundleProduct(element,i)">
                                     <mat-icon>delete</mat-icon>
                                 </button>
                             </td>
                         </ng-container>
-            
+
                         <tr mat-header-row *matHeaderRowDef="displayedColumnsOne"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumnsOne;"></tr>
                     </table>
                 </ng-template>
-                 <mat-paginator 
+                 <mat-paginator
                     #Paginator
-                     [pageIndex]="0" 
-                     [pageSize]="tablePaging.limit" 
-                     [pageSizeOptions]="[5, 10, 20,30, 50, 100]" 
+                     [pageIndex]="0"
+                     [pageSize]="tablePaging.limit"
+                     [pageSizeOptions]="[5, 10, 20,30, 50, 100]"
                      (page)="pageChanged($event)"
                      aria-label="Select page">
                 </mat-paginator>
@@ -105,6 +105,6 @@
         </div>
     </div>
 
-   
+
 
 </div>

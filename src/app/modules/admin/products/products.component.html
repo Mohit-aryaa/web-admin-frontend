@@ -3,7 +3,7 @@
     <div class="flex-auto p-6 sm:p-10">
         <div class="row mb-3">
             <div class="col-md-6">
-                
+
             </div>
             <div class="col-md-6 text-end">
                 <a routerLink="/add-product">
@@ -12,8 +12,10 @@
             </div>
         </div>
 
+
         <div class="row">
             <div class=" mat-elevation-z8 shadow-sm p-3 w-100 bg-white">
+
                 <div class="d-flex px-3 py-4">
                     <div class="col-6">
                         <mat-icon style="cursor: pointer;" (click)="getNextData()">autorenew</mat-icon>
@@ -25,6 +27,50 @@
                         </div>
                     </div>
                 </div>
+                <form [formGroup]="searchForm" class="row">
+                    <div class="form-group col px-1">
+                        <input style="max-width: 268px;" type="text" class="form-control bg-light"  formControlName="searchInput" placeholder="Search">
+                    </div>
+                    <div class="form-group col px-0">
+                        <select class="form-select" aria-label="Default select example" formControlName="product">
+                            <option  value="productName" selected>Product Name</option>
+                            <option value="productSku">ProductSku</option>
+                        </select>
+                    </div>
+                    <div class="form-group col px-1">
+                        <select class="form-select" aria-label="Default select example" formControlName="category">
+                            <option  value="" selected>All categories</option>
+                            <option *ngFor="let categories of categoriesList" [value]="categories._id">{{categories.categoryName}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group col px-1">
+                        <select class="form-select" aria-label="Default select example" id="vendor" name="vendor" formControlName="vendor">
+                            <option value="" selected >All Vendors</option>
+                            <option *ngFor="let vendors of vendorsList" [value]="vendors._id">{{vendors.name}}</option>
+                        </select>
+                    </div>
+
+                    <div class="col px-1">
+                        <div class="btn bg-gray-100 w-100">Approval Status</div>
+                    </div>
+
+                    <div class="form-group col px-1">
+                        <select class="form-select" aria-label="Default select example" formControlName="publish">
+                            <option selected value="">All </option>
+                            <option value="publish">Published</option>
+                            <option value="unpublish">Unpublished</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col px-1">
+                        <button class="me-2" mat-raised-button color="primary" (click)="filterTable()">
+                            <mat-icon>check</mat-icon>
+                        </button>
+                        <button  mat-raised-button color="warn" (click)="unSubscribeFilterTable()">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </div>
+                </form>
                 <div *ngIf="loading;else table" class="d-flex justify-content-center">
                     <mat-spinner class="progress-spinner"></mat-spinner>
                 </div>
@@ -54,10 +100,10 @@
                             <th mat-header-cell *matHeaderCellDef> Name</th>
                             <td mat-cell *matCellDef="let element">{{element.productName}}</td>
                         </ng-container>
-                        
-                        <ng-container matColumnDef="productCode">
+
+                        <ng-container matColumnDef="productSku">
                             <th mat-header-cell *matHeaderCellDef> Sku</th>
-                            <td mat-cell *matCellDef="let element">{{element.productCode}}</td>
+                            <td mat-cell *matCellDef="let element">{{element.productSku}}</td>
                         </ng-container>
                         <ng-container matColumnDef="stock">
                             <th mat-header-cell *matHeaderCellDef> Stock</th>
@@ -86,24 +132,24 @@
                                 <a style="text-decoration: none;" routerLink="/edit-product/{{element._id}}">
                                     <button mat-icon-button>
                                         <mat-icon>edit</mat-icon>
-                               
+
                                     </button>
                                 </a>
-                                <button mat-icon-button color="warn"  (click)="deleteProduct(element,i)"> 
+                                <button mat-icon-button color="warn"  (click)="deleteProduct(element,i)">
                                     <mat-icon>delete</mat-icon>
                                 </button>
                             </td>
                         </ng-container>
-            
+
                         <tr mat-header-row *matHeaderRowDef="displayedColumnsOne"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumnsOne;"></tr>
                     </table>
                 </ng-template>
-                <mat-paginator 
+                <mat-paginator
                     #Paginator
-                    [pageIndex]="0" 
-                    [pageSize]="tablePaging.limit" 
-                    [pageSizeOptions]="[5, 10, 20,30, 50, 100]" 
+                    [pageIndex]="0"
+                    [pageSize]="tablePaging.limit"
+                    [pageSizeOptions]="[5, 10, 20,30, 50, 100]"
                     (page)="pageChanged($event)"
                     aria-label="Select page">
                 </mat-paginator>
@@ -111,6 +157,6 @@
         </div>
     </div>
 
-   
+
 
 </div>

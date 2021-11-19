@@ -31,7 +31,7 @@ export class SubCategoriesComponent implements OnInit {
   getCategoriesList :any[];
   tablePaging = {
     offset: 0,
-    limit: 5,
+    limit: 20,
     previousSize: 0
   };
   userDataPromise: any;
@@ -155,7 +155,7 @@ export class SubCategoriesComponent implements OnInit {
       }
       reader.readAsDataURL(e.target.files[0]);
     }
-    this.storeImg = e.target.files[0];  
+    this.storeImg = e.target.files[0];
   }
 
   postFormInput() {
@@ -165,7 +165,7 @@ export class SubCategoriesComponent implements OnInit {
       return false;
     }
     if (this.seletedSubCategory) {
-      if(this.subCategoriesForm.value.subCategoryBannerPicture == '') {
+      if(this.showPreview == false) {
         this.subCategoriesForm.patchValue({
           'subCategoryBanner': undefined
         })
@@ -188,12 +188,12 @@ export class SubCategoriesComponent implements OnInit {
           verticalPosition: 'top'
         })
         return false
-      } else { 
+      } else {
         this.subCategoriesService.addSubCategories(this.subCategoriesForm.value).subscribe(
           (res: any) => {
             this.modalService.dismissAll();
             this.subCategoriesForm.reset();
-            this.getNextData(); 
+            this.getNextData();
           },
           errors => {
             console.log(errors);
@@ -212,14 +212,14 @@ export class SubCategoriesComponent implements OnInit {
       })
       return false
     }
-    const formData = new FormData();
-       
-    formData.append('banner', this.storeImg) 
-    const filename = this.storeImg.name.split('.').pop(); 
-    const file = filename.toLowerCase()
-    console.log(formData)
-    this.imgUploading = true
-    if(this.subCategoriesForm.value.subCategoryBannerPicture !==  '') {
+
+    if(this.showPreview == true) {
+        const formData = new FormData();
+        formData.append('banner', this.storeImg)
+        const filename = this.storeImg.name.split('.').pop();
+        const file = filename.toLowerCase()
+        console.log(formData)
+        this.imgUploading = true
       if(file.match(/png/g)  || file.match(/jpeg/g) || file.match(/jpg/g)) {
         this.subCategoriesService.uploadSubCategoryBanner(formData).subscribe((res:any)=> {
             this.subCategoriesForm.patchValue({
@@ -236,7 +236,7 @@ export class SubCategoriesComponent implements OnInit {
           verticalPosition: 'top'
         })
         return false
-      } 
+      }
     } else {
       this.imgUploading = false
       this.postFormInput();
@@ -254,6 +254,7 @@ export class SubCategoriesComponent implements OnInit {
   }
 
   checkAllDeleteItems(e:any) {
+    this.setBulkDeleteItems = [];
     var items:any =  document.getElementsByClassName("deleteChecks");
     if(e.target.checked) {
       for (let i = 0; i < items.length; i++) {
@@ -261,7 +262,7 @@ export class SubCategoriesComponent implements OnInit {
         element.checked = true
         let getId = element.getAttribute('id')
         this.setBulkDeleteItems.push(getId)
-      
+
       }
     } else {
       for (let i = 0; i < items.length; i++) {
@@ -271,14 +272,14 @@ export class SubCategoriesComponent implements OnInit {
       }
    }
 
-   
+
   }
 
   getDeleteItems(event: any, index:any) {
     let checkElement = <HTMLInputElement> document.getElementById('deleteAll');
     checkElement.checked = false
     var element = <HTMLInputElement> document.getElementById(event._id);
-    var isChecked = element.checked;  
+    var isChecked = element.checked;
     if(isChecked) {
       this.setBulkDeleteItems.push(event._id);
     } else {
@@ -319,25 +320,25 @@ export class SubCategoriesComponent implements OnInit {
       container: [
         ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
         ['blockquote', 'code-block'],
-    
+
         [{ 'header': 1 }, { 'header': 2 }],               // custom button values
         [{ 'list': 'ordered'}, { 'list': 'bullet' }],
         [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
         [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
         [{ 'direction': 'rtl' }],                         // text direction
-    
+
         [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
         [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-    
+
         [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
         [{ 'font': [] }],
         [{ 'align': [] }],
-    
+
         ['clean'],                                         // remove formatting button
-    
+
         ['link', 'image', 'video']                         // link and image, video
       ]
-      
+
     },
   }
 

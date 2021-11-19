@@ -4,50 +4,49 @@ import { environment } from 'environments/environment';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class BrandService {
+    constructor(private _http: HttpClient) { }
 
-  constructor(private _http: HttpClient) { }
+    apiUrl: string = environment.apiUrl;
+    api_url = `${this.apiUrl}/brands`;
 
-  apiUrl: string = environment.apiUrl;
-  api_url = `${this.apiUrl}/brands`;
+    getBrands(payload: any): Observable<any> {
+        return this._http.get(
+            `${this.api_url}?offset=${payload.params.offset}&limit=${payload.params.limit}&previousSize=${payload.params.previousSize}`
+        );
+    }
 
-  getBrands(payload:any) :Observable<any> {
-    return this._http.get(`${this.api_url}?offset=${payload.params.offset}&limit=${payload.params.limit}&previousSize=${payload.params.previousSize}`);
-  }
+    listBrands(): Observable<any> {
+        return this._http.get(this.api_url);
+    }
 
+    showBrand(payload: any): Observable<any> {
+        return this._http.get(`${this.api_url}/${payload}`);
+    }
 
-  listBrands() :Observable<any> {
-    return this._http.get(this.api_url);
-  }
+    uploadBrandBanner(payload: any) {
+        return this._http.post(`${this.api_url}/upload`, payload);
+    }
 
-  showBrand(payload: any) :Observable<any>{
-    return this._http.get(`${this.api_url}/${payload}`)
-  }
+    addBrands(payload: any) {
+        return this._http.post(this.api_url, payload);
+    }
 
-   uploadBrandBanner(payload: any) {
-     return this._http.post(`${this.api_url}/upload`, payload)
-   }
+    updateBrands(params: any, payload: any) {
+        return this._http.put(`${this.api_url}/${params}`, payload);
+    }
 
-  addBrands(payload: any) {
-   return this._http.post(this.api_url, payload);
-  }
+    deleteBrands(params: any, payload: any) {
+        return this._http.delete(`${this.api_url}/${params}`, payload);
+    }
 
-  updateBrands(params:any, payload: any) {
-    return this._http.put(`${this.api_url}/${params}`, payload);
-  }
-  
-  deleteBrands(params:any, payload: any) {
-    return this._http.delete(`${this.api_url}/${params}`, payload);
-  }
+    bulkDelete(payload: any) {
+        return this._http.post(`${this.api_url}/bulkDelete`, payload);
+    }
 
-  bulkDelete(payload: any) {
-    return this._http.post(`${this.api_url}/bulkDelete`, payload)
-  }
-
-
-  filterBrands(payload:any) {
-    return this._http.get(`${this.api_url}?filter=${payload}`);
-  }
+    filterBrands(payload: any) {
+        return this._http.get(`${this.api_url}?filter=${payload}`);
+    }
 }

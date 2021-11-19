@@ -48,7 +48,7 @@ export class QuestionsComponent implements OnInit {
     this.getData()
   }
 
-  
+
 
   getData() {
     this.questionsService.getQuestions({ params: this.tablePaging }).subscribe((res: any) => {
@@ -109,7 +109,7 @@ export class QuestionsComponent implements OnInit {
     });
   }
 
-  
+
 
   postData() {
     console.log('postData',this.questionForm.value)
@@ -121,7 +121,7 @@ export class QuestionsComponent implements OnInit {
         (results: any) => {
           this.modalService.dismissAll();
           this.questionForm.reset();
-          this.getNextData()       
+          this.getNextData()
         },
         errors => {
           console.log(errors);
@@ -140,6 +140,7 @@ export class QuestionsComponent implements OnInit {
   }
 
   checkAllDeleteItems(e:any) {
+    this.setBulkDeleteItems = [];
     var items:any =  document.getElementsByClassName("deleteChecks");
     if(e.target.checked) {
       for (let i = 0; i < items.length; i++) {
@@ -147,7 +148,7 @@ export class QuestionsComponent implements OnInit {
         element.checked = true
         let getId = element.getAttribute('id');
         this.setBulkDeleteItems.push(getId)
-      
+
       }
     } else {
       for (let i = 0; i < items.length; i++) {
@@ -155,14 +156,14 @@ export class QuestionsComponent implements OnInit {
         element.checked = false
         this.setBulkDeleteItems = []
       }
-   }  
+   }
   }
 
   getDeleteItems(event: any, index:any) {
     let checkElement = <HTMLInputElement> document.getElementById('deleteAll');
     checkElement.checked = false
     var element = <HTMLInputElement> document.getElementById(event._id);
-    var isChecked = element.checked;  
+    var isChecked = element.checked;
     if(isChecked) {
       this.setBulkDeleteItems.push(event._id);
     } else {

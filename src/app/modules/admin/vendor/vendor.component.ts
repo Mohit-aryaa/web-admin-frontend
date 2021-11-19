@@ -36,7 +36,7 @@ export class VendorComponent implements OnInit {
 
   displayedColumnsOne: string[] = ['check','name', 'status', 'action'];
   ngOnInit(): void {
-    
+
     this.getData();
   }
 
@@ -45,6 +45,7 @@ export class VendorComponent implements OnInit {
   }
 
   checkAllDeleteItems(e:any) {
+    this.setBulkDeleteItems = [];
     //console.log(e)
     var items:any =  document.getElementsByClassName("deleteChecks");
     if(e.target.checked) {
@@ -53,7 +54,7 @@ export class VendorComponent implements OnInit {
         element.checked = true
         let getId = element.getAttribute('id')
         this.setBulkDeleteItems.push(getId)
-      
+
       }
     } else {
       for (let i = 0; i < items.length; i++) {
@@ -62,14 +63,14 @@ export class VendorComponent implements OnInit {
         this.setBulkDeleteItems = []
       }
    }
- 
+
   }
 
   getDeleteItems(event: any, index:any) {
     let checkElement = <HTMLInputElement> document.getElementById('deleteAll');
     checkElement.checked = false
     var element = <HTMLInputElement> document.getElementById(event._id);
-    var isChecked = element.checked; 
+    var isChecked = element.checked;
     if(isChecked) {
       this.setBulkDeleteItems.push(event._id);
     } else {
@@ -102,7 +103,7 @@ export class VendorComponent implements OnInit {
     }
   }
 
-  
+
 
   getData() {
     this.vendorsService.getVendors({ params: this.tablePaging }).subscribe((res: any) => {
@@ -169,7 +170,7 @@ export class VendorComponent implements OnInit {
     this.vendorsForm.patchValue(data);
   }
 
-  
+
 
   deleteVendors(deleteVendors: any) {
     if (confirm("Are you sure to delete ?")) {

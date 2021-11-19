@@ -43,7 +43,7 @@ export class AddBundleProductComponent implements OnInit {
   selectedIndex: number = 0;
   constructor(private productsService: ProductsService,private categoriesService: CategoriesService , private subCategoriesService: SubCategoriesService, private _formBuilder: FormBuilder, private _snackBar: MatSnackBar,private brandsService: BrandService,private vendorsService: VendorService, private bundleProductsService: BundleProductService, private subChildCategoriesService : SubChildCategoryService, private route: ActivatedRoute, private router:Router) { }
 
-  
+
 
   ngOnInit(): void {
     this.color = colors;
@@ -58,7 +58,7 @@ export class AddBundleProductComponent implements OnInit {
       productDescription:['', [Validators.required]],
       productImagepicture: [''],
       productImages:[''],
-      productCode:['',[Validators.required]],
+      productSku:['',[Validators.required]],
       productModel: ['', [Validators.required]],
       productCategory:['', [Validators.required]],
       productSubCategory: ['',[Validators.required]],
@@ -70,7 +70,7 @@ export class AddBundleProductComponent implements OnInit {
       manfactureDate:['', [Validators.required]],
       stock: ['', [Validators.required]],
       todaysDeal:[false, ],
-      publish:[false, ],
+      publish:['', [Validators.required]],
       featured:[false, ],
       price:['',[Validators.required]],
       mrp : ['',[Validators.required]],
@@ -116,8 +116,8 @@ export class AddBundleProductComponent implements OnInit {
     this.selectedBundleProduct = this.route.snapshot.paramMap.get('id');
     if(this.selectedBundleProduct !== null) {
       this.getData(this.selectedBundleProduct)
-    } 
-    
+    }
+
   }
 
   selectable = true;
@@ -165,6 +165,7 @@ export class AddBundleProductComponent implements OnInit {
   getSubCategories(data: any) {
     this.subCategoriesService.getDataByCategoryId(data).subscribe((res: any) => {
       this.getSubCategoriesList = res.SubCategory
+      console.log(this.getSubCategoriesList)
     }, (errors:any) => {
       console.log(errors)
     })
@@ -177,6 +178,7 @@ export class AddBundleProductComponent implements OnInit {
   getSubChildCategories(data: any) {
     this.subChildCategoriesService.getDataBySubCategoryId(data).subscribe((res: any) => {
       this.getSubChildCategoriesList = res.SubChildCategory
+      console.log(this.getSubChildCategoriesList)
     }, (errors:any) => {
       console.log(errors)
     })
@@ -210,11 +212,10 @@ export class AddBundleProductComponent implements OnInit {
   getData(data:any) {
     this.showOldImages = true;
     this.bundleProductsService.showBundleProduct(data).subscribe((res:any) =>{
-      //this.getEditData = res;
-      //this.getRes = res;
       this.tags = res.tags
       this.getProductImages =  res.productImages;
       this.getSubCategories(res.productCategory);
+      this.getSubChildCategories(res.productSubCategory);
       delete res.productImages;
       this.addBundleProductsForm.patchValue(res)
     })
@@ -232,9 +233,9 @@ export class AddBundleProductComponent implements OnInit {
         }
         reader.readAsDataURL(file);
       }
-    }    
-    
-    this.storeImg = event.target.files; 
+    }
+
+    this.storeImg = event.target.files;
   }
 
   tabChanged(tabChangeEvent: MatTabChangeEvent): void {
@@ -259,7 +260,7 @@ export class AddBundleProductComponent implements OnInit {
     if(this.addBundleProductsForm.invalid || this.imgUploading) {
       console.log(this.addBundleProductsForm.value)
       return false;
-    } 
+    }
     if(this.selectedBundleProduct){
       if(this.getProductImages.length == 0 && this.urls.length == 0) {
         this._snackBar.open('At least one image is required', '', {
@@ -318,7 +319,7 @@ export class AddBundleProductComponent implements OnInit {
           verticalPosition: 'top'
         });
       })
-    }    
+    }
   }
 
   postData() {
@@ -331,14 +332,14 @@ export class AddBundleProductComponent implements OnInit {
         verticalPosition: 'top'
       })
       return false;
-    } 
+    }
     if(this.storeImg.length > 0) {
-      for (let i = 0; i < this.storeImg.length; i++) { 
-        formData.append('images[]', this.storeImg[i]) 
-        filename.push(this.storeImg[i].name.split('.').pop()) 
+      for (let i = 0; i < this.storeImg.length; i++) {
+        formData.append('images[]', this.storeImg[i])
+        filename.push(this.storeImg[i].name.split('.').pop())
       }
       const file = filename.toString();
-      this.imgUploading = true 
+      this.imgUploading = true
       if(file.match(/png/g)  || file.match(/jpeg/g) || file.match(/jpg/g)) {
         this.productsService.uploadProductImage(formData).subscribe((res:any)=> {
             this.addBundleProductsForm.patchValue({
@@ -360,7 +361,7 @@ export class AddBundleProductComponent implements OnInit {
       this.imgUploading = false
       this.postFormInput();
     }
-     
+
   }
 
   applyProductFilter(filterValue: string) {
@@ -387,7 +388,7 @@ export class AddBundleProductComponent implements OnInit {
       })
     }
   }
-  
+
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
@@ -404,25 +405,25 @@ export class AddBundleProductComponent implements OnInit {
       container: [
         ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
         ['blockquote', 'code-block'],
-    
+
         [{ 'header': 1 }, { 'header': 2 }],               // custom button values
         [{ 'list': 'ordered'}, { 'list': 'bullet' }],
         [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
         [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
         [{ 'direction': 'rtl' }],                         // text direction
-    
+
         [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
         [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-    
+
         [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
         [{ 'font': [] }],
         [{ 'align': [] }],
-    
+
         ['clean'],                                         // remove formatting button
-    
+
         ['link', 'image', 'video']                         // link and image, video
       ]
-      
+
     },
   }
 

@@ -20,7 +20,7 @@ export class BundleProductsComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   dataSource = new MatTableDataSource<any>();
   @ViewChild('Paginator') Paginator!: MatPaginator;
-  
+
   loading: boolean = false;
   BundleProducts: any[];
   tablePaging = {
@@ -33,16 +33,17 @@ export class BundleProductsComponent implements OnInit {
   setBulkDeleteItems = [];
 
   constructor(private http: HttpClient, private _snackBar: MatSnackBar, private bundleProductsService: BundleProductService) { }
-  displayedColumnsOne: string[] = ['check','name', 'image',  'productCode', 'category', 'brand', 'products', 'price', 'action'];
+  displayedColumnsOne: string[] = ['check','name', 'image',  'productSku', 'category', 'brand', 'products', 'price', 'action'];
   ngOnInit(): void {
-    
+
   }
 
   ngAfterViewInit() {
     this.getData();
   }
-  
+
   checkAllDeleteItems(e:any) {
+    this.setBulkDeleteItems = [];
     var items:any =  document.getElementsByClassName("deleteChecks");
     if(e.target.checked) {
       for (let i = 0; i < items.length; i++) {
@@ -50,7 +51,7 @@ export class BundleProductsComponent implements OnInit {
         element.checked = true
         let getId = element.getAttribute('id')
         this.setBulkDeleteItems.push(getId)
-      
+
       }
     } else {
       for (let i = 0; i < items.length; i++) {
@@ -59,7 +60,7 @@ export class BundleProductsComponent implements OnInit {
         this.setBulkDeleteItems = []
       }
    }
- 
+
   }
 
   getDeleteItems(event: any, index:any) {
@@ -96,7 +97,7 @@ export class BundleProductsComponent implements OnInit {
     }
   }
 
-  
+
   getData() {
     this.bundleProductsService.getBundleProducts({ params: this.tablePaging }).subscribe((res: any) => {
       this.loading = false;

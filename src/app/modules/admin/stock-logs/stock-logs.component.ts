@@ -37,7 +37,7 @@ export class StockLogsComponent implements OnInit {
 
   displayedColumnsOne: string[] = ['check', 'name', 'logType',  'entryType', 'stock', 'action'];
   ngOnInit(): void {
-   
+
     this.getData();
   }
 
@@ -45,7 +45,7 @@ export class StockLogsComponent implements OnInit {
     this.getData()
   }
 
-  
+
 
   getData() {
     this.stockLogsService.getStockLogs({ params: this.tablePaging }).subscribe((res: any) => {
@@ -109,6 +109,7 @@ export class StockLogsComponent implements OnInit {
   }
 
   checkAllDeleteItems(e:any) {
+    this.setBulkDeleteItems = [];
     var items:any =  document.getElementsByClassName("deleteChecks");
     if(e.target.checked) {
       for (let i = 0; i < items.length; i++) {
@@ -130,7 +131,7 @@ export class StockLogsComponent implements OnInit {
     let checkElement = <HTMLInputElement> document.getElementById('deleteAll');
     checkElement.checked = false
     var element = <HTMLInputElement> document.getElementById(event._id);
-    var isChecked = element.checked;  
+    var isChecked = element.checked;
     if(isChecked) {
       this.setBulkDeleteItems.push(event._id);
     } else {
@@ -161,6 +162,6 @@ export class StockLogsComponent implements OnInit {
         verticalPosition: 'top'
       });
     }
-  } 
+  }
 
 }

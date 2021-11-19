@@ -4,36 +4,37 @@ import { environment } from 'environments/environment';
 import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class ShippingService {
-  constructor(private _http: HttpClient) { }
+    constructor(private _http: HttpClient) { }
 
-  apiUrl: string = environment.apiUrl;
-  api_url = `${this.apiUrl}/shippings`;
+    apiUrl: string = environment.apiUrl;
+    api_url = `${this.apiUrl}/shippings`;
 
+    getShipping(payload: any): Observable<any> {
+        return this._http.get(
+            `${this.api_url}?offset=${payload.params.offset}&limit=${payload.params.limit}&previousSize=${payload.params.previousSize}`
+        );
+    }
 
-  getShipping(payload:any): Observable <any>{
-    return this._http.get(`${this.api_url}?offset=${payload.params.offset}&limit=${payload.params.limit}&previousSize=${payload.params.previousSize}`);
-  }
+    addShipping(payload: any) {
+        return this._http.post(this.api_url, payload);
+    }
 
-  addShipping(payload: any) {
-    return this._http.post(this.api_url, payload)
-} 
- 
-  updateShipping (params:any, payload: any) {
-    return this._http.put(`${this.api_url}/${params}`, payload)
-  }
-  
-  filterShipping(payload:any) :Observable<any> {
-    return this._http.get(`${this.api_url}?filter=${payload}`);
-  }
+    updateShipping(params: any, payload: any) {
+        return this._http.put(`${this.api_url}/${params}`, payload);
+    }
 
-  deleteShipping(params:any ) {
-    return this._http.delete(`${this.api_url}/${params._id}`, params)  
-  }
+    filterShipping(payload: any): Observable<any> {
+        return this._http.get(`${this.api_url}?filter=${payload}`);
+    }
 
-  bulkDelete(payload: any) {
-    return this._http.post(`${this.api_url}/bulkDelete`, payload)
-  }
+    deleteShipping(params: any) {
+        return this._http.delete(`${this.api_url}/${params._id}`, params);
+    }
+
+    bulkDelete(payload: any) {
+        return this._http.post(`${this.api_url}/bulkDelete`, payload);
+    }
 }

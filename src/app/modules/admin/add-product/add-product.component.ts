@@ -53,7 +53,7 @@ export class AddProductComponent implements OnInit {
       productDescription:['', [Validators.required]],
       productImagepicture: [''],
       productImages:[''],
-      productCode:['',[Validators.required]],
+      productSku:['',[Validators.required]],
       productModel: ['', [Validators.required]],
       productCategory:['', [Validators.required]],
       productSubCategory: ['', [Validators.required]],
@@ -72,7 +72,7 @@ export class AddProductComponent implements OnInit {
       manfactureDate:['', [Validators.required]],
       stock: ['', [Validators.required]],
       todaysDeal:[false, ],
-      publish:[false, ],
+      publish:['', [Validators.required]],
       featured:[false, ],
       price:['',[Validators.required]],
       mrp : ['',[Validators.required]],
@@ -118,10 +118,10 @@ export class AddProductComponent implements OnInit {
     this.selectedProduct = this.route.snapshot.paramMap.get('id');
     if(this.selectedProduct !== null) {
       this.getData(this.selectedProduct)
-    } 
-    
-      
-    
+    }
+
+
+
   }
 
   removeImage(e: any) {
@@ -140,7 +140,7 @@ export class AddProductComponent implements OnInit {
       })
     }
   }
-  
+
 
   selectable = true;
   removable = true;
@@ -204,6 +204,7 @@ export class AddProductComponent implements OnInit {
     })
   }
 
+
   getBrands() {
     this.brandsService.listBrands().subscribe((res: any) => {
       this.getBrandsList = res.Brands
@@ -242,11 +243,11 @@ export class AddProductComponent implements OnInit {
   getData(data:any) {
     this.showOldImages = true;
     this.productsService.showProduct(data).subscribe((res:any) =>{
-      //this.getEditData = res;
-      //this.getRes = res;
+      console.log(res)
       this.tags = res.tags
       this.getProductImages =  res.productImages;
       this.getSubCategories(res.productCategory);
+      this.getSubChildCategories(res.productSubCategory);
       delete res.productImages;
       this.productsForm.patchValue(res)
     })
@@ -265,8 +266,8 @@ export class AddProductComponent implements OnInit {
         }
         reader.readAsDataURL(file);
       }
-    }    
-    this.storeImg = event.target.files; 
+    }
+    this.storeImg = event.target.files;
   }
 
   postFormInput() {
@@ -274,7 +275,7 @@ export class AddProductComponent implements OnInit {
     if(this.productsForm.invalid || this.imgUploading ) {
       console.log(this.productsForm.value)
       return false;
-    } 
+    }
 
     if(this.selectedProduct) {
       if(this.getProductImages.length == 0 && this.urls.length == 0) {
@@ -334,7 +335,7 @@ export class AddProductComponent implements OnInit {
           verticalPosition: 'top'
         });
       })
-    }    
+    }
   }
 
   postData() {
@@ -349,9 +350,9 @@ export class AddProductComponent implements OnInit {
       return false
     }
     if(this.storeImg.length > 0) {
-      for (let i = 0; i < this.storeImg.length; i++) { 
-        formData.append('images[]', this.storeImg[i]) 
-        filename.push(this.storeImg[i].name.split('.').pop()) 
+      for (let i = 0; i < this.storeImg.length; i++) {
+        formData.append('images[]', this.storeImg[i])
+        filename.push(this.storeImg[i].name.split('.').pop())
       }
       const file = filename.toString();
       this.imgUploading = true
@@ -371,12 +372,12 @@ export class AddProductComponent implements OnInit {
           verticalPosition: 'top'
         })
         return false
-      } 
+      }
     } else {
       this.imgUploading = false
       this.postFormInput();
     }
-    
+
   }
 
   numberOnly(event): boolean {
@@ -395,25 +396,25 @@ export class AddProductComponent implements OnInit {
       container: [
         ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
         ['blockquote', 'code-block'],
-    
+
         [{ 'header': 1 }, { 'header': 2 }],               // custom button values
         [{ 'list': 'ordered'}, { 'list': 'bullet' }],
         [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
         [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
         [{ 'direction': 'rtl' }],                         // text direction
-    
+
         [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
         [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-    
+
         [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
         [{ 'font': [] }],
         [{ 'align': [] }],
-    
+
         ['clean'],                                         // remove formatting button
-    
+
         ['link', 'image', 'video']                         // link and image, video
       ]
-      
+
     },
   }
 
@@ -438,7 +439,7 @@ export class AddProductComponent implements OnInit {
     console.log("Blurred");
   }
 
-  
+
 
 }
 

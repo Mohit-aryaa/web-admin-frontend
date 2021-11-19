@@ -35,7 +35,7 @@ export class ShippingComponent implements OnInit {
 
   displayedColumnsOne: string[] = ['check', 'shippingCost', 'shippingFrom',  'shippingTo', 'shippingTime', 'minimumOrder',  'action'];
   ngOnInit(): void {
-   
+
     this.getData();
   }
 
@@ -54,12 +54,12 @@ export class ShippingComponent implements OnInit {
 
   get shippingFrom() {
     return this.shippingForm.get('shippingFrom');
-  } 
-  
+  }
+
   get shippingTo() {
     return this.shippingForm.get('shippingTo');
-  } 
-  
+  }
+
 
   getData() {
     this.shippingservice.getShipping({ params: this.tablePaging }).subscribe((res: any) => {
@@ -170,6 +170,7 @@ export class ShippingComponent implements OnInit {
   }
 
   checkAllDeleteItems(e:any) {
+    this.setBulkDeleteItems = [];
     var items:any =  document.getElementsByClassName("deleteChecks");
     if(e.target.checked) {
       for (let i = 0; i < items.length; i++) {
@@ -184,19 +185,19 @@ export class ShippingComponent implements OnInit {
         element.checked = false
         this.setBulkDeleteItems = []
       }
-   }   
+   }
   }
 
   getDeleteItems(event: any, index:any) {
     let checkElement = <HTMLInputElement> document.getElementById('deleteAll');
     checkElement.checked = false
     var element = <HTMLInputElement> document.getElementById(event._id);
-    var isChecked = element.checked;  
+    var isChecked = element.checked;
     if(isChecked) {
       this.setBulkDeleteItems.push(event._id);
     } else {
       this.setBulkDeleteItems.splice(index, 1)
-    } 
+    }
   }
 
 
