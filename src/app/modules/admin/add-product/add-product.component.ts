@@ -273,7 +273,6 @@ export class AddProductComponent implements OnInit {
     console.log(this.productsForm.value)
     if(this.productsForm.invalid || this.imgUploading ) {
       console.log(this.productsForm.value)
-      //alert('error')
       return false;
     } 
 

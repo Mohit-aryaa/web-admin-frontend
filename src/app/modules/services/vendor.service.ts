@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from 'environments/environment';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
   providedIn: 'root'
@@ -8,41 +10,39 @@ export class VendorService {
 
   constructor(private _http: HttpClient) { }
 
-  api_url = 'http://localhost:3000/vendors';
+  apiUrl: string = environment.apiUrl;
+  api_url = `${this.apiUrl}/vendors`;
 
-  getVendors(data:any) {
-    return this._http.get(this.api_url+'?offset='+data.params.offset+'&limit='+data.params.limit+'&previousSize='+data.params.previousSize);
-   }
+  getVendors(payload: any) :Observable<any> {
+    return this._http.get(`${this.api_url}?offset=${payload.params.offset}&limit=${payload.params.limit}&previousSize=${payload.params.previousSize}`);
+  }
 
-   listVendors() {
+  listVendors() :Observable<any>{
      return this._http.get(this.api_url)
-   }
-
-   showVendor(data:any) {
-     return this._http.get(this.api_url+'/'+data)
-   }
-
-  addVendors(data: any) {
-   return this._http.post(this.api_url, data);
   }
 
-  updateVendors(dataId:any, data: any) {
-    return this._http.put(this.api_url+'/'+dataId, data);
+  showVendor(params:any) {
+     return this._http.get(`${this.api_url}/${params}`)
   }
 
-  deleteVendors(data: any) {
-    return this._http.delete(this.api_url+'/'+data._id, data);
+  addVendors(payload: any) {
+    return this._http.post(this.api_url, payload);
   }
 
-  bulkDelete(data: any) {
-    return this._http.post(this.api_url+'/bulkDelete', data)
+  updateVendors(params:any, payload: any) {
+    return this._http.put(`${this.api_url}/${params}`, payload);
   }
 
-  uploadVendors(data:any) {
-    return this._http.post(this.api_url+'/store', data);
+  deleteVendors(payload: any) {
+    return this._http.delete(this.api_url+'/'+payload._id, payload);
   }
 
-  filterVendors(data:any) {
-    return this._http.get(this.api_url+'?filter='+ data);
+  bulkDelete(payload: any) {
+    return this._http.post(`${this.api_url}/bulkDelete`, payload)
+  }
+
+
+  filterVendors(payload:any) :Observable<any>{
+    return this._http.get(`${this.api_url}?filter=${payload}`);
   }
 }

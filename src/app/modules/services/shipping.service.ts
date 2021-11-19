@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from 'environments/environment';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
   providedIn: 'root'
@@ -7,31 +9,31 @@ import { Injectable } from '@angular/core';
 export class ShippingService {
   constructor(private _http: HttpClient) { }
 
-  api_url = 'http://localhost:3000/shippings';
+  apiUrl: string = environment.apiUrl;
+  api_url = `${this.apiUrl}/shippings`;
 
 
-  getShipping(data:any) {
-    //console.log(data.params.offset)
-    return this._http.get(this.api_url+'?offset='+data.params.offset+'&limit='+data.params.limit+'&previousSize='+data.params.previousSize);
+  getShipping(payload:any): Observable <any>{
+    return this._http.get(`${this.api_url}?offset=${payload.params.offset}&limit=${payload.params.limit}&previousSize=${payload.params.previousSize}`);
   }
 
-  addShipping(data: any) {
-    return this._http.post(this.api_url, data);
-  }
+  addShipping(payload: any) {
+    return this._http.post(this.api_url, payload)
+} 
  
-  updateShipping(dataId:any, data: any) {
-    return this._http.put(this.api_url+'/'+dataId, data);
+  updateShipping (params:any, payload: any) {
+    return this._http.put(`${this.api_url}/${params}`, payload)
   }
   
-  filterShipping(data: any) {
-    return this._http.get(this.api_url+'?filter='+ data);
+  filterShipping(payload:any) :Observable<any> {
+    return this._http.get(`${this.api_url}?filter=${payload}`);
   }
 
-  deleteShipping( data: any) {
-    return this._http.get(this.api_url+'/'+data._id, data);
+  deleteShipping(params:any ) {
+    return this._http.delete(`${this.api_url}/${params._id}`, params)  
   }
 
-  bulkDelete(data: any) {
-    return this._http.post(this.api_url+'/bulkDelete', data)
+  bulkDelete(payload: any) {
+    return this._http.post(`${this.api_url}/bulkDelete`, payload)
   }
 }

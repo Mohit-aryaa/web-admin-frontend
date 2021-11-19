@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from 'environments/environment';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -7,24 +8,26 @@ import { Observable } from 'rxjs';
 })
 export class UserService {
 
-  constructor(private _httpClient: HttpClient) { }
-   //user queries
-  api_url = 'http://localhost:3000/users'
-  getUser(data): Observable <any>{
-      return this._httpClient.get(this.api_url+'?offset='+data.params.offset+'&limit='+data.params.limit+'&previousSize='+data.params.previousSize);
+  constructor(private _http: HttpClient) { }
+   
+  apiUrl: string = environment.apiUrl;
+  api_url = `${this.apiUrl}/users`;
+
+  getUser(payload: any) :Observable<any> {
+    return this._http.get(`${this.api_url}?offset=${payload.params.offset}&limit=${payload.params.limit}&previousSize=${payload.params.previousSize}`);
   }
-  addUser(data: any) {
-      return this._httpClient.post(this.api_url, data)
-  } 
-  updateUser(id, data: any) {
-    return this._httpClient.put(this.api_url+'/'+id, data)
+  addUser(payload: any) {
+    return this._http.post(this.api_url, payload);
+   }
+  updateUser(params:any, payload: any) {
+    return this._http.put(`${this.api_url}/${params}`, payload);
   }
-  deleteUser(del:any ) {
-    return this._httpClient.delete(this.api_url+'/'+del._id, del)  
+  deleteUser(payload: any) {
+    return this._http.delete(this.api_url+'/'+payload._id, payload);
   }
 
-  filterUser(data:any) {
-    return this._httpClient.get(this.api_url+'?filter='+ data);
+  filterUser(payload:any) :Observable<any>{
+    return this._http.get(`${this.api_url}?filter=${payload}`);
   }
   
 }

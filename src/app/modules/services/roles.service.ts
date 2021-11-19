@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from 'environments/environment';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -7,29 +8,28 @@ import { Observable } from 'rxjs';
 })
 export class RolesService {
 
-  constructor(private _httpClient: HttpClient) { }
+  constructor(private _http: HttpClient) { }
 
-   //rolel queries
-   api_url = 'http://localhost:3000/roles'
+  apiUrl: string = environment.apiUrl;
+  api_url = `${this.apiUrl}/roles`;
 
-   getRoles(data:any): Observable <any>{
-      //console.log(data)
-       return this._httpClient.get(this.api_url+'?offset='+data.params.offset+'&limit='+data.params.limit+'&previousSize='+data.params.previousSize);
+   getRoles(payload:any): Observable <any>{
+    return this._http.get(`${this.api_url}?offset=${payload.params.offset}&limit=${payload.params.limit}&previousSize=${payload.params.previousSize}`);
+  }
+   listRoles() :Observable<any>{
+      return this._http.get(this.api_url);
    }
-   listRoles() {
-      return this._httpClient.get(this.api_url);
-   }
-   addRoles(data: any) {
-       return this._httpClient.post(this.api_url, data)
+   addRoles(payload: any) {
+       return this._http.post(this.api_url, payload)
    } 
-   updateRoles (id, data: any) {
-     return this._httpClient.put(this.api_url+'/'+id, data)
+   updateRoles (params:any, payload: any) {
+     return this._http.put(`${this.api_url}/${params}`, payload)
    }
-   deleteRoles(del:any ) {
-     return this._httpClient.delete(this.api_url+'/'+del._id, del)  
+   deleteRoles(params:any ) {
+     return this._http.delete(`${this.api_url}/${params._id}`, params)  
    }
  
-   filterRoles(data:any) {
-     return this._httpClient.get(this.api_url+'?filter='+data);
+   filterRoles(payload:any) :Observable<any> {
+     return this._http.get(`${this.api_url}?filter=${payload}`);
    }
 }

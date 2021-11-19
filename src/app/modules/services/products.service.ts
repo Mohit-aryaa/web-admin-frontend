@@ -22,35 +22,35 @@ export class ProductsService {
      return this._http.get(`${this.api_url}/${payload}`)
   }
 
-  listProduct() {
+  listProduct() :Observable<any>{
     return this._http.get(this.api_url)
   }
 
-  addProducts(data: any) :Observable<any> {
-   return this._http.post(this.api_url, data);
+  addProducts(payload: any)  {
+   return this._http.post(this.api_url, payload);
   }
 
   updateProducts(params:any, payload: any) {
     return this._http.put(`${this.api_url}/${params}`, payload);
   }
 
-  deleteProducts(data: any) {
-    return this._http.delete(this.api_url+'/'+data._id, data);
+  deleteProducts(params: any) {
+    return this._http.delete(`${this.api_url}/${params._id}`, params);
   }
 
-  removeImage(data: any) {
-    return this._http.post(this.api_url+'/removeImage/', data)
+  removeImage(payload: any) {
+    return this._http.post(`${this.api_url}/removeImage`, payload)
   }
 
-  bulkDelete(data: any) {
-    return this._http.post(this.api_url+'/bulkDelete', data)
+  bulkDelete(payload: any) {
+    return this._http.post(`${this.api_url}/bulkDelete`, payload)
   }
 
-  uploadProductImage(data:any) {
-    return this._http.post(`${this.api_url}/upload`, data);
+  uploadProductImage(payload:any) {
+    return this._http.post(`${this.api_url}/upload`, payload);
   }
 
-  filterProduct(data:any) {
-    return this._http.get(this.api_url+'?filter='+ data);
+  filterProduct(payload:any) :Observable<any> {
+    return this._http.get(`${this.api_url}?filter=${payload}`);
   }
 }

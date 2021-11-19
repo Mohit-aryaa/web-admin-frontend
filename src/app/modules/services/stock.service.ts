@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from 'environments/environment';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
   providedIn: 'root'
@@ -8,26 +10,25 @@ export class StockService {
 
   constructor(private _http: HttpClient) { }
 
-  api_url = 'http://localhost:3000/products/stock';
+  apiUrl: string = environment.apiUrl;
+  api_url = `${this.apiUrl}/products/stock`;
 
 
-
-  getStock(data:any) {
-    //console.log(data.params.offset)
-    return this._http.get(this.api_url+'?offset='+data.params.offset+'&limit='+data.params.limit+'&previousSize='+data.params.previousSize);
-   }
-
-
-  updateStock(dataId:any, data: any) {
-    return this._http.put(this.api_url+'/'+dataId, data);
+  getStock(payload:any): Observable <any>{
+    return this._http.get(`${this.api_url}?offset=${payload.params.offset}&limit=${payload.params.limit}&previousSize=${payload.params.previousSize}`);
   }
 
-  filterStock(data) {
-    return this._http.get(this.api_url+'?filter='+ data);
+
+  updateStock(params:any, payload: any) {
+    return this._http.put(`${this.api_url}/${params}`, payload)
   }
 
-  updateBundleStock(dataId:any, data: any) {
-    return this._http.put(this.api_url+'/bundle/'+dataId, data);
+  filterStock(payload:any) :Observable<any> {
+    return this._http.get(`${this.api_url}?filter=${payload}`);
+  }
+
+  updateBundleStock(params:any, payload: any) {
+    return this._http.put(`${this.api_url}/bundle/${params}`, payload);
   }
   
 }

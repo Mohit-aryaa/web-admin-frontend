@@ -59,6 +59,20 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div class="form-group col-12" [ngClass]="showOldImages? 'd-block' : 'd-none' ">
+                                            <div class="mt-3 mb-1 h5">Product Images</div>
+                                            <div class="row">
+                                               <div class="col-lg-3 col-md-6 my-3 position-relative" *ngFor="let images of getProductImages; let i = index" >
+                                                   <button mat-mini-fab color="warn" class="remove-images" aria-label="Example icon button with a home icon" (click)="removeImage(getProductImages[i] )">
+                                                       <mat-icon >remove_circle_outline</mat-icon>
+                                                     </button>
+                                                   <div class="col-12 rounded-lg shadow-lg p-2 border-4 border-blue-200 border-opacity-100">
+                                                        <img  src="{{images}}"  alt="" class="w-100">
+                                                   </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         
                                         <div class="form-group mb-3 col-md-6 col-12">
                                             <label for="" class="mb-1"> Product Model</label>
@@ -591,7 +605,7 @@
 
                                         <div class="form-group mb-3">
                                            <div class="d-flex">
-                                            <button mat-raised-button color="primary"  (click)="postData()">Add Product</button>
+                                            <button mat-raised-button color="primary"  (click)="postData()">{{selectedBundleProduct ? 'Update product' : 'Add Product'}}</button>
                                             <button mat-raised-button color="primary" class="ms-auto" (click)="previousStep()">Back</button>
                                            </div>
                                         </div>
