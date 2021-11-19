@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CategoriesService } from '../../services/categories.service';
+import { CategoriesService } from 'app/modules/services/categories.service';
 
 @Component({
   selector: 'app-categories',
@@ -60,10 +60,8 @@ export class CategoriesComponent implements OnInit {
 
   getData() {
     this.categoryService.getCategories({ params: this.tablePaging }).subscribe((res: any) => {
-      //console.log('getdata', res);
       this.loading = false;
       this.categories = res.Categories;
-      console.log('this.categories', this.categories)
       this.categories.length = res.total;
       this.dataSource = new MatTableDataSource<any>(this.categories);
       this.dataSource.paginator = this.Paginator;
@@ -76,17 +74,14 @@ export class CategoriesComponent implements OnInit {
       this.userDataPromise.unsubscribe();
     }
     this.userDataPromise = this.categoryService.getCategories({ params: this.tablePaging }).subscribe((response: any) => {
-        this.loading = false;
-        console.log(response.Categories)
-        this.categories.length = this.tablePaging['previousSize'];
-        this.categories.push(...response.Categories);
-
-        this.categories.length = response.total;
-        this.dataSource = new MatTableDataSource<any>(this.categories);
-        this.dataSource._updateChangeSubscription();
-        this.dataSource.paginator = this.Paginator;
-
-      })
+      this.loading = false;
+      this.categories.length = this.tablePaging['previousSize'];
+      this.categories.push(...response.Categories);
+      this.categories.length = response.total;
+      this.dataSource = new MatTableDataSource<any>(this.categories);
+      this.dataSource._updateChangeSubscription();
+      this.dataSource.paginator = this.Paginator;
+    })
   }
 
 
@@ -99,17 +94,13 @@ export class CategoriesComponent implements OnInit {
     let previousSize = pageSize * pageIndex;
     this.tablePaging['previousSize'] = previousSize;
     this.getNextData();
-    //this.dataTableSize = event.pageSize
   }
 
   applyCategoryFilter(filterValue: string) {
-    console.log('this.tablePaging', this.tablePaging);
     var filterData = filterValue.trim().toLowerCase();
-    //this.getNextData();
     this.userDataPromise = this.categoryService.filterCategories(filterData).subscribe((res: any) => {
       this.loading = false;
       this.categories = res.categories;
-      console.log('this.Products', this.categories)
       this.categories.length = res.total;
       this.dataSource = new MatTableDataSource<any>(this.categories);
       this.dataSource.paginator = this.Paginator;
@@ -118,42 +109,33 @@ export class CategoriesComponent implements OnInit {
 
   openModal(id = null) {
     this.selectedCategory = id;
-    //console.log(data);
     this.modalService.open(this.content, {size:'lg', ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
-      // this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.categoriesForm.reset();
       this.url = '';
       this.showPreview = false;
       this.showImageBox = false;
-      // this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-
     });
   }
 
   openUpdateModal(data: any) {
-    console.log(data);
     this.openModal(data._id);
     this.categoriesForm.patchValue(data);
     this.showImageBox = true;
     this.ImageBox = data.categoryBanner;
-    console.log(this.ImageBox)
   }
 
   onSelectedImage(e: any) {
-      this.showPreview = true
-      const that = this;
-    //this.isUploading = true;
-      if (e.target.files && e.target.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function() {
-          that.url = reader.result;
-          //console.log(that.previewImg)
-        }
-        reader.readAsDataURL(e.target.files[0]);
+    this.showPreview = true
+    const that = this;
+    if (e.target.files && e.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function() {
+        that.url = reader.result;
       }
-      this.storeImg = e.target.files[0];
-    
+      reader.readAsDataURL(e.target.files[0]);
+    }
+    this.storeImg = e.target.files[0];
   }
 
   postFormInput() {
@@ -170,14 +152,10 @@ export class CategoriesComponent implements OnInit {
       }
       this.categoryService.updateCategories(this.selectedCategory, this.categoriesForm.value).subscribe(
         (results: any) => {
-          //console.log(results);
           this.modalService.dismissAll();
           this.categoriesForm.reset();
           this.showImageBox = false;
-          console.log(this.categories.length)
-          
           this.getNextData()
-          
         },
         errors => {
           console.log(errors);
@@ -193,12 +171,9 @@ export class CategoriesComponent implements OnInit {
       } else {
         this.categoryService.addCategories(this.categoriesForm.value).subscribe(
           (res: any) => {
-            console.log(res);
             this.modalService.dismissAll();
             this.categoriesForm.reset();
-            console.log(this.categories.length)
             this.getNextData();
-            
           },
           errors => {
             console.log(errors);
@@ -217,24 +192,19 @@ export class CategoriesComponent implements OnInit {
       })
       return false
     }
-    console.log(this.storeImg)
     const formData = new FormData();
-    
-    formData.append('images', this.storeImg) 
+    formData.append('banner', this.storeImg) 
     const filename = this.storeImg.name.split('.').pop(); 
     const file = filename.toLowerCase(); 
-    console.log(formData)
     this.imgUploading = true
     if(this.categoriesForm.value.categoryBannerPicture !==  '') {
       if(file.match(/png/g)  || file.match(/jpeg/g) || file.match(/jpg/g)) {
         this.categoryService.uploadCategoryBanner(formData).subscribe((res:any)=> {
-          console.log(res)
             this.categoriesForm.patchValue({
               'categoryBanner': res.imagePath
             })
             this.imgUploading = false
             this.postFormInput();
-            console.log(this.categoriesForm.value)
           },(errors) => {
             console.log(errors)
         })
@@ -243,8 +213,6 @@ export class CategoriesComponent implements OnInit {
           duration: 2000,
           verticalPosition: 'top'
         })
-        console.log('Only jpg, png and jpeg formats are allowed')
-        console.log(file)
         return false
       } 
     } else {
@@ -255,9 +223,7 @@ export class CategoriesComponent implements OnInit {
   
 
   deleteCategory(deleteCategory: any) {
-    //console.log(delSubCategory);
     if (confirm("Are you sure to delete ?")) {
-      //console.log("Implement delete functionality here");
       this.categoryService.deleteCategories(deleteCategory).subscribe(
         (res: any) => {
          this.getNextData()
@@ -267,52 +233,40 @@ export class CategoriesComponent implements OnInit {
   }
 
   checkAllDeleteItems(e:any) {
-    //console.log(e)
     var items:any =  document.getElementsByClassName("deleteChecks");
     if(e.target.checked) {
       for (let i = 0; i < items.length; i++) {
         let element = items[i];
         element.checked = true
         let getId = element.getAttribute('id')
-        console.log(element);
         this.setBulkDeleteItems.push(getId)
-      
       }
     } else {
-      for (let i = 0; i < items.length; i++) {
-        let element = items[i];
-        element.checked = false
-        console.log(element);
-        this.setBulkDeleteItems = []
-      }
-   }
-
-   
+        for (let i = 0; i < items.length; i++) {
+          let element = items[i];
+          element.checked = false
+          this.setBulkDeleteItems = []
+        }
+    } 
   }
 
   getDeleteItems(event: any, index:any) {
     let checkElement = <HTMLInputElement> document.getElementById('deleteAll');
     checkElement.checked = false
     var element = <HTMLInputElement> document.getElementById(event._id);
-    var isChecked = element.checked;  
-    console.log('index', this.setBulkDeleteItems)
-    //console.log('element', event)
+    var isChecked = element.checked; 
     if(isChecked) {
       this.setBulkDeleteItems.push(event._id);
     } else {
-
       this.setBulkDeleteItems.splice(index, 1)
     }
-      console.log(this.setBulkDeleteItems) 
   }
 
 
   BulkDelete() {
-    //console.log('bulkDelete')
     if(typeof this.setBulkDeleteItems !== undefined && this.setBulkDeleteItems.length > 0) {
       if (confirm("Are you sure to delete ?")) {
         this.categoryService.bulkDelete(this.setBulkDeleteItems).subscribe((res:any) => {
-          console.log('response', res)
           let element = <HTMLInputElement> document.getElementById('deleteAll');
           element.checked = false
           this._snackBar.open(res.message, '', {

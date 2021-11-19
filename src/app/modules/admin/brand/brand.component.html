@@ -6,7 +6,7 @@
                
             </div>
             <div class="col-md-6 text-end">
-                <button  (click)="openModal()" mat-raised-button color="primary"><mat-icon class="me-2">add</mat-icon> Add Products</button>
+                <button  (click)="openModal()" mat-raised-button color="primary"><mat-icon class="me-2">add</mat-icon> Add Brands</button>
             </div>
         </div>
 
@@ -43,7 +43,7 @@
                         </ng-container>
                         <ng-container matColumnDef="banner">
                             <th mat-header-cell *matHeaderCellDef> Banner</th>
-                            <td mat-cell *matCellDef="let element">{{element.brandBanner}}<img src="{{element.brandBanner}}" style="width:100px;" class="py-1" alt=""></td>
+                            <td mat-cell *matCellDef="let element"><img src="{{element.brandBanner}}" style="width:100px;" class="py-1" alt=""></td>
                         </ng-container>
                         <ng-container matColumnDef="name">
                             <th mat-header-cell *matHeaderCellDef> Name</th>
@@ -59,7 +59,7 @@
                         <ng-container matColumnDef="action">
                             <th mat-header-cell *matHeaderCellDef class="text-right"> Action </th>
                             <td mat-cell *matCellDef="let element; let i = index " class="text-right">
-                            <button mat-icon-button (click)="openUpdateModal(element, i)">
+                            <button mat-icon-button (click)="openUpdateModal(element,  i)">
                                 <mat-icon>edit</mat-icon>
                             </button>
                                 <button mat-icon-button color="warn"  (click)="deleteBrand(element,i)"> 
@@ -126,7 +126,7 @@
                         <label for="" class="mb-1 text-center">Old Banner</label>
                         <div class="row">
                             <div class=" col-md-6 mx-auto col-12 rounded-lg shadow-lg p-2 border-4 border-blue-200 border-opacity-100">
-                                <img  src="http://localhost:3000/{{ImageBox}}"  alt="" class="w-100">
+                                <img  src="{{ImageBox}}"  alt="" class="w-100">
                             </div>
                         </div>
                     </div>

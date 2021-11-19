@@ -13,6 +13,7 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { colors } from "../colors";
 import { countries } from '../country';
 import { SubChildCategoryService } from '../../services/sub-child-category.service';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-add-bundle-product',
   templateUrl: './add-bundle-product.component.html',
@@ -31,14 +32,16 @@ export class AddBundleProductComponent implements OnInit {
   getSubChildCategoriesList: any[];
   getBrandsList : any [];
   getVendorsList : any [];
+  getProductImages = [];
   showPreview:boolean = false;
   urls = [];
   color: any;
   country: any;
+  selectedBundleProduct: any;
   similarProducts: any = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
   blogPosts: any = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
   selectedIndex: number = 0;
-  constructor(private productsService: ProductsService,private categoriesService: CategoriesService , private subCategoriesService: SubCategoriesService, private _formBuilder: FormBuilder, private _snackBar: MatSnackBar,private brandsService: BrandService,private vendorsService: VendorService, private bundleProductsService: BundleProductService, private subChildCategoriesService : SubChildCategoryService) { }
+  constructor(private productsService: ProductsService,private categoriesService: CategoriesService , private subCategoriesService: SubCategoriesService, private _formBuilder: FormBuilder, private _snackBar: MatSnackBar,private brandsService: BrandService,private vendorsService: VendorService, private bundleProductsService: BundleProductService, private subChildCategoriesService : SubChildCategoryService, private route: ActivatedRoute) { }
 
   
 
@@ -109,6 +112,9 @@ export class AddBundleProductComponent implements OnInit {
       }),
       variant : ['',[Validators.required]],
     })
+
+    
+    
   }
 
   selectable = true;
@@ -150,28 +156,24 @@ export class AddBundleProductComponent implements OnInit {
   }
 
   getCategoryValue(e:any) {
-    console.log(e.target.value)
     this.getSubCategories(e.target.value)
   }
 
   getSubCategories(data: any) {
     this.subCategoriesService.getDataByCategoryId(data).subscribe((res: any) => {
       this.getSubCategoriesList = res.SubCategory
-      console.log('getSubCategoriesList',this.getSubCategoriesList)
     }, (errors:any) => {
       console.log(errors)
     })
   }
 
   getSubCategoryValue(e:any) {
-    console.log(e.target.value)
     this.getSubChildCategories(e.target.value)
   }
 
   getSubChildCategories(data: any) {
     this.subChildCategoriesService.getDataBySubCategoryId(data).subscribe((res: any) => {
       this.getSubChildCategoriesList = res.SubChildCategory
-      console.log('getSubChildCategoriesList',this.getSubChildCategoriesList)
     }, (errors:any) => {
       console.log(errors)
     })
@@ -188,7 +190,6 @@ export class AddBundleProductComponent implements OnInit {
 
   getProducts() {
     this.productsService.listProduct().subscribe((res:any) => {
-      console.log(res);
       this.getProductList = res.Products;
     }, (errors:any) => {
       console.log(errors)
@@ -202,6 +203,8 @@ export class AddBundleProductComponent implements OnInit {
       console.log(errors)
     })
   }
+
+  
 
   onSelectdProductImage(event:any) {
     this.showPreview = true
@@ -222,7 +225,6 @@ export class AddBundleProductComponent implements OnInit {
 
   tabChanged(tabChangeEvent: MatTabChangeEvent): void {
     this.selectedIndex = tabChangeEvent.index;
-    console.log(this.selectedIndex)
   }
 
   nextStep() {
@@ -230,27 +232,21 @@ export class AddBundleProductComponent implements OnInit {
     if (this.selectedIndex != maxNumberOfTabs) {
       this.selectedIndex = this.selectedIndex + 1;
     }
-    console.log(this.selectedIndex);
   }
 
   previousStep() {
     if (this.selectedIndex != 0) {
       this.selectedIndex = this.selectedIndex - 1;
     }
-    console.log(this.selectedIndex);
   }
 
   postFormInput() {
     console.log(this.addBundleProductsForm.value.products)
     if(this.addBundleProductsForm.invalid || this.imgUploading) {
       console.log(this.addBundleProductsForm.value)
-      //alert('error')
       return false;
     } 
-
     this.bundleProductsService.addBundleProducts(this.addBundleProductsForm.value).subscribe((res:any) => {
-      console.log(res);
-        
       this.addBundleProductsForm.reset();
       this.tags = [];
       this.urls = [];
@@ -260,7 +256,6 @@ export class AddBundleProductComponent implements OnInit {
         duration: 2000,
         verticalPosition: 'top'
       });
-      //this.getNextData();
     },(errors) => {
       console.log(errors)
       this._snackBar.open(errors.error.message, '', {
@@ -273,7 +268,6 @@ export class AddBundleProductComponent implements OnInit {
 
   postData() {
     this.addBundleProductsForm.markAllAsTouched();
-    console.log(this.storeImg)
     const formData = new FormData();
     var filename = [];
     if (this.showPreview == false ) {
@@ -288,7 +282,6 @@ export class AddBundleProductComponent implements OnInit {
       filename.push(this.storeImg[i].name.split('.').pop()) 
     }
     const file = filename.toString();
-    console.log(formData)
     this.imgUploading = true
     if (this.addBundleProductsForm.invalid) {
       this._snackBar.open('All fields are required',  '', {
@@ -306,13 +299,11 @@ export class AddBundleProductComponent implements OnInit {
     } 
     if(file.match(/png/g)  || file.match(/jpeg/g) || file.match(/jpg/g)) {
       this.productsService.uploadProductImage(formData).subscribe((res:any)=> {
-        console.log(res.imagePath)
           this.addBundleProductsForm.patchValue({
             'productImages': res.imagePath
           })
           this.imgUploading = false
           this.postFormInput();
-          console.log(this.addBundleProductsForm.value)
         },(errors) => {
           console.log(errors)
       })
@@ -321,18 +312,15 @@ export class AddBundleProductComponent implements OnInit {
         duration: 2000,
         verticalPosition: 'top'
       })
-      console.log(file)
       return false
     } 
   }
 
   applyProductFilter(filterValue: string) {
     var filterData = filterValue.trim().toLowerCase();
-    //this.getNextData();
     this.productsService.filterProduct(filterData).subscribe((res: any) => {
       //this.loading = false;
       this.getProductList = res.Products;
-      console.log('this.Products', this.getProductList)
     })
 
   }

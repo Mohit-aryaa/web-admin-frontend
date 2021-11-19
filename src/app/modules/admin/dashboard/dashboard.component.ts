@@ -65,8 +65,6 @@ export class DashboardComponent implements OnInit {
         this.cards[i].cardstatus = 'text-warning';
       }
     }
-    
-  //console.log(this.cardstatus)
   }
 
 }

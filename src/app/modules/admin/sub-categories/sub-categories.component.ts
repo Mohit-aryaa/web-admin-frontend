@@ -7,8 +7,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { lowerCase } from 'lodash';
-import { CategoriesService } from '../../services/categories.service';
-import { SubCategoriesService } from '../../services/sub-Categories.service';
+import { CategoriesService } from 'app/modules/services/categories.service';
+import { SubCategoriesService } from 'app/modules/services/sub-categories.service';
 
 @Component({
   selector: 'app-sub-Categories',
@@ -73,10 +73,8 @@ export class SubCategoriesComponent implements OnInit {
 
   getData() {
     this.subCategoriesService.getSubCategories({ params: this.tablePaging }).subscribe((res: any) => {
-      //console.log('getdata', res);
       this.loading = false;
       this.subCategories = res.SubCategories;
-      console.log('this.subCategories', this.subCategories)
       this.subCategories.length = res.total;
       this.dataSource = new MatTableDataSource<any>(this.subCategories);
       this.dataSource.paginator = this.Paginator;
@@ -90,15 +88,12 @@ export class SubCategoriesComponent implements OnInit {
     }
     this.userDataPromise = this.subCategoriesService.getSubCategories({ params: this.tablePaging }).subscribe((response: any) => {
         this.loading = false;
-        console.log(response.SubCategories)
         this.subCategories.length = this.tablePaging['previousSize'];
         this.subCategories.push(...response.SubCategories);
-
         this.subCategories.length = response.total;
         this.dataSource = new MatTableDataSource<any>(this.subCategories);
         this.dataSource._updateChangeSubscription();
         this.dataSource.paginator = this.Paginator;
-
       })
   }
 
@@ -116,13 +111,11 @@ export class SubCategoriesComponent implements OnInit {
   }
 
   applyCategoryFilter(filterValue: string) {
-    console.log('this.tablePaging', this.tablePaging);
     var filterData = filterValue.trim().toLowerCase();
     //this.getNextData();
     this.userDataPromise = this.subCategoriesService.filterSubCategories(filterData).subscribe((res: any) => {
       this.loading = false;
       this.subCategories = res.SubCategories;
-      console.log('this.Products', this.subCategories)
       this.subCategories.length = res.total;
       this.dataSource = new MatTableDataSource<any>(this.subCategories);
       this.dataSource.paginator = this.Paginator;
@@ -133,14 +126,11 @@ export class SubCategoriesComponent implements OnInit {
     this.seletedSubCategory = id;
     //console.log(data);
     this.modalService.open(this.content, {size: 'lg', ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
-      // this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.subCategoriesForm.reset();
       this.url = '';
       this.showPreview = false;
       this.showImageBox = false;
-      // this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-
     });
   }
 
@@ -158,20 +148,17 @@ export class SubCategoriesComponent implements OnInit {
   onSelectedImage(e: any) {
     this.showPreview = true
     const that = this;
-  //this.isUploading = true;
     if (e.target.files && e.target.files[0]) {
       const reader = new FileReader();
       reader.onload = function() {
         that.url = reader.result;
-        //console.log(that.previewImg)
       }
       reader.readAsDataURL(e.target.files[0]);
     }
-    this.storeImg = e.target.files[0];
-  
-}
+    this.storeImg = e.target.files[0];  
+  }
 
-postFormInput() {
+  postFormInput() {
     this.subCategoriesForm.markAllAsTouched();
     if (this.subCategoriesForm.invalid) {
       console.log('this.subCategoriesForm', this.subCategoriesForm.value)
@@ -185,12 +172,10 @@ postFormInput() {
       }
       this.subCategoriesService.updateSubCategories(this.seletedSubCategory, this.subCategoriesForm.value).subscribe(
         (results: any) => {
-          //console.log(results);
           this.modalService.dismissAll();
           this.subCategoriesForm.reset();
           console.log(this.subCategories.length)
           this.getNextData()
-          
         },
         errors => {
           console.log(errors);
@@ -206,12 +191,9 @@ postFormInput() {
       } else { 
         this.subCategoriesService.addSubCategories(this.subCategoriesForm.value).subscribe(
           (res: any) => {
-            console.log(res);
             this.modalService.dismissAll();
             this.subCategoriesForm.reset();
-            console.log(this.subCategories.length)
-            this.getNextData();
-            
+            this.getNextData(); 
           },
           errors => {
             console.log(errors);
@@ -230,24 +212,21 @@ postFormInput() {
       })
       return false
     }
-    console.log(this.storeImg)
     const formData = new FormData();
        
-    formData.append('images', this.storeImg) 
+    formData.append('banner', this.storeImg) 
     const filename = this.storeImg.name.split('.').pop(); 
     const file = filename.toLowerCase()
     console.log(formData)
     this.imgUploading = true
     if(this.subCategoriesForm.value.subCategoryBannerPicture !==  '') {
       if(file.match(/png/g)  || file.match(/jpeg/g) || file.match(/jpg/g)) {
-        this.subCategoriesService.uploadCategoryBanner(formData).subscribe((res:any)=> {
-          console.log(res)
+        this.subCategoriesService.uploadSubCategoryBanner(formData).subscribe((res:any)=> {
             this.subCategoriesForm.patchValue({
               'subCategoryBanner': res.imagePath
             })
             this.imgUploading = false
             this.postFormInput();
-            console.log(this.subCategoriesForm.value)
           },(errors) => {
             console.log(errors)
         })
@@ -256,8 +235,6 @@ postFormInput() {
           duration: 2000,
           verticalPosition: 'top'
         })
-        console.log('Only jpg, png and jpeg formats are allowed')
-        console.log(file)
         return false
       } 
     } else {
@@ -267,9 +244,7 @@ postFormInput() {
   }
 
   deleteCategory(deleteCategory: any) {
-    //console.log(delsubsubCategories);
     if (confirm("Are you sure to delete ?")) {
-      //console.log("Implement delete functionality here");
       this.subCategoriesService.deleteSubCategories(deleteCategory).subscribe(
         (res: any) => {
          this.getNextData()
@@ -279,14 +254,12 @@ postFormInput() {
   }
 
   checkAllDeleteItems(e:any) {
-    //console.log(e)
     var items:any =  document.getElementsByClassName("deleteChecks");
     if(e.target.checked) {
       for (let i = 0; i < items.length; i++) {
         let element = items[i];
         element.checked = true
         let getId = element.getAttribute('id')
-        //console.log(element);
         this.setBulkDeleteItems.push(getId)
       
       }
@@ -294,7 +267,6 @@ postFormInput() {
       for (let i = 0; i < items.length; i++) {
         let element = items[i];
         element.checked = false
-        //console.log(element);
         this.setBulkDeleteItems = []
       }
    }
@@ -307,24 +279,18 @@ postFormInput() {
     checkElement.checked = false
     var element = <HTMLInputElement> document.getElementById(event._id);
     var isChecked = element.checked;  
-    console.log('index', this.setBulkDeleteItems)
-    //console.log('element', event)
     if(isChecked) {
       this.setBulkDeleteItems.push(event._id);
     } else {
-
       this.setBulkDeleteItems.splice(index, 1)
     }
-      console.log(this.setBulkDeleteItems) 
   }
 
 
   BulkDelete() {
-    //console.log('bulkDelete')
     if(typeof this.setBulkDeleteItems !== undefined && this.setBulkDeleteItems.length > 0) {
       if (confirm("Are you sure to delete ?")) {
         this.subCategoriesService.bulkDelete(this.setBulkDeleteItems).subscribe((res:any) => {
-          console.log('response', res)
           let element = <HTMLInputElement> document.getElementById('deleteAll');
           element.checked = false
           this._snackBar.open(res.message, '', {

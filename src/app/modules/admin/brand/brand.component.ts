@@ -59,14 +59,12 @@ export class BrandComponent implements OnInit {
   }
 
   checkAllDeleteItems(e:any) {
-    //console.log(e)
     var items:any =  document.getElementsByClassName("deleteChecks");
     if(e.target.checked) {
       for (let i = 0; i < items.length; i++) {
         let element = items[i];
         element.checked = true
         let getId = element.getAttribute('id')
-        console.log(element);
         this.setBulkDeleteItems.push(getId)
       
       }
@@ -74,35 +72,30 @@ export class BrandComponent implements OnInit {
       for (let i = 0; i < items.length; i++) {
         let element = items[i];
         element.checked = false
-        console.log(element);
         this.setBulkDeleteItems = []
       }
    }
- 
+   console.log(this.setBulkDeleteItems)
   }
 
   getDeleteItems(event: any, index:any) {
     let checkElement = <HTMLInputElement> document.getElementById('deleteAll');
     checkElement.checked = false
     var element = <HTMLInputElement> document.getElementById(event._id);
-    var isChecked = element.checked;  
-    //console.log('index', id)
-    //console.log('element', event)
+    var isChecked = element.checked;
     if(isChecked) {
       this.setBulkDeleteItems.push(event._id);
     } else {
-
       this.setBulkDeleteItems.splice(index, 1)
     }
-      console.log(this.setBulkDeleteItems) 
+    console.log(isChecked)
+    console.log(this.setBulkDeleteItems)
   }
 
   BulkDelete() {
-    //console.log('bulkDelete')
     if(typeof this.setBulkDeleteItems !== undefined && this.setBulkDeleteItems.length > 0) {
       if (confirm("Are you sure to delete ?")) {
         this.brandsService.bulkDelete(this.setBulkDeleteItems).subscribe((res:any) => {
-          console.log('response', res)
           let element = <HTMLInputElement> document.getElementById('deleteAll');
           element.checked = false
           this._snackBar.open(res.message, '', {
@@ -125,10 +118,8 @@ export class BrandComponent implements OnInit {
 
   getData() {
     this.brandsService.getBrands({ params: this.tablePaging }).subscribe((res: any) => {
-      //console.log('getdata', res);
       this.loading = false;
       this.Brands = res.Brands;
-      console.log('this.users', this.Brands)
       this.Brands.length = res.total;
       this.dataSource = new MatTableDataSource<any>(this.Brands);
       this.dataSource.paginator = this.Paginator;
@@ -141,17 +132,14 @@ export class BrandComponent implements OnInit {
       this.userDataPromise.unsubscribe();
     }
     this.userDataPromise = this.brandsService.getBrands({ params: this.tablePaging }).subscribe((response: any) => {
-        this.loading = false;
-        console.log(response.Brands)
-        this.Brands.length = this.tablePaging['previousSize'];
-        this.Brands.push(...response.Brands);
-
-        this.Brands.length = response.total;
-        this.dataSource = new MatTableDataSource<any>(this.Brands);
-        this.dataSource._updateChangeSubscription();
-        this.dataSource.paginator = this.Paginator;
-
-      })
+      this.loading = false;
+      this.Brands.length = this.tablePaging['previousSize'];
+      this.Brands.push(...response.Brands);
+      this.Brands.length = response.total;
+      this.dataSource = new MatTableDataSource<any>(this.Brands);
+      this.dataSource._updateChangeSubscription();
+      this.dataSource.paginator = this.Paginator;
+    })
   }
 
 
@@ -170,11 +158,9 @@ export class BrandComponent implements OnInit {
   applyCategoryFilter(filterValue: string) {
     console.log('this.tablePaging', this.tablePaging);
     var filterData = filterValue.trim().toLowerCase();
-    //this.getNextData();
     this.userDataPromise = this.brandsService.filterBrands(filterData).subscribe((res: any) => {
       this.loading = false;
       this.Brands = res.Brands;
-      console.log('this.Products', this.Brands)
       this.Brands.length = res.total;
       this.dataSource = new MatTableDataSource<any>(this.Brands);
       this.dataSource.paginator = this.Paginator;
@@ -183,37 +169,29 @@ export class BrandComponent implements OnInit {
 
   openModal(id = null) {
     this.selectedBrand = id;
-    //console.log(data);
     this.modalService.open(this.content, {size: 'lg', ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
-      // this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.brandsForm.reset();
       this.url = '';
       this.showPreview = false;
       this.showImageBox = false;
-      // this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-
     });
   }
 
   openUpdateModal(data: any) {
-    console.log(data);
     this.openModal(data._id);
     this.brandsForm.patchValue(data);
     this.showImageBox = true;
     this.ImageBox = data.brandBanner;
-    console.log(this.ImageBox)
   }
 
   onSelectedImage(e: any) {
     this.showPreview = true
     const that = this;
-  //this.isUploading = true;
     if (e.target.files && e.target.files[0]) {
       const reader = new FileReader();
       reader.onload = function() {
         that.url = reader.result;
-        //console.log(that.previewImg)
       }
       reader.readAsDataURL(e.target.files[0]);
     }
@@ -236,13 +214,9 @@ export class BrandComponent implements OnInit {
       console.log(this.brandsForm.value)
       this.brandsService.updateBrands(this.selectedBrand, this.brandsForm.value).subscribe(
         (results: any) => {
-          //console.log(results);
           this.modalService.dismissAll();
           this.brandsForm.reset();
-          console.log(this.Brands.length)
-          
           this.getNextData()
-          
         },
         errors => {
           console.log(errors);
@@ -258,12 +232,9 @@ export class BrandComponent implements OnInit {
       } else {
         this.brandsService.addBrands(this.brandsForm.value).subscribe(
           (res: any) => {
-            console.log(res);
             this.modalService.dismissAll();
             this.brandsForm.reset();
-            console.log(this.Brands.length)
             this.getNextData();
-            
           },
           errors => {
             console.log(errors);
@@ -282,12 +253,10 @@ export class BrandComponent implements OnInit {
       })
       return false
     }
-    console.log(this.storeImg)
     const formData = new FormData();
-    formData.append('file', this.storeImg) 
+    formData.append('banner', this.storeImg) 
     const filename = this.storeImg.name.split('.').pop(); 
-    const file = filename.toLowerCase(); 
-    console.log(formData)
+    const file = filename.toLowerCase();
     this.imgUploading = true
     if(this.brandsForm.value.brandBannerPicture !==  '') {
       if(file.match(/png/g)  || file.match(/jpeg/g) || file.match(/jpg/g)) {
@@ -298,7 +267,6 @@ export class BrandComponent implements OnInit {
             })
             this.imgUploading = false
             this.postFormInput();
-            console.log(this.brandsForm.value)
           },(errors) => {
             console.log(errors)
         })
@@ -307,8 +275,6 @@ export class BrandComponent implements OnInit {
           duration: 2000,
           verticalPosition: 'top'
         })
-        console.log('Only jpg, png and jpeg formats are allowed')
-        console.log(file)
         return false
       } 
     } else {
@@ -318,10 +284,8 @@ export class BrandComponent implements OnInit {
   }
 
   deleteBrand(deleteBrand: any) {
-    //console.log(delsubsubCategories);
     if (confirm("Are you sure to delete ?")) {
-      //console.log("Implement delete functionality here");
-      this.brandsService.deleteBrands(deleteBrand).subscribe(
+      this.brandsService.deleteBrands(deleteBrand._id,deleteBrand).subscribe(
         (res: any) => {
          this.getNextData()
         }

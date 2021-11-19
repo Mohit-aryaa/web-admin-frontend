@@ -104,7 +104,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
     },
     {
         id: 'abandoncart',
-        title: 'Abandpn Cart',
+        title: 'Abandon Cart',
         type: 'basic',
         icon: 'heroicons_outline:document',
         link: ''

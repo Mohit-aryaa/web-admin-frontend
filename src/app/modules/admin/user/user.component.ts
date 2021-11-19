@@ -213,12 +213,10 @@ export class UserComponent implements OnInit {
   }
 
   applyUserFilter(filterValue: string) {
-    console.log('this.tablePaging', this.tablePaging);
     var filterData = filterValue.trim().toLowerCase();
     this.userDataPromise = this._userService.filterUser(filterData).subscribe((res: any) => {
       this.loading = false;
       this.users = res.Users;
-      console.log('this.users', this.users)
       this.users.length = res.total;
       this.userDataSource = new MatTableDataSource<any>(this.users);
       this.userDataSource.paginator = this.UserTablePaginator;
@@ -238,7 +236,6 @@ export class UserComponent implements OnInit {
   }
 
   openUpdateModal(data: any) {
-    console.log(data);
     this.openModal(data._id);
     this.userForm.patchValue(data);
   }
@@ -252,7 +249,6 @@ export class UserComponent implements OnInit {
     if (this.selectedUser) {
       this._userService.updateUser(this.selectedUser, this.userForm.value).subscribe(
         (results: any) => {
-          //console.log(results);
           this.modalService.dismissAll();
           this.userForm.reset();
           this.getNextData();
@@ -264,7 +260,6 @@ export class UserComponent implements OnInit {
     } else {
       this._userService.addUser(this.userForm.value).subscribe(
         (res: any) => {
-          console.log(res);
           this.modalService.dismissAll();
           this.userForm.reset();
           this.getNextData();
@@ -277,9 +272,7 @@ export class UserComponent implements OnInit {
   }
 
   deleteUser(deleteUser: any) {
-    //console.log(delSubCategory);
     if (confirm("Are you sure to delete ?")) {
-      //console.log("Implement delete functionality here");
       this._userService.deleteUser(deleteUser).subscribe(
         (res: any) => {
           this.getNextData();
@@ -311,12 +304,10 @@ export class UserComponent implements OnInit {
       this.roleDataPromise.unsubscribe();
     }
     this.roleDataPromise = this._roleService.getRoles({ params: this.  tablePaging  }).subscribe((response: any) => {
-        //this.loading = false;
-        //console.log('Roles',response.Roles)
+       
         this.roles.length = this.  tablePaging ['previousSize'];
         this.roles.push(...response.Roles);
         this.roles.length = response.total;
-        console.log(this.roles)
         this.roleDataSource = new MatTableDataSource<any>(this.roles);
         this.roleDataSource._updateChangeSubscription();
         this.roleDataSource.paginator = this.RoleTablePaginator;
@@ -337,7 +328,6 @@ export class UserComponent implements OnInit {
   }
 
   applyRoleFilter(filterValue: string) {
-    //console.log('this.tablePaging', this.tablePaging);
     var filterRoleData = filterValue.trim().toLowerCase();
     //this.getNextData();
     this.roleDataPromise = this._roleService.filterRoles(filterRoleData).subscribe((res: any) => {
@@ -359,7 +349,6 @@ export class UserComponent implements OnInit {
     if (this.selectedRole) {
       this._roleService.updateRoles(this.selectedRole, data).subscribe(
         (results: any) => {
-          //console.log(results);
           this.modalService.dismissAll();
           this.roleName = '';
           this.resetPermissions();
@@ -372,7 +361,6 @@ export class UserComponent implements OnInit {
     } else {
       this._roleService.addRoles(data).subscribe(
         (res: any) => {
-          console.log(res);
           this.modalService.dismissAll();
           this.roleName = '';
           this.resetPermissions();
@@ -386,9 +374,7 @@ export class UserComponent implements OnInit {
   }
 
   deleteRole(deleteRole: any) {
-    //console.log(delSubCategory);
     if (confirm("Are you sure to delete ?")) {
-      //console.log("Implement delete functionality here");
       this._roleService.deleteRoles(deleteRole).subscribe(
         (res: any) => {
           //console.log(res);
@@ -412,7 +398,6 @@ export class UserComponent implements OnInit {
   }
 
   openRoleUpdateModal(data: any) {
-    console.log(data);
     this.openModal(data._id);
     this.roleName = data.roleName;
     delete data.permissions._id;

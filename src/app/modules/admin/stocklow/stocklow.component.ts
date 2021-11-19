@@ -49,10 +49,8 @@ export class StocklowComponent implements OnInit {
 
   getData() {
     this.stockService.getStock({ params: this.tablePaging }).subscribe((res: any) => {
-      //console.log('getdata', res);
       this.loading = false;
       this.Stocks = res.Stocks;
-      console.log('this.users', this.Stocks)
       this.Stocks.length = res.total;
       this.dataSource = new MatTableDataSource<any>(this.Stocks);
       this.dataSource.paginator = this.Paginator;
@@ -66,15 +64,12 @@ export class StocklowComponent implements OnInit {
     }
     this.userDataPromise = this.stockService.getStock({ params: this.tablePaging }).subscribe((response: any) => {
         this.loading = false;
-        console.log(response.Stocks)
         this.Stocks.length = this.tablePaging['previousSize'];
         this.Stocks.push(...response.Stocks);
-
         this.Stocks.length = response.total;
         this.dataSource = new MatTableDataSource<any>(this.Stocks);
         this.dataSource._updateChangeSubscription();
         this.dataSource.paginator = this.Paginator;
-
       })
   }
 
@@ -92,13 +87,11 @@ export class StocklowComponent implements OnInit {
   }
 
   applyCategoryFilter(filterValue: string) {
-    console.log('this.tablePaging', this.tablePaging);
     var filterData = filterValue.trim().toLowerCase();
     //this.getNextData();
     this.userDataPromise = this.stockService.filterStock(filterData).subscribe((res: any) => {
       this.loading = false;
       this.Stocks = res.Stocks;
-      console.log('this.Products', this.Stocks)
       this.Stocks.length = res.total;
       this.dataSource = new MatTableDataSource<any>(this.Stocks);
       this.dataSource.paginator = this.Paginator;
@@ -106,27 +99,20 @@ export class StocklowComponent implements OnInit {
   }
 
   openUpdateModal(data: any) {
-    
-    console.log(data);
     this.selectedStock = data.isBundle
     this.selectedStockId = data._id;
     console.log(this.selectedStock)
     this.stockForm.patchValue(data);
     console.log('openModal',this.selectedStock)
     this.modalService.open(this.content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
-      // this.closeResult = `Closed with: ${result}`;
-     
     }, (reason) => {
       this.stockForm.reset();
-      // this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-
     });
   }
 
   
 
   postData() {
-
     console.log('postData',this.stockForm.value)
     this.stockForm.markAllAsTouched();
     if (this.stockForm.invalid) {
@@ -136,13 +122,9 @@ export class StocklowComponent implements OnInit {
     if(this.selectedStock) {
       this.stockService.updateBundleStock(this.selectedStockId, this.stockForm.value).subscribe(
         (results: any) => {
-          //console.log(results);
           this.modalService.dismissAll();
           this.stockForm.reset();
-          console.log(this.Stocks.length)
-          
           this.getNextData()
-          
         },
         errors => {
           console.log(errors);
@@ -151,13 +133,9 @@ export class StocklowComponent implements OnInit {
     } else  {
         this.stockService.updateStock(this.selectedStockId, this.stockForm.value).subscribe(
           (results: any) => {
-            console.log(results);
             this.modalService.dismissAll();
             this.stockForm.reset();
-            console.log(this.Stocks.length)
-            
-            this.getNextData()
-            
+            this.getNextData() 
           },
           errors => {
             console.log(errors);

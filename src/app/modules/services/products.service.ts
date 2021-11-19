@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { products } from 'app/mock-api/apps/ecommerce/inventory/data';
+import { environment } from 'environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,26 +11,27 @@ export class ProductsService {
 
   constructor(private _http: HttpClient) { }
 
-  api_url = 'http://localhost:3000/products';
+  apiUrl: string = environment.apiUrl;
+  api_url = `${this.apiUrl}/products`;
 
-  getProducts(data:any) {
-    return this._http.get(this.api_url+'?offset='+data.params.offset+'&limit='+data.params.limit+'&previousSize='+data.params.previousSize);
+  getProducts(payload:any) :Observable<any> {
+    return this._http.get(`${this.api_url}?offset=${payload.params.offset}&limit=${payload.params.limit}&previousSize=${payload.params.previousSize}`);
    }
 
-   showProduct(Id: any) {
-     return this._http.get(this.api_url+'/'+Id)
-   }
+  showProduct(payload: any) :Observable<any>{
+     return this._http.get(`${this.api_url}/${payload}`)
+  }
 
   listProduct() {
     return this._http.get(this.api_url)
   }
 
-  addProducts(data: any) {
+  addProducts(data: any) :Observable<any> {
    return this._http.post(this.api_url, data);
   }
 
-  updateProducts(dataId:any, data: any) {
-    return this._http.put(this.api_url+'/'+dataId, data);
+  updateProducts(params:any, payload: any) {
+    return this._http.put(`${this.api_url}/${params}`, payload);
   }
 
   deleteProducts(data: any) {
@@ -44,7 +47,7 @@ export class ProductsService {
   }
 
   uploadProductImage(data:any) {
-    return this._http.post(this.api_url+'/store', data);
+    return this._http.post(`${this.api_url}/upload`, data);
   }
 
   filterProduct(data:any) {

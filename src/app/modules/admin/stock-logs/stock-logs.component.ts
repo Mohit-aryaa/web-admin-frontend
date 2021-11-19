@@ -49,10 +49,8 @@ export class StockLogsComponent implements OnInit {
 
   getData() {
     this.stockLogsService.getStockLogs({ params: this.tablePaging }).subscribe((res: any) => {
-      console.log('getdata', res);
       this.loading = false;
       this.StockLogs = res.StockLogs;
-      console.log('this.users', this.StockLogs)
       this.StockLogs.length = res.total;
       this.dataSource = new MatTableDataSource<any>(this.StockLogs);
       this.dataSource.paginator = this.Paginator;
@@ -66,10 +64,8 @@ export class StockLogsComponent implements OnInit {
     }
     this.userDataPromise = this.stockLogsService.getStockLogs({ params: this.tablePaging }).subscribe((response: any) => {
         this.loading = false;
-        console.log(response.StockLogs)
         this.StockLogs.length = this.tablePaging['previousSize'];
         this.StockLogs.push(...response.StockLogs);
-
         this.StockLogs.length = response.total;
         this.dataSource = new MatTableDataSource<any>(this.StockLogs);
         this.dataSource._updateChangeSubscription();
@@ -91,13 +87,11 @@ export class StockLogsComponent implements OnInit {
   }
 
   applyFilter(filterValue: string) {
-    console.log('this.tablePaging', this.tablePaging);
     var filterData = filterValue.trim().toLowerCase();
     //this.getNextData();
     this.userDataPromise = this.stockLogsService.filterStockLogs(filterData).subscribe((res: any) => {
       this.loading = false;
       this.StockLogs = res.StockLogs;
-      console.log('this.StockLogs', this.StockLogs)
       this.StockLogs.length = res.total;
       this.dataSource = new MatTableDataSource<any>(this.StockLogs);
       this.dataSource.paginator = this.Paginator;
@@ -105,9 +99,7 @@ export class StockLogsComponent implements OnInit {
   }
 
   deleteStockLog(deleteStockLog: any) {
-    //console.log(delsubsubCategories);
     if (confirm("Are you sure to delete ?")) {
-      //console.log("Implement delete functionality here");
       this.stockLogsService.deleteStockLogs(deleteStockLog).subscribe(
         (res: any) => {
          this.getNextData()
@@ -117,27 +109,21 @@ export class StockLogsComponent implements OnInit {
   }
 
   checkAllDeleteItems(e:any) {
-    //console.log(e)
     var items:any =  document.getElementsByClassName("deleteChecks");
     if(e.target.checked) {
       for (let i = 0; i < items.length; i++) {
         let element = items[i];
         element.checked = true
         let getId = element.getAttribute('id')
-        console.log(element);
         this.setBulkDeleteItems.push(getId)
-      
       }
     } else {
-      for (let i = 0; i < items.length; i++) {
-        let element = items[i];
-        element.checked = false
-        console.log(element);
-        this.setBulkDeleteItems = []
-      }
-   }
-
-   
+        for (let i = 0; i < items.length; i++) {
+          let element = items[i];
+          element.checked = false
+          this.setBulkDeleteItems = []
+        }
+    }
   }
 
   getDeleteItems(event: any, index:any) {
@@ -145,24 +131,18 @@ export class StockLogsComponent implements OnInit {
     checkElement.checked = false
     var element = <HTMLInputElement> document.getElementById(event._id);
     var isChecked = element.checked;  
-    console.log('index', this.setBulkDeleteItems)
-    //console.log('element', event)
     if(isChecked) {
       this.setBulkDeleteItems.push(event._id);
     } else {
-
       this.setBulkDeleteItems.splice(index, 1)
     }
-      console.log(this.setBulkDeleteItems) 
   }
 
 
   BulkDelete() {
-    //console.log('bulkDelete')
     if(typeof this.setBulkDeleteItems !== undefined && this.setBulkDeleteItems.length > 0) {
       if (confirm("Are you sure to delete ?")) {
         this.stockLogsService.bulkDelete(this.setBulkDeleteItems).subscribe((res:any) => {
-          console.log('response', res)
           let element = <HTMLInputElement> document.getElementById('deleteAll');
           element.checked = false
           this._snackBar.open(res.message, '', {
@@ -181,8 +161,6 @@ export class StockLogsComponent implements OnInit {
         verticalPosition: 'top'
       });
     }
-  }
-
-  
+  } 
 
 }

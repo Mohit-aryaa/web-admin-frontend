@@ -50,28 +50,23 @@ export class EditVendorComponent implements OnInit {
 
   tabChanged(tabChangeEvent: MatTabChangeEvent): void {
     this.selectedIndex = tabChangeEvent.index;
-    console.log(this.selectedIndex)
   }
 
   nextStep() {
-    const maxNumberOfTabs = 11
+    const maxNumberOfTabs = 4
     if (this.selectedIndex != maxNumberOfTabs) {
       this.selectedIndex = this.selectedIndex + 1;
     }
-    console.log(this.selectedIndex);
   }
 
   previousStep() {
     if (this.selectedIndex != 0) {
       this.selectedIndex = this.selectedIndex - 1;
     }
-    console.log(this.selectedIndex);
   }
 
   getData(data:any) {
     this.vendorsService.showVendor(data).subscribe((res:any) =>{
-      console.log(res)
-      //this.getRes = res;
       delete res.password;
       this.vendorsEditForm.patchValue(res)
     })
@@ -80,7 +75,6 @@ export class EditVendorComponent implements OnInit {
   postData() {
     this.vendorsEditForm.markAllAsTouched();
     if (this.vendorsEditForm.invalid) {
-      console.log('this.vendors', this.vendorsEditForm.value)
       this._snackBar.open('All fields are required', '', {
         duration: 2000,
         verticalPosition: 'top'
@@ -89,7 +83,6 @@ export class EditVendorComponent implements OnInit {
     }
     this.vendorsService.updateVendors(this.getId, this.vendorsEditForm.value).subscribe(
       (res: any) => {
-        console.log(res);
         this.vendorsEditForm.reset();
         this._snackBar.open(res.message, '', {
           duration: 2000,
@@ -99,8 +92,7 @@ export class EditVendorComponent implements OnInit {
       errors => {
         console.log(errors);
       }
-    )
-    
+    ) 
   }
 
 }

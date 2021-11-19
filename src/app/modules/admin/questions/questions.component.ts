@@ -52,10 +52,8 @@ export class QuestionsComponent implements OnInit {
 
   getData() {
     this.questionsService.getQuestions({ params: this.tablePaging }).subscribe((res: any) => {
-      console.log('getdata', res);
       this.loading = false;
       this.Questions = res.Questions;
-      console.log('Questions', this.Questions)
       this.Questions.length = res.total;
       this.dataSource = new MatTableDataSource<any>(this.Questions);
       this.dataSource.paginator = this.Paginator;
@@ -68,16 +66,14 @@ export class QuestionsComponent implements OnInit {
       this.userDataPromise.unsubscribe();
     }
     this.userDataPromise = this.questionsService.getQuestions({ params: this.tablePaging }).subscribe((response: any) => {
-        this.loading = false;
-        console.log(response.Questions)
-        this.Questions.length = this.tablePaging['previousSize'];
-        this.Questions.push(...response.Questions);
-
-        this.Questions.length = response.total;
-        this.dataSource = new MatTableDataSource<any>(this.Questions);
-        this.dataSource._updateChangeSubscription();
-        this.dataSource.paginator = this.Paginator;
-      })
+      this.loading = false;
+      this.Questions.length = this.tablePaging['previousSize'];
+      this.Questions.push(...response.Questions);
+      this.Questions.length = response.total;
+      this.dataSource = new MatTableDataSource<any>(this.Questions);
+      this.dataSource._updateChangeSubscription();
+      this.dataSource.paginator = this.Paginator;
+    })
   }
 
 
@@ -94,13 +90,10 @@ export class QuestionsComponent implements OnInit {
   }
 
   applyFilter(filterValue: string) {
-    //console.log('this.tablePaging', this.tablePaging);
     var filterData = filterValue.trim().toLowerCase();
-    //this.getNextData();
     this.userDataPromise = this.questionsService.filterQuestions(filterData).subscribe((res: any) => {
       this.loading = false;
       this.Questions = res.Questions;
-      //console.log('this.StockLogs', this.Questions)
       this.Questions.length = res.total;
       this.dataSource = new MatTableDataSource<any>(this.Questions);
       this.dataSource.paginator = this.Paginator;
@@ -109,15 +102,10 @@ export class QuestionsComponent implements OnInit {
 
   openUpdateModal(data: any) {
     this.selectedQuestionId = data._id;
-    console.log(this.selectedQuestionId)
     this.questionForm.patchValue(data);
     this.modalService.open(this.content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
-      // this.closeResult = `Closed with: ${result}`;
-     
     }, (reason) => {
       this.questionForm.reset();
-      // this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-
     });
   }
 
@@ -127,15 +115,12 @@ export class QuestionsComponent implements OnInit {
     console.log('postData',this.questionForm.value)
     this.questionForm.markAllAsTouched();
     if (this.questionForm.invalid) {
-      console.log('this.questionForm', this.questionForm.value)
       return false;
     }
       this.questionsService.updateAnswers(this.selectedQuestionId, this.questionForm.value).subscribe(
         (results: any) => {
-          //console.log(results);
           this.modalService.dismissAll();
           this.questionForm.reset();
-          console.log(this.Questions.length)
           this.getNextData()       
         },
         errors => {
@@ -145,9 +130,7 @@ export class QuestionsComponent implements OnInit {
   }
 
   deleteQuestions(deleteStockLog: any) {
-    //console.log(delsubsubCategories);
     if (confirm("Are you sure to delete ?")) {
-      //console.log("Implement delete functionality here");
       this.questionsService.deleteQuestions(deleteStockLog).subscribe(
         (res: any) => {
          this.getNextData()
@@ -157,14 +140,12 @@ export class QuestionsComponent implements OnInit {
   }
 
   checkAllDeleteItems(e:any) {
-    //console.log(e)
     var items:any =  document.getElementsByClassName("deleteChecks");
     if(e.target.checked) {
       for (let i = 0; i < items.length; i++) {
         let element = items[i];
         element.checked = true
-        let getId = element.getAttribute('id')
-        console.log(element);
+        let getId = element.getAttribute('id');
         this.setBulkDeleteItems.push(getId)
       
       }
@@ -172,7 +153,6 @@ export class QuestionsComponent implements OnInit {
       for (let i = 0; i < items.length; i++) {
         let element = items[i];
         element.checked = false
-        console.log(element);
         this.setBulkDeleteItems = []
       }
    }  
@@ -183,24 +163,18 @@ export class QuestionsComponent implements OnInit {
     checkElement.checked = false
     var element = <HTMLInputElement> document.getElementById(event._id);
     var isChecked = element.checked;  
-    console.log('index', this.setBulkDeleteItems)
-    //console.log('element', event)
     if(isChecked) {
       this.setBulkDeleteItems.push(event._id);
     } else {
-
       this.setBulkDeleteItems.splice(index, 1)
     }
-      console.log(this.setBulkDeleteItems) 
   }
 
 
   BulkDelete() {
-    //console.log('bulkDelete')
     if(typeof this.setBulkDeleteItems !== undefined && this.setBulkDeleteItems.length > 0) {
       if (confirm("Are you sure to delete ?")) {
         this.questionsService.bulkDelete(this.setBulkDeleteItems).subscribe((res:any) => {
-          console.log('response', res)
           let element = <HTMLInputElement> document.getElementById('deleteAll');
           element.checked = false
           this._snackBar.open(res.message, '', {

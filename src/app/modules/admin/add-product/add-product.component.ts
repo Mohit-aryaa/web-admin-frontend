@@ -13,6 +13,8 @@ import { colors } from "../colors";
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { countries } from "../country";
 import { SubChildCategoryService } from '../../services/sub-child-category.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { of } from 'rxjs';
 @Component({
   selector: 'app-add-product',
   templateUrl: './add-product.component.html',
@@ -24,6 +26,7 @@ export class AddProductComponent implements OnInit {
   storeImg :any = FileList;
   imgUploading: boolean = false;
   showPreview: boolean = false;
+  showOldImages: boolean = false;
   getCategoriesList: any[];
   getSubCategoriesList: any[];
   getSubChildCategoriesList: any[];
@@ -33,10 +36,11 @@ export class AddProductComponent implements OnInit {
   urls = [];
   color: any;
   country: any;
+  getProductImages: [];
   similarProducts: any = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
   blogPosts: any = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
   selectedIndex: number = 0;
-  constructor(private http: HttpClient, private productsService: ProductsService,private categoriesService: CategoriesService , private subCategoriesService: SubCategoriesService, private _formBuilder: FormBuilder, private _snackBar: MatSnackBar,private brandsService: BrandService,private vendorsService: VendorService, private subChildCategoriesService: SubChildCategoryService) { }
+  constructor(private http: HttpClient, private productsService: ProductsService,private categoriesService: CategoriesService , private subCategoriesService: SubCategoriesService, private _formBuilder: FormBuilder, private _snackBar: MatSnackBar,private brandsService: BrandService,private vendorsService: VendorService, private subChildCategoriesService: SubChildCategoryService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.color = colors;
@@ -47,7 +51,7 @@ export class AddProductComponent implements OnInit {
     this.productsForm = this._formBuilder.group({
       productName:['', [Validators.required]],
       productDescription:['', [Validators.required]],
-      productImagepicture: ['', [Validators.required]],
+      productImagepicture: [''],
       productImages:[''],
       productCode:['',[Validators.required]],
       productModel: ['', [Validators.required]],
@@ -110,8 +114,32 @@ export class AddProductComponent implements OnInit {
       }),
       variant : ['',[Validators.required]],
     })
+
+    this.selectedProduct = this.route.snapshot.paramMap.get('id');
+    if(this.selectedProduct !== null) {
+      this.getData(this.selectedProduct)
+    } 
+    
+      
+    
   }
 
+  removeImage(e: any) {
+    console.log(e, this.selectedProduct)
+    const removeImageData: any = {
+      id : this.selectedProduct,
+      image: e
+    }
+    if (confirm("Are you sure to delete ?")) {
+      this.productsService.removeImage(removeImageData).subscribe((response:any) => {
+        console.log(response.images)
+        this.getProductImages = response.images;
+
+      },(errors:any) => {
+        console.log(errors)
+      })
+    }
+  }
   
 
   selectable = true;
@@ -153,28 +181,24 @@ export class AddProductComponent implements OnInit {
   }
 
   getCategoryValue(e:any) {
-    console.log(e.target.value)
     this.getSubCategories(e.target.value)
   }
 
   getSubCategories(data: any) {
     this.subCategoriesService.getDataByCategoryId(data).subscribe((res: any) => {
       this.getSubCategoriesList = res.SubCategory
-      console.log('getSubCategoriesList',this.getSubCategoriesList)
     }, (errors:any) => {
       console.log(errors)
     })
   }
 
   getSubCategoryValue(e:any) {
-    console.log(e.target.value)
     this.getSubChildCategories(e.target.value)
   }
 
   getSubChildCategories(data: any) {
     this.subChildCategoriesService.getDataBySubCategoryId(data).subscribe((res: any) => {
       this.getSubChildCategoriesList = res.SubChildCategory
-      console.log('getSubChildCategoriesList',this.getSubChildCategoriesList)
     }, (errors:any) => {
       console.log(errors)
     })
@@ -183,7 +207,6 @@ export class AddProductComponent implements OnInit {
   getBrands() {
     this.brandsService.listBrands().subscribe((res: any) => {
       this.getBrandsList = res.Brands
-      //console.log('subcat',this.getSubCategoriesList)
     }, (errors:any) => {
       console.log(errors)
     })
@@ -199,7 +222,6 @@ export class AddProductComponent implements OnInit {
 
   tabChanged(tabChangeEvent: MatTabChangeEvent): void {
       this.selectedIndex = tabChangeEvent.index;
-      console.log(this.selectedIndex)
   }
 
   nextStep() {
@@ -207,14 +229,27 @@ export class AddProductComponent implements OnInit {
     if (this.selectedIndex != maxNumberOfTabs) {
       this.selectedIndex = this.selectedIndex + 1;
     }
-    console.log(this.selectedIndex);
+    //console.log(this.selectedIndex);
   }
 
   previousStep() {
     if (this.selectedIndex != 0) {
       this.selectedIndex = this.selectedIndex - 1;
     }
-    console.log(this.selectedIndex);
+    //console.log(this.selectedIndex);
+  }
+
+  getData(data:any) {
+    this.showOldImages = true;
+    this.productsService.showProduct(data).subscribe((res:any) =>{
+      //this.getEditData = res;
+      //this.getRes = res;
+      this.tags = res.tags
+      this.getProductImages =  res.productImages;
+      this.getSubCategories(res.productCategory);
+      delete res.productImages;
+      this.productsForm.patchValue(res)
+    })
   }
 
 
@@ -231,7 +266,6 @@ export class AddProductComponent implements OnInit {
         reader.readAsDataURL(file);
       }
     }    
-    
     this.storeImg = event.target.files; 
   }
 
@@ -243,32 +277,69 @@ export class AddProductComponent implements OnInit {
       return false;
     } 
 
-    this.productsService.addProducts(this.productsForm.value).subscribe((res:any) => {
-      console.log(res);
-        
-      this.productsForm.reset();
-      this.tags = [];
-      this.urls = undefined
-      this.showPreview = false
-      this.storeImg = undefined;
-      this._snackBar.open(res.message, '', {
-        duration: 2000,
-        verticalPosition: 'top'
-      });
-      //this.getNextData();
-    },(errors) => {
-      console.log(errors)
-      this._snackBar.open(errors.error.message, '', {
-        duration: 2000,
-        verticalPosition: 'top'
-      });
-    })
-    
+    if(this.selectedProduct) {
+      if(this.getProductImages.length == 0 && this.urls.length == 0) {
+        this._snackBar.open('At least one image is required', '', {
+          duration: 2000,
+          verticalPosition: 'top'
+        });
+        return false
+      }
+      if(this.productsForm.value.productImagepicture == '') {
+        this.productsForm.patchValue({
+          'productImages': undefined
+        })
+      }
+      this.productsService.updateProducts(this.selectedProduct, this.productsForm.value).subscribe((res:any) => {
+        this.productsForm.reset();
+        this.tags = [];
+        this.urls = undefined
+        this.showPreview = false
+        this.storeImg = undefined;
+        this._snackBar.open(res.message, '', {
+          duration: 2000,
+          verticalPosition: 'top'
+        });
+        setTimeout(()=> {
+          this.router.navigate(['/products']);
+        }, 2000)
+      },(errors) => {
+        console.log(errors)
+        this._snackBar.open(errors.error.message, '', {
+          duration: 2000,
+          verticalPosition: 'top'
+        });
+      })
+    } else {
+      if (this.showPreview == false ) {
+        this._snackBar.open('Banner is required',  '', {
+          duration: 2000,
+          verticalPosition: 'top'
+        })
+        return false
+      }
+      this.productsService.addProducts(this.productsForm.value).subscribe((res:any) => {
+        this.productsForm.reset();
+        this.tags = [];
+        this.urls = undefined
+        this.showPreview = false
+        this.storeImg = undefined;
+        this._snackBar.open(res.message, '', {
+          duration: 2000,
+          verticalPosition: 'top'
+        });
+      },(errors) => {
+        console.log(errors)
+        this._snackBar.open(errors.error.message, '', {
+          duration: 2000,
+          verticalPosition: 'top'
+        });
+      })
+    }    
   }
 
   postData() {
     this.productsForm.markAllAsTouched();
-    console.log(this.storeImg)
     const formData = new FormData();
     var filename = [];
     if(this.productsForm.invalid) {
@@ -278,46 +349,36 @@ export class AddProductComponent implements OnInit {
       })
       return false
     }
-    if (this.showPreview == false ) {
-      this._snackBar.open('At least one image is required',  '', {
-        duration: 2000,
-        verticalPosition: 'top'
-      })
-      return false
-    } 
-    for (let i = 0; i < this.storeImg.length; i++) { 
-      formData.append('images[]', this.storeImg[i]) 
-      filename.push(this.storeImg[i].name.split('.').pop()) 
-    }
-    const file = filename.toString();
-    console.log(formData)
-    this.imgUploading = true
-     
-    if(file.match(/png/g)  || file.match(/jpeg/g) || file.match(/jpg/g)) {
-      this.productsService.uploadProductImage(formData).subscribe((res:any)=> {
-        console.log(res)
-          this.productsForm.patchValue({
-            'productImages': res.imagePath
-          })
-          this.imgUploading = false
-          this.postFormInput();
-          console.log(this.productsForm.value)
-        },(errors) => {
-          console.log(errors)
-      })
+    if(this.storeImg.length > 0) {
+      for (let i = 0; i < this.storeImg.length; i++) { 
+        formData.append('images[]', this.storeImg[i]) 
+        filename.push(this.storeImg[i].name.split('.').pop()) 
+      }
+      const file = filename.toString();
+      this.imgUploading = true
+      if(file.match(/png/g)  || file.match(/jpeg/g) || file.match(/jpg/g)) {
+        this.productsService.uploadProductImage(formData).subscribe((res:any)=> {
+            this.productsForm.patchValue({
+              'productImages': res.imagePath
+            })
+            this.imgUploading = false
+            this.postFormInput();
+          },(errors) => {
+            console.log(errors)
+        })
+      } else {
+        this._snackBar.open('Only jpg, png and jpeg formats are allowed',  '', {
+          duration: 2000,
+          verticalPosition: 'top'
+        })
+        return false
+      } 
     } else {
-      this._snackBar.open('Only jpg, png and jpeg formats are allowed',  '', {
-        duration: 2000,
-        verticalPosition: 'top'
-      })
-      console.log('Only jpg, png and jpeg formats are allowed')
-      console.log(file)
-      return false
-    } 
+      this.imgUploading = false
+      this.postFormInput();
+    }
+    
   }
-  
-  
-  
 
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
@@ -358,7 +419,7 @@ export class AddProductComponent implements OnInit {
   }
 
   onSelectionChanged = (event: any) =>{
-    console.log(this.productsForm.value.productDescription)
+    //console.log(this.productsForm.value.productDescription)
     if(event.oldRange == null){
       this.onFocus();
     }

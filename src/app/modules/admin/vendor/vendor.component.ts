@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { VendorService } from '../../services/vendor.service';
+import { VendorService } from 'app/modules/services/vendor.service';
 
 @Component({
   selector: 'app-vendor',
@@ -52,7 +52,6 @@ export class VendorComponent implements OnInit {
         let element = items[i];
         element.checked = true
         let getId = element.getAttribute('id')
-        console.log(element);
         this.setBulkDeleteItems.push(getId)
       
       }
@@ -60,7 +59,6 @@ export class VendorComponent implements OnInit {
       for (let i = 0; i < items.length; i++) {
         let element = items[i];
         element.checked = false
-        console.log(element);
         this.setBulkDeleteItems = []
       }
    }
@@ -71,16 +69,12 @@ export class VendorComponent implements OnInit {
     let checkElement = <HTMLInputElement> document.getElementById('deleteAll');
     checkElement.checked = false
     var element = <HTMLInputElement> document.getElementById(event._id);
-    var isChecked = element.checked;  
-    //console.log('index', id)
-    //console.log('element', event)
+    var isChecked = element.checked; 
     if(isChecked) {
       this.setBulkDeleteItems.push(event._id);
     } else {
-
       this.setBulkDeleteItems.splice(index, 1)
     }
-      console.log(this.setBulkDeleteItems) 
   }
 
   BulkDelete() {
@@ -88,7 +82,6 @@ export class VendorComponent implements OnInit {
     if(typeof this.setBulkDeleteItems !== undefined && this.setBulkDeleteItems.length > 0) {
       if (confirm("Are you sure to delete ?")) {
         this.vendorsService.bulkDelete(this.setBulkDeleteItems).subscribe((res:any) => {
-        console.log('response', res)
         let element = <HTMLInputElement> document.getElementById('deleteAll');
         element.checked = false
         this._snackBar.open(res.message, '', {
@@ -113,10 +106,8 @@ export class VendorComponent implements OnInit {
 
   getData() {
     this.vendorsService.getVendors({ params: this.tablePaging }).subscribe((res: any) => {
-      //console.log('getdata', res);
       this.loading = false;
       this.Vendors = res.Vendors;
-      console.log('this.users', this.Vendors)
       this.Vendors.length = res.total;
       this.dataSource = new MatTableDataSource<any>(this.Vendors);
       this.dataSource.paginator = this.Paginator;
@@ -129,17 +120,14 @@ export class VendorComponent implements OnInit {
       this.userDataPromise.unsubscribe();
     }
     this.userDataPromise = this.vendorsService.getVendors({ params: this.tablePaging }).subscribe((response: any) => {
-        this.loading = false;
-        console.log(response.Vendors)
-        this.Vendors.length = this.tablePaging['previousSize'];
-        this.Vendors.push(...response.Vendors);
-
-        this.Vendors.length = response.total;
-        this.dataSource = new MatTableDataSource<any>(this.Vendors);
-        this.dataSource._updateChangeSubscription();
-        this.dataSource.paginator = this.Paginator;
-
-      })
+      this.loading = false;
+      this.Vendors.length = this.tablePaging['previousSize'];
+      this.Vendors.push(...response.Vendors);
+      this.Vendors.length = response.total;
+      this.dataSource = new MatTableDataSource<any>(this.Vendors);
+      this.dataSource._updateChangeSubscription();
+      this.dataSource.paginator = this.Paginator;
+    })
   }
 
 
@@ -156,7 +144,6 @@ export class VendorComponent implements OnInit {
   }
 
   applyCategoryFilter(filterValue: string) {
-    console.log('this.tablePaging', this.tablePaging);
     var filterData = filterValue.trim().toLowerCase();
     //this.getNextData();
     this.userDataPromise = this.vendorsService.filterVendors(filterData).subscribe((res: any) => {
@@ -171,18 +158,13 @@ export class VendorComponent implements OnInit {
 
   openModal(id = null) {
     this.selectedVendor = id;
-    //console.log(data);
     this.modalService.open(this.content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
-      // this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.vendorsForm.reset();
-      // this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-
     });
   }
 
   openUpdateModal(data: any) {
-    console.log(data);
     this.openModal(data._id);
     this.vendorsForm.patchValue(data);
   }
@@ -190,9 +172,7 @@ export class VendorComponent implements OnInit {
   
 
   deleteVendors(deleteVendors: any) {
-    //console.log(delsubsubCategories);
     if (confirm("Are you sure to delete ?")) {
-      //console.log("Implement delete functionality here");
       this.vendorsService.deleteVendors(deleteVendors).subscribe(
         (res: any) => {
          this.getNextData()

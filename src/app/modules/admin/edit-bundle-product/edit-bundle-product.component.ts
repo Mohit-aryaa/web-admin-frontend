@@ -18,8 +18,7 @@ import { colors } from "../colors";
   styleUrls: ['./edit-bundle-product.component.scss']
 })
 export class EditBundleProductComponent implements OnInit {
-
-   getId: any;
+  getId: any;
   getBrandsList: any[];
   editBundleProductsForm:FormGroup;
   storeImg :any = FileList;
@@ -121,7 +120,6 @@ export class EditBundleProductComponent implements OnInit {
   getBrands() {
     this.brandsService.listBrands().subscribe((res: any) => {
       this.getBrandsList = res.Brands
-      //console.log('subcat',this.getSubCategoriesList)
     }, (errors:any) => {
       console.log(errors)
     })
@@ -130,7 +128,6 @@ export class EditBundleProductComponent implements OnInit {
   getCategories() {
     this.categoriesService.listCategories().subscribe((res: any) => {
       this.getCategoriesList = res.Categories
-      console.log('subcat',this.getCategoriesList)
     }, (errors:any) => {
       console.log(errors)
     })

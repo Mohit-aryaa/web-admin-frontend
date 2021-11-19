@@ -43,14 +43,12 @@ export class BundleProductsComponent implements OnInit {
   }
   
   checkAllDeleteItems(e:any) {
-    //console.log(e)
     var items:any =  document.getElementsByClassName("deleteChecks");
     if(e.target.checked) {
       for (let i = 0; i < items.length; i++) {
         let element = items[i];
         element.checked = true
         let getId = element.getAttribute('id')
-        console.log(element);
         this.setBulkDeleteItems.push(getId)
       
       }
@@ -58,7 +56,6 @@ export class BundleProductsComponent implements OnInit {
       for (let i = 0; i < items.length; i++) {
         let element = items[i];
         element.checked = false
-        console.log(element);
         this.setBulkDeleteItems = []
       }
    }
@@ -69,23 +66,17 @@ export class BundleProductsComponent implements OnInit {
     let checkElement = <HTMLInputElement> document.getElementById('deleteAll');
     checkElement.checked = false
     var element = <HTMLInputElement> document.getElementById(event._id);
-    var isChecked = element.checked;  
-    //console.log('index', id)
-    //console.log('element', event)
+    var isChecked = element.checked;
     if(isChecked) {
       this.setBulkDeleteItems.push(event._id);
     } else {
-
       this.setBulkDeleteItems.splice(index, 1)
     }
-      console.log(this.setBulkDeleteItems) 
   }
 
   BulkDelete() {
-    //console.log('bulkDelete')
     if(typeof this.setBulkDeleteItems !== undefined && this.setBulkDeleteItems.length > 0) {
       this.bundleProductsService.bulkDelete(this.setBulkDeleteItems).subscribe((res:any) => {
-        console.log('response', res)
         let element = <HTMLInputElement> document.getElementById('deleteAll');
         element.checked = false
         this._snackBar.open(res.message, '', {
@@ -108,7 +99,6 @@ export class BundleProductsComponent implements OnInit {
   
   getData() {
     this.bundleProductsService.getBundleProducts({ params: this.tablePaging }).subscribe((res: any) => {
-      console.log('getdata', res);
       this.loading = false;
       this.BundleProducts = res.BundleProducts;
       console.log('this.users', this.BundleProducts)
@@ -124,17 +114,14 @@ export class BundleProductsComponent implements OnInit {
       this.userDataPromise.unsubscribe();
     }
     this.userDataPromise = this.bundleProductsService.getBundleProducts({ params: this.tablePaging }).subscribe((response: any) => {
-        this.loading = false;
-        console.log(response.BundleProducts)
-        this.BundleProducts.length = this.tablePaging['previousSize'];
-        this.BundleProducts.push(...response.BundleProducts);
-
-        this.BundleProducts.length = response.total;
-        this.dataSource = new MatTableDataSource<any>(this.BundleProducts);
-        this.dataSource._updateChangeSubscription();
-        this.dataSource.paginator = this.Paginator;
-
-      })
+      this.loading = false;
+      this.BundleProducts.length = this.tablePaging['previousSize'];
+      this.BundleProducts.push(...response.BundleProducts);
+      this.BundleProducts.length = response.total;
+      this.dataSource = new MatTableDataSource<any>(this.BundleProducts);
+      this.dataSource._updateChangeSubscription();
+      this.dataSource.paginator = this.Paginator;
+    })
   }
 
 
@@ -150,13 +137,10 @@ export class BundleProductsComponent implements OnInit {
   }
 
   applyProductFilter(filterValue: string) {
-    console.log('this.tablePaging', this.tablePaging);
     var filterData = filterValue.trim().toLowerCase();
-    //this.getNextData();
     this.userDataPromise = this.bundleProductsService.filterBundleProducts(filterData).subscribe((res: any) => {
       this.loading = false;
       this.BundleProducts = res.BundleProducts;
-      console.log('this.Products', this.BundleProducts)
       this.BundleProducts.length = res.total;
       this.dataSource = new MatTableDataSource<any>(this.BundleProducts);
       this.dataSource.paginator = this.Paginator;
@@ -166,10 +150,9 @@ export class BundleProductsComponent implements OnInit {
 
   deleteBundleProduct(deleteProduct: any) {
     if (confirm("Are you sure to delete ?")) {
-      //console.log("Implement delete functionality here");
       this.bundleProductsService.deleteBundleProducts(deleteProduct).subscribe(
         (res: any) => {
-          this.getData();
+          this.getNextData();
         }
       )
     }

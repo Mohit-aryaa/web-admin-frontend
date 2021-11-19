@@ -80,14 +80,12 @@ export class ShippingComponent implements OnInit {
     }
     this.userDataPromise = this.shippingservice.getShipping({ params: this.tablePaging }).subscribe((response: any) => {
         this.loading = false;
-        console.log(response.Shippings)
         this.Shippings.length = this.tablePaging['previousSize'];
         this.Shippings.push(...response.Shippings);
         this.Shippings.length = response.total;
         this.dataSource = new MatTableDataSource<any>(this.Shippings);
         this.dataSource._updateChangeSubscription();
         this.dataSource.paginator = this.Paginator;
-
       })
   }
 
@@ -105,13 +103,11 @@ export class ShippingComponent implements OnInit {
   }
 
   applyFilter(filterValue: string) {
-    console.log('this.tablePaging', this.tablePaging);
     var filterData = filterValue.trim().toLowerCase();
     //this.getNextData();
     this.userDataPromise = this.shippingservice.filterShipping(filterData).subscribe((res: any) => {
       this.loading = false;
       this.Shippings = res.Shippings;
-      console.log('this.StockLogs', this.Shippings)
       this.Shippings.length = res.total;
       this.dataSource = new MatTableDataSource<any>(this.Shippings);
       this.dataSource.paginator = this.Paginator;
@@ -120,18 +116,13 @@ export class ShippingComponent implements OnInit {
 
   openModal(id = null) {
     this.selectedShipping = id;
-    //console.log(data);
     this.modalService.open(this.content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
-      // this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.shippingForm.reset();
-      // this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-
     });
   }
 
   openUpdateModal(data: any) {
-    console.log(data);
     this.openModal(data._id);
     this.shippingForm.patchValue(data);
   }
@@ -146,13 +137,9 @@ export class ShippingComponent implements OnInit {
     if (this.selectedShipping) {
       this.shippingservice.updateShipping(this.selectedShipping, this.shippingForm.value).subscribe(
         (results: any) => {
-          //console.log(results);
           this.modalService.dismissAll();
           this.shippingForm.reset();
-          console.log(this.Shippings.length)
-          
           this.getNextData()
-          
         },
         errors => {
           console.log(errors);
@@ -161,12 +148,9 @@ export class ShippingComponent implements OnInit {
     } else {
       this.shippingservice.addShipping(this.shippingForm.value).subscribe(
         (res: any) => {
-          console.log(res);
           this.modalService.dismissAll();
           this.shippingForm.reset();
-          console.log(this.Shippings.length)
           this.getNextData();
-          
         },
         errors => {
           console.log(errors);
@@ -176,9 +160,7 @@ export class ShippingComponent implements OnInit {
   }
 
   deleteStockLog(deleteStockLog: any) {
-    //console.log(delsubsubCategories);
     if (confirm("Are you sure to delete ?")) {
-      //console.log("Implement delete functionality here");
       this.shippingservice.deleteShipping(deleteStockLog).subscribe(
         (res: any) => {
          this.getNextData()
@@ -188,22 +170,18 @@ export class ShippingComponent implements OnInit {
   }
 
   checkAllDeleteItems(e:any) {
-    //console.log(e)
     var items:any =  document.getElementsByClassName("deleteChecks");
     if(e.target.checked) {
       for (let i = 0; i < items.length; i++) {
         let element = items[i];
         element.checked = true
         let getId = element.getAttribute('id')
-        console.log(element);
         this.setBulkDeleteItems.push(getId)
-      
       }
     } else {
       for (let i = 0; i < items.length; i++) {
         let element = items[i];
         element.checked = false
-        console.log(element);
         this.setBulkDeleteItems = []
       }
    }   
@@ -214,24 +192,18 @@ export class ShippingComponent implements OnInit {
     checkElement.checked = false
     var element = <HTMLInputElement> document.getElementById(event._id);
     var isChecked = element.checked;  
-    console.log('index', this.setBulkDeleteItems)
-    //console.log('element', event)
     if(isChecked) {
       this.setBulkDeleteItems.push(event._id);
     } else {
-
       this.setBulkDeleteItems.splice(index, 1)
-    }
-      console.log(this.setBulkDeleteItems) 
+    } 
   }
 
 
   BulkDelete() {
-    //console.log('bulkDelete')
     if(typeof this.setBulkDeleteItems !== undefined && this.setBulkDeleteItems.length > 0) {
       if (confirm("Are you sure to delete ?")) {
         this.shippingservice.bulkDelete(this.setBulkDeleteItems).subscribe((res:any) => {
-          console.log('response', res)
           let element = <HTMLInputElement> document.getElementById('deleteAll');
           element.checked = false
           this._snackBar.open(res.message, '', {

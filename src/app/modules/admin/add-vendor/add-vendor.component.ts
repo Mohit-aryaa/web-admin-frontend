@@ -52,18 +52,16 @@ export class AddVendorComponent implements OnInit {
   }
 
   nextStep() {
-    const maxNumberOfTabs = 11
+    const maxNumberOfTabs = 4
     if (this.selectedIndex != maxNumberOfTabs) {
       this.selectedIndex = this.selectedIndex + 1;
     }
-    console.log(this.selectedIndex);
   }
 
   previousStep() {
     if (this.selectedIndex != 0) {
       this.selectedIndex = this.selectedIndex - 1;
     }
-    console.log(this.selectedIndex);
   }
 
   postData() {
@@ -78,7 +76,6 @@ export class AddVendorComponent implements OnInit {
     }
     this.vendorsService.addVendors(this.vendorsForm.value).subscribe(
       (res: any) => {
-        console.log(res);
         this.vendorsForm.reset();
         this._snackBar.open(res.message, '', {
           duration: 2000,
