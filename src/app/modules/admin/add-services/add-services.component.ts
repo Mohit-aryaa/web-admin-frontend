@@ -19,11 +19,12 @@ import { SubChildCategoryService } from '../../services/sub-child-category.servi
 import { ActivatedRoute, Router } from '@angular/router';
 import { ThemePalette } from '@angular/material/core';
 @Component({
-    selector: 'app-add-product',
-    templateUrl: './add-product.component.html',
-    styleUrls: ['./add-product.component.scss'],
+  selector: 'app-add-services',
+  templateUrl: './add-services.component.html',
+  styleUrls: ['./add-services.component.scss']
 })
-export class AddProductComponent implements OnInit {
+export class AddServicesComponent implements OnInit {
+
     productsForm: FormGroup;
     selectedProduct: any;
     storeImg: any = FileList;

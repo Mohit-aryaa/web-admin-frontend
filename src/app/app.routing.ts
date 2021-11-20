@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Route } from '@angular/router';
 import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
@@ -6,8 +8,8 @@ import { InitialDataResolver } from 'app/app.resolvers';
 
 // @formatter:off
 // tslint:disable:max-line-length
-export const appRoutes: Route[] = [
 
+export const appRoutes: Route[] = [
     // Redirect empty path to '/example'
     {path: '', pathMatch : 'full', redirectTo: 'dashboard'},
 
@@ -93,6 +95,7 @@ export const appRoutes: Route[] = [
             {path: 'edit-bundle-product/:id', loadChildren: () => import('app/modules/admin/add-bundle-product/add-bundle-product.module').then(m => m.AddBundleProductModule)},
             {path: 'shipping', loadChildren: () => import('app/modules/admin/shipping/shipping.module').then(m => m.ShippingModule)},
             {path: 'questions', loadChildren: () => import('app/modules/admin/questions/questions.module').then(m => m.QuestionsModule)},
+            {path: 'add-Service', loadChildren: () => import('app/modules/admin/add-services/add-services.module').then(m => m.AddServiceModule)},
 
         ]
     }

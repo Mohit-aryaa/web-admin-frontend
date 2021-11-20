@@ -1,1 +1,93 @@
-<p>services works!</p>
+<div class="flex flex-col flex-auto min-w-0" style="max-height: 90vh; overflow-y: scroll;">
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:p-10">
+        <div class="row mb-3">
+            <div class="col-md-6">
+
+            </div>
+            <div class="col-md-6 text-end">
+                <a routerLink="/add-Service">
+                    <button  mat-raised-button color="primary"><mat-icon class="me-2">add</mat-icon> Add Services</button>
+                </a>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class=" mat-elevation-z8 shadow-sm p-3 w-100 bg-white">
+
+                <div class="d-flex px-3 py-4">
+                    <div class="col-6">
+                        <mat-icon style="cursor: pointer;" (click)="getNextData()">autorenew</mat-icon>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group d-flex">
+                            <button  mat-raised-button color="warn" (click)="BulkDelete()" class="ms-auto me-2">Bulk Delete</button>
+                            <input style="max-width: 268px;" type="text" class="form-control bg-light sortInput rounded-pill" #productInput (keyup)="applyProductFilter(productInput.value)" placeholder="Search">
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="loading;else table" class="d-flex justify-content-center">
+                    <mat-spinner class="progress-spinner"></mat-spinner>
+                </div>
+                <div *ngIf="dataSource.data.length === 0" class="text-center">
+                    No Records Found!
+                </div>
+
+                <ng-template #table>
+                    <table mat-table [dataSource]="dataSource" matSort class="" style="width: 100%;">
+                        <ng-container matColumnDef="check">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <div class="form-group">
+                                    <input  class="form-check-input" (click)="checkAllDeleteItems($event)" type="checkbox" id="deleteAll"  value="" >
+                                </div>
+                            </th>
+                            <td mat-cell *matCellDef="let element; let j = index">
+                                <div class="form-check">
+                                    <input  class="form-check-input deleteChecks" (click)="getDeleteItems(element, j)" type="checkbox" value="" id="{{element._id}}">
+                                </div>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="image">
+                            <th mat-header-cell *matHeaderCellDef> Image</th>
+                            <td mat-cell *matCellDef="let element"><img src="{{element.productImages[0]}}" style="max-width: 70px;" class="w-100 py-2" alt=""></td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="title">
+                            <th mat-header-cell *matHeaderCellDef> Title</th>
+                            <tdT mat-cell *matCellDef="let element">{{element.title}}</tdT>
+                        </ng-container>
+                        <ng-container matColumnDef="description">
+                            <th mat-header-cell *matHeaderCellDef> Description</th>
+                            <td mat-cell *matCellDef="let element">{{element.description}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="publish">
+                            <th mat-header-cell *matHeaderCellDef> Publish</th>
+                            <td mat-cell *matCellDef="let element">{{element.publish }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="subCategory">
+                            <th mat-header-cell *matHeaderCellDef> Sub Category</th>
+                            <td mat-cell *matCellDef="let element">{{element.productSubCategory.subCategoryName }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="options">
+                            <th mat-header-cell *matHeaderCellDef> Options</th>
+                            <td mat-cell *matCellDef="let element">{{element.otions}}</td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsOne"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsOne;"></tr>
+                    </table>
+                </ng-template>
+                <mat-paginator
+                    #Paginator
+                    [pageIndex]="0"
+                    [pageSize]="tablePaging.limit"
+                    [pageSizeOptions]="[5, 10, 20,30, 50, 100]"
+                    (page)="pageChanged($event)"
+                    aria-label="Select page">
+                </mat-paginator>
+            </div>
+        </div>
+    </div>
+</div>

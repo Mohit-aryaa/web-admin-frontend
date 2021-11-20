@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AddProductComponent } from './add-product.component';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,12 +12,19 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSelectModule } from '@angular/material/select';
 import { QuillModule } from 'ngx-quill';
+import { AddServicesComponent } from './add-services.component';
 
 @NgModule({
-  declarations: [AddProductComponent],
+  declarations: [
+    AddServicesComponent
+  ],
   imports: [
     CommonModule,
-    RouterModule.forChild([{ path: '', component: AddProductComponent }]),
+    RouterModule.forChild(
+        [
+            {path: '', component: AddServicesComponent}
+        ]
+    ),
     MatButtonModule,
     MatIconModule,
     FormsModule,
@@ -33,4 +39,4 @@ import { QuillModule } from 'ngx-quill';
     QuillModule,
   ],
 })
-export class AddProductModule {}
+export class AddServiceModule { }
