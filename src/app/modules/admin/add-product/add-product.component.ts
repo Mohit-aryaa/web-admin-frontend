@@ -40,9 +40,6 @@ export class AddProductComponent implements OnInit {
     getColors: any;
     country: any;
     getProductImages: [];
-    public disabled = false;
-    public color: ThemePalette = 'primary';
-    public touchUi = false;
 
     similarProducts: any = [
         'Extra cheese',
