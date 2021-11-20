@@ -34,7 +34,7 @@
                                             <label for="" class="mb-1"> Address Line 2</label>
                                             <textarea class="form-control" id="addressLine2" name="addressLine2" formControlName="addressLine2" placeholder="John doe"></textarea>
                                         </div>
-                                        
+
                                         <div class="form-group mb-3 col-md-6 col-12">
                                             <label for="" class="mb-1">State</label>
                                             <input type="text" class="form-control" id="state" name="state" formControlName="state" placeholder="State">
@@ -47,16 +47,16 @@
                                             <label for="" class="mb-1">Zip</label>
                                             <input type="text" class="form-control" id="zip" name="zip" formControlName="zip" placeholder="Zip">
                                         </div>
-                                        
-                                    
-                                        
+
+
+
                                     </div>
-                        
+
                                     <div class="form-group col-12 d-flex">
                                         <button mat-raised-button color="primary" class="ms-auto" (click)="nextStep()">next</button>
                                     </div>
 
-                        
+
                                 </div>
                             </div>
                         </mat-tab>
@@ -91,13 +91,13 @@
                                             <div class="form-group col-12 d-flex">
                                                 <button mat-raised-button color="primary" class="ms-auto" (click)="previousStep()">back</button>
                                                 <button mat-raised-button color="primary" class="ms-2" (click)="nextStep()">next</button>
-                                            </div> 
-                                        </div>                                        
-                                           
-                                                                           
+                                            </div>
+                                        </div>
+
+
                                     </div>
-                        
-                        
+
+
                                 </div>
                             </div>
                         </mat-tab>
@@ -151,16 +151,16 @@
                                             <input type="text" class="form-control" id="gstNumber" name="gstNumber" formControlName="gstNumber" placeholder="Gst Number">
                                         </div>
 
-                                        
+
 
                                         <div class="form-group col-12 d-flex">
                                             <button mat-raised-button color="primary" class="ms-auto" (click)="previousStep()">back</button>
                                             <button mat-raised-button color="primary" class="ms-2" (click)="nextStep()">next</button>
-                                        </div> 
-                                        
-        
+                                        </div>
+
+
                                     </div>
-                        
+
                                 </div>
                             </div>
                         </mat-tab>
@@ -178,7 +178,7 @@
                                                 <div class="mx-auto bg-primary" style="height: 2px; width: 120px;"></div>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="form-group mb-3 col-12">
                                             <label for="" class="mb-1">MemebrShip</label>
                                             <select class="form-select" aria-label="Default select example" formControlName="memberShip">
@@ -188,17 +188,17 @@
                                                 <option value="platinum">Platinum</option>
                                               </select>
                                         </div>
-                                           
+
                                         <div class="form-group col-12 d-flex">
                                             <button mat-raised-button color="primary" class="ms-auto" (click)="previousStep()">back</button>
                                             <button mat-raised-button color="primary" class="ms-2" (click)="nextStep()">next</button>
-                                        </div>                                     
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </mat-tab>
 
-                       
+
                         <mat-tab label="Account" id="account" class="matTab">
                             <div class="p-4 shadow bg-white vendors-form-wrapper position-relative" >
                                 <div class="vendorsForms">
@@ -206,13 +206,13 @@
                                         <div class="col-md-12 mb-4 d-flex align-items-end">
                                             <div class="me-3">
                                                 <img src="assets/images/logo/logo.svg" alt="" class="" style="width: 35px; top: 40px;">
-                                            </div>   
+                                            </div>
                                             <div style="width: fit-content">
                                                 <div class="mt-3 mb-2 fw-bold h4 text-center">Account Details </div>
                                                 <div class="mx-auto bg-primary" style="height: 2px; width: 90px;"></div>
                                             </div>
-                                        </div>     
-                                        
+                                        </div>
+
                                         <div class="form-group mb-3 col-md-6  col-12">
                                             <label for="" class="mb-1">Email</label>
                                             <input type="email" class="form-control" id="email" name="email" formControlName="email" placeholder="Email">
@@ -237,12 +237,12 @@
 
                                         <div class="form-group mb-3">
                                            <div class="d-flex">
-                                            <button mat-raised-button color="primary"  (click)="postData()">Add Vendor</button>
+                                            <button mat-raised-button color="primary"  (click)="postData()">{{selectedVendor ? 'Update Vendor':'Add Vendor'}}</button>
                                             <button mat-raised-button color="primary" class="ms-auto" (click)="previousStep()">Back</button>
                                            </div>
                                         </div>
-                                    
-                                                                   
+
+
                                     </div>
                                 </div>
                             </div>
@@ -251,7 +251,7 @@
                 </form>
             </div>
 
-          
+
         </div>
     </div>
 </div>

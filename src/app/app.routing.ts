@@ -83,7 +83,7 @@ export const appRoutes: Route[] = [
             {path: 'brands', loadChildren: () => import('app/modules/admin/brand/brand.module').then(m => m.BrandModule)},
             {path: 'vendors', loadChildren: () => import('app/modules/admin/vendor/vendor.module').then(m => m.VendorModule)},
             {path: 'add-vendor', loadChildren: () => import('app/modules/admin/add-vendor/add-vendor.module').then(m => m.AddVendorModule)},
-            {path: 'edit-vendor/:id', loadChildren: () => import('app/modules/admin/edit-vendor/edit-vendor.module').then(m => m.EditVendorModule)},
+            {path: 'edit-vendor/:id', loadChildren: () => import('app/modules/admin/add-vendor/add-vendor.module').then(m => m.AddVendorModule)},
             {path: 'services', loadChildren: () => import('app/modules/admin/services/services.module').then(m => m.ServicesModule)},
             {path: 'sub-categories', loadChildren: () => import('app/modules/admin/sub-categories/sub-categories.module').then(m => m.SubCategoriesModule)},
             {path: 'stocklow', loadChildren: () => import('app/modules/admin/stocklow/stocklow.module').then(m => m.StocklowModule)},
@@ -93,7 +93,7 @@ export const appRoutes: Route[] = [
             {path: 'edit-bundle-product/:id', loadChildren: () => import('app/modules/admin/add-bundle-product/add-bundle-product.module').then(m => m.AddBundleProductModule)},
             {path: 'shipping', loadChildren: () => import('app/modules/admin/shipping/shipping.module').then(m => m.ShippingModule)},
             {path: 'questions', loadChildren: () => import('app/modules/admin/questions/questions.module').then(m => m.QuestionsModule)},
-            
+
         ]
     }
 ];

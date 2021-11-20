@@ -82,6 +82,7 @@ export class AddBundleProductComponent implements OnInit {
       minimumQuantity: ['',[Validators.required]],
       customersOptions: this._formBuilder.group({
         color:['', [Validators.required]],
+        customerChoiceInput: ['', [Validators.required]],
         choiceStyle:['', [Validators.required]]
       }),
       seoKeyWords: ['',[Validators.required]],

@@ -267,29 +267,29 @@
                                         </div>
                                         </div>
                                         <div formGroupName="customersOptions" class="row">
+                                            <div class="form-group col-md-6 col-12">
+                                                <label for="" class="mb-1"> Select Color</label>
+                                                <mat-form-field>
+                                                    <input type="color" matInput formControlName="color" >
+                                                </mat-form-field>
+                                            </div>
+
                                             <div class="form-group mb-3 col-md-6  col-12">
-                                                <label for="" class="mb-1"> Display Style</label>
+                                                <label for="" class="mb-1"> Customer Choice Input </label>
+                                                <mat-form-field>
+                                                    <input type="text" matInput formControlName="customerChoiceInput">
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="form-group mb-3 col-md-6  col-12">
+                                                <label for="" class="mb-1">Display Style</label>
                                                 <mat-form-field appearance="fill">
-                                                   <mat-select formControlName="choiceStyle" >
+                                                   <mat-select  formControlName="choiceStyle" >
                                                         <mat-option value="btns">Buttons</mat-option>
                                                         <mat-option value="radioBtn">Radio Btns</mat-option>
                                                         <mat-option value="dropdown">Dropdown</mat-option>
                                                     </mat-select>
                                                 </mat-form-field>
-                                            </div>
-
-                                            <div class="form-group mb-3 col-md-6  col-12">
-                                                <label for="" class="mb-1"> Select Color</label>
-                                                <mat-form-field appearance="fill">
-                                                    <mat-select multiple formControlName="color" >
-                                                        <mat-option *ngFor="let getColor of color" [value]="getColor.name">
-                                                            <div class="d-flex align-items-center ">
-                                                                <div style="width: 15px; height:15px;" [style.background]="getColor.hexString"  class="me-2"></div>
-                                                                <div>{{getColor.name}}</div>
-                                                            </div>
-                                                        </mat-option>
-                                                    </mat-select>
-                                                  </mat-form-field>
                                             </div>
                                             <div class="form-group col-12 d-flex">
                                                 <button mat-raised-button color="primary" class="ms-auto" (click)="previousStep()">back</button>

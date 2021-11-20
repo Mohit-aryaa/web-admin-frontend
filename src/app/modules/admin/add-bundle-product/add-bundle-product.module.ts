@@ -8,15 +8,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSortModule } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
-import { RouterModule } from '@angular/router';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { DataTablesModule } from 'angular-datatables';
-import { SharedModule } from 'app/shared/shared.module';
+import { RouterModule } from '@angular/router';;
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { QuillModule } from 'ngx-quill';
@@ -26,7 +20,7 @@ import { QuillModule } from 'ngx-quill';
 @NgModule({
   declarations: [
     AddBundleProductComponent,
-    
+
   ],
   imports: [
     CommonModule,
@@ -35,25 +29,20 @@ import { QuillModule } from 'ngx-quill';
         {path: '', component: AddBundleProductComponent}
       ]
     ),
-    SharedModule,
-    MatTableModule,
     MatButtonModule,
     MatIconModule,
-    MatPaginatorModule,
     MatSortModule,
     FormsModule,
     ReactiveFormsModule,
     MatExpansionModule,
     MatFormFieldModule,
     MatInputModule,
-    DataTablesModule,
-    NgxDatatableModule,
-    MatProgressSpinnerModule,
     MatSnackBarModule,
     MatChipsModule,
     MatSelectModule,
     MatTabsModule,
     QuillModule
   ]
+
 })
 export class AddBundleProductModule { }
