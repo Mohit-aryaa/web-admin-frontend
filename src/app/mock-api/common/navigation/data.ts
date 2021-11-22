@@ -178,7 +178,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 title: 'Consultant List',
                 type: 'basic',
                 icon: '',
-                link: '',
+                link: '/consultant',
             },
             {
                 id: 'payToConsultants',

@@ -95,7 +95,11 @@ export const appRoutes: Route[] = [
             {path: 'edit-bundle-product/:id', loadChildren: () => import('app/modules/admin/add-bundle-product/add-bundle-product.module').then(m => m.AddBundleProductModule)},
             {path: 'shipping', loadChildren: () => import('app/modules/admin/shipping/shipping.module').then(m => m.ShippingModule)},
             {path: 'questions', loadChildren: () => import('app/modules/admin/questions/questions.module').then(m => m.QuestionsModule)},
+<<<<<<< HEAD
             {path: 'add-Service', loadChildren: () => import('app/modules/admin/add-services/add-services.module').then(m => m.AddServiceModule)},
+=======
+            {path: 'consultant', loadChildren: () => import('app/modules/admin/consultant/consultant.module').then(m => m.ConsultantModule)},
+>>>>>>> c8bf1a5 (added consultant component)
 
         ]
     }

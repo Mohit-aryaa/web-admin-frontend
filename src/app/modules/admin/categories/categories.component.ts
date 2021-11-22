@@ -38,7 +38,6 @@ export class CategoriesComponent implements OnInit {
   imgUploading: boolean = false;
   ImageBox: any;
   constructor(
-    private http: HttpClient,
     private modalService: NgbModal,
     private _formBuilder: FormBuilder,
     private categoryService: CategoriesService,
