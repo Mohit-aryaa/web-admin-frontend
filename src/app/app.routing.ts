@@ -94,7 +94,11 @@ export const appRoutes: Route[] = [
             {path: 'shipping', loadChildren: () => import('app/modules/admin/shipping/shipping.module').then(m => m.ShippingModule)},
             {path: 'questions', loadChildren: () => import('app/modules/admin/questions/questions.module').then(m => m.QuestionsModule)},
 <<<<<<< HEAD
+<<<<<<< HEAD
             {path: 'add-Service', loadChildren: () => import('app/modules/admin/add-services/add-services.module').then(m => m.AddServiceModule)},
+=======
+            {path: 'consultant', loadChildren: () => import('app/modules/admin/consultant/consultant.module').then(m => m.ConsultantModule)},
+>>>>>>> c8bf1a5 (added consultant component)
 =======
             {path: 'consultant', loadChildren: () => import('app/modules/admin/consultant/consultant.module').then(m => m.ConsultantModule)},
 >>>>>>> c8bf1a5 (added consultant component)
