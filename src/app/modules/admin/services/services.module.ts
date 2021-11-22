@@ -16,11 +16,8 @@ import { RouterModule } from '@angular/router';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { DataTablesModule } from 'angular-datatables';
 import { SharedModule } from 'app/shared/shared.module';
-import { Route } from '@angular/compiler/src/core';
 
- const route: Route[] = [
 
- ];
 
 @NgModule({
   declarations: [
@@ -30,7 +27,7 @@ import { Route } from '@angular/compiler/src/core';
     CommonModule,
     RouterModule.forChild(
       [
-        {path: '', component: ServicesComponent},
+        {path: '', component: ServicesComponent}
       ]
     ),
     SharedModule,
