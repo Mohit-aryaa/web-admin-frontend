@@ -95,13 +95,22 @@ export const appRoutes: Route[] = [
             {path: 'questions', loadChildren: () => import('app/modules/admin/questions/questions.module').then(m => m.QuestionsModule)},
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             {path: 'add-Service', loadChildren: () => import('app/modules/admin/add-services/add-services.module').then(m => m.AddServiceModule)},
 =======
+            {path: 'add-Service', loadChildren: () => import('app/modules/admin/add-services/add-services.module').then(m => m.AddServiceModule)},
+<<<<<<< HEAD
+>>>>>>> 150bb0f06a3ea19e18ff2957c3def1837e3d2d40
+=======
             {path: 'consultant', loadChildren: () => import('app/modules/admin/consultant/consultant.module').then(m => m.ConsultantModule)},
 >>>>>>> c8bf1a5 (added consultant component)
 =======
             {path: 'consultant', loadChildren: () => import('app/modules/admin/consultant/consultant.module').then(m => m.ConsultantModule)},
+<<<<<<< HEAD
 >>>>>>> c8bf1a5 (added consultant component)
+=======
+>>>>>>> 175ac7a2803f607db4a19dadffc17ddda57390e6
+>>>>>>> 150bb0f06a3ea19e18ff2957c3def1837e3d2d40
 
         ]
     }
