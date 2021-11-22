@@ -11,6 +11,7 @@ export class ProductsService {
     constructor(private _http: HttpClient) { }
 
     apiUrl: string = environment.apiUrl;
+    
     api_url = `${this.apiUrl}/products`;
 
     getProducts(payload: any): Observable<any> {
