@@ -114,7 +114,7 @@ export class CategoriesComponent implements OnInit {
       .filterCategories(filterData)
       .subscribe((res: any) => {
         this.loading = false;
-        this.categories = res.categories;
+        this.categories = res.Categories;
         this.categories.length = res.total;
         this.dataSource = new MatTableDataSource<any>(this.categories);
         this.dataSource.paginator = this.Paginator;

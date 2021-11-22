@@ -1,0 +1,296 @@
+<div class="flex flex-col flex-auto min-w-0" >
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:p-10">
+        <div class="row mb-3">
+            <div class="col-md-6">
+
+            </div>
+            <div class="col-md-6 text-end">
+                <button  mat-raised-button color="primary" (click)="openModal()"><mat-icon class="me-2">add</mat-icon> Add Coupns</button>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class=" mat-elevation-z8 shadow-sm p-3 w-100 bg-white">
+
+                <div class="d-flex px-3 py-4">
+                    <div class="col-2">
+                        <mat-icon style="cursor: pointer;" (click)="getNextData()">autorenew</mat-icon>
+                    </div>
+                    <div class="col-10">
+                        <div class="form-group d-flex justify-content-end">
+                             <button  mat-raised-button color="primary" (click)="BulkPublish()" class="ms-auto me-2">
+                                <mat-icon class="me-1">check_circle_outline</mat-icon>
+                                Publish
+                            </button>
+                            <button  mat-raised-button color="warn" (click)="BulkUnpublish()" class=" me-2">
+                                <mat-icon class="me-1">highlight_off</mat-icon>Unpublish
+                            </button>
+                            <button  mat-raised-button color="warn" (click)="BulkDelete()" class=" me-2">
+                                <mat-icon class="me-1">delete_forever</mat-icon>Bulk Delete
+                            </button>
+                            <input style="max-width: 268px;" type="text" class="form-control bg-light sortInput rounded-pill" #couponInput (keyup)="applyCouponFilter(couponInput.value)" placeholder="Search">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-100 pt-2"  *ngIf="loading; else table">
+                    <div class=" row  align-items-center"  >
+                        <div class="item col" ><ngx-skeleton-loader  appearance="line"></ngx-skeleton-loader></div>
+                        <div class="item col" ><ngx-skeleton-loader  appearance="line"></ngx-skeleton-loader></div>
+                        <div class="item col" ><ngx-skeleton-loader  appearance="line"></ngx-skeleton-loader></div>
+                        <div class="item col" ><ngx-skeleton-loader  appearance="line"></ngx-skeleton-loader></div>
+                        <div class="item col" ><ngx-skeleton-loader  appearance="line"></ngx-skeleton-loader></div>
+                        <div class="item col" ><ngx-skeleton-loader  appearance="line"></ngx-skeleton-loader></div>
+                    </div>
+                    <div class=" row  align-items-center"  *ngFor="let data of products">
+                        <div class="item col" ><ngx-skeleton-loader  appearance="line"></ngx-skeleton-loader></div>
+                        <div class="item col" ><ngx-skeleton-loader  appearance="line"></ngx-skeleton-loader></div>
+                        <div class="item col" ><ngx-skeleton-loader  appearance="line"></ngx-skeleton-loader></div>
+                        <div class="item col" ><ngx-skeleton-loader  appearance="line"></ngx-skeleton-loader></div>
+                        <div class="item col" ><ngx-skeleton-loader  appearance="line"></ngx-skeleton-loader></div>
+                    </div>
+                </div>
+
+                <div *ngIf="dataSource.data.length === 0" class="text-center">
+                    No Records Found!
+                </div>
+
+                <ng-template #table>
+                    <table mat-table [dataSource]="dataSource" matSort class="" style="width: 100%;">
+                        <ng-container matColumnDef="check">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <div class="form-group">
+                                    <input  class="form-check-input" (click)="getBulkItems($event)" type="checkbox" id="checkAll"  value="" >
+                                </div>
+                            </th>
+                            <td mat-cell *matCellDef="let element; let j = index">
+                                <div class="form-check">
+                                    <input  class="form-check-input bulkChecks" (click)="getCheckedItem(element, j)" type="checkbox" value="" id="{{element._id}}">
+                                </div>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="title">
+                            <th mat-header-cell *matHeaderCellDef> Title</th>
+                            <td mat-cell *matCellDef="let element">{{element.title}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="code">
+                            <th mat-header-cell *matHeaderCellDef> Code</th>
+                            <td mat-cell *matCellDef="let element">{{element.couponCode}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="CustomerGroup">
+                            <th mat-header-cell *matHeaderCellDef> Customer Group</th>
+                            <td mat-cell *matCellDef="let element">{{element.customerGroup}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="publish">
+                            <th mat-header-cell *matHeaderCellDef> Publish</th>
+                            <td mat-cell *matCellDef="let element"><mat-slide-toggle color="primary" [(ngModel)]="element.publish"  (change)="setPublish(element._id,element.publish,  i)"></mat-slide-toggle></td>
+                        </ng-container>
+
+
+                        <ng-container matColumnDef="action">
+                            <th mat-header-cell *matHeaderCellDef class="text-right"> Action </th>
+                            <td mat-cell *matCellDef="let element; let i = index " class="text-right">
+                                <button mat-icon-button (click)="openUpdateModal(element, i)">
+                                    <mat-icon>edit</mat-icon>
+
+                                </button>
+                                <button mat-icon-button color="warn"  (click)="deleteProduct(element,i)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsOne"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsOne;"></tr>
+                    </table>
+                </ng-template>
+                <mat-paginator
+                    #Paginator
+                    [pageIndex]="0"
+                    [pageSize]="tablePaging.limit"
+                    [pageSizeOptions]="[5, 10, 20,30, 50, 100]"
+                    (page)="pageChanged($event)"
+                    aria-label="Select page">
+                </mat-paginator>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #content let-modal class="bd-example-modal-lg">
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">{{selectedCoupon ? 'Update' : 'Add'}} Coupon</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form class="px-4" [formGroup]="couponForm" (ngSubmit)="postData()">
+                <div class="row">
+                    <div class="form-group mb-3 col-12">
+                        <label for="" class="mb-1">Title</label>
+                        <input type="text" class="form-control"  formControlName="title" placeholder="Coupon Title">
+                    </div>
+                    <div class="form-group mb-3  col-12">
+                        <label for="" class="mb-1">Valid From</label>
+                        <input type="date" class="form-control"  formControlName="validFrom">
+                    </div>
+                    <div class="form-group mb-3  col-12">
+                        <label for="" class="mb-1">Valid Till</label>
+                        <input type="date" class="form-control"  formControlName="validTill">
+                    </div>
+
+                    <div class="form-group mb-3 col-12">
+                        <label for="" class="mb-1">Choose Discount On</label>
+                        <select class="form-select" aria-label="Default select example" id="discountOn" name="discountOn" formControlName="discountOn" (change)="chooseDiscountOn($event)">
+                            <option value="" hidden selected disabled>Select</option>
+                            <option value="allProducts">All Products</option>
+                            <option value="category">Category</option>
+                            <option value="subCategory">Sub Category</option>
+                            <option value="subChildCategory">Sub Child Category</option>
+                            <option value="product">Product</option>
+                            <option value="bundleProduct">Bundle Product</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-3  col-12" [ngClass]="showCategory ? 'd-block' : 'd-none'">
+                        <label for="" class="mb-1">Category</label>
+                        <mat-form-field appearance="fill">
+                            <mat-select multiple formControlName="discountOnField" >
+                            <mat-option *ngFor="let category of getDiscountOnData" [value]="category._id">{{category.categoryName}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-group mb-3  col-12" [ngClass]="showSubCategory ? 'd-block' : 'd-none'">
+                        <label for="" class="mb-1">Sub Category</label>
+                        <mat-form-field appearance="fill">
+                            <mat-select multiple formControlName="discountOnField" >
+                            <mat-option *ngFor="let subCategory of getDiscountOnData" [value]="subCategory._id">{{subCategory.subCategoryName}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-group mb-3  col-12" [ngClass]="showSubChildCategory ? 'd-block' : 'd-none'">
+                        <label for="" class="mb-1">Sub Child Category</label>
+                        <mat-form-field appearance="fill">
+                            <mat-select multiple formControlName="discountOnField" >
+                            <mat-option *ngFor="let subChildCategory of getDiscountOnData" [value]="subChildCategory._id">{{subChildCategory.subChildCategoryName}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-group mb-3  col-12" [ngClass]="showProduct ? 'd-block' : 'd-none'">
+                        <label for="" class="mb-1">Product</label>
+                        <mat-form-field appearance="fill">
+                            <mat-select multiple formControlName="discountOnField" >
+                            <mat-option *ngFor="let product of getDiscountOnData" [value]="product._id">{{product.productName}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-group mb-3  col-12" [ngClass]="showBundleProduct ? 'd-block' : 'd-none'">
+                        <label for="" class="mb-1">Bundle Product</label>
+                        <mat-form-field appearance="fill">
+                            <mat-select multiple formControlName="discountOnField" >
+                            <mat-option *ngFor="let bundleProduct of getDiscountOnData" [value]="bundleProduct._id">{{bundleProduct.productName}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-group mb-3  col-12">
+                        <label for="" class="mb-1">Coupon Code</label>
+                        <input type="text" class="form-control" id="couponCode" name="couponCode" formControlName="couponCode" placeholder="John doe">
+                    </div>
+
+                    <div class="form-group mb-3  col-12">
+                        <label for="" class="mb-1">Discount Type</label>
+                        <select class="form-select" aria-label="Default select example" id="discountType" name="discountType" formControlName="discountType">
+                            <option value="" hidden selected disabled>Select</option>
+                            <option value="percent">Percent</option>
+                            <option value="amount">Amount</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-3  col-12">
+                        <label for="" class="mb-1"> Discount Value</label>
+                        <input type="text" class="form-control" id="discountValue" name="discountValue" formControlName="discountValue" placeholder="Discount Value" (keypress)="numberOnly($event)">
+                    </div>
+
+                    <div class="form-group mb-3 col-12">
+                        <label for="" class="mb-1">Customer Group</label>
+                        <select class="form-select" aria-label="Default select example" formControlName="customerGroup">
+                            <option value="" selected hidden disabled>Select </option>
+                            <option value="consultant">Consultant</option>
+                            <option value="customer">Customer</option>
+                            <option value="wholeSaler">Wholesaler</option>
+                          </select>
+                    </div>
+
+                    <div class="form-group mb-3 col-12">
+                        <label for="" class="mb-1">Device Type</label>
+                        <select class="form-select" aria-label="Default select example" formControlName="deviceType">
+                            <option value="" selected hidden disabled>Select </option>
+                            <option value="all">All</option>
+                            <option value="desktopOnly">Desktop only</option>
+                            <option value="MobileApplication">Mobile Application</option>
+                          </select>
+                    </div>
+
+                    <div class="form-group mb-3  col-12">
+                        <label for="" class="mb-1">Payment Type</label>
+                        <select class="form-select" aria-label="Default select example" formControlName="paymentType">
+                            <option value="" selected hidden disabled>Select </option>
+                            <option value="all">All</option>
+                            <option value="prepaid">Prepaid</option>
+                            <option value="cod">COD</option>
+                          </select>
+                    </div>
+
+                    <div class="form-group mb-3  col-12">
+                        <label for="" class="mb-1"> Cart Amount</label>
+                        <input type="text" class="form-control" id="cartAmount" name="cartAmount" formControlName="cartAmount" placeholder="Discount Value" (keypress)="numberOnly($event)">
+                    </div>
+
+                    <div class="form-group mb-3  col-12">
+                        <label for="" class="mb-1"> Max Discount</label>
+                        <input type="text" class="form-control" id="maxDiscount" name="maxDiscount" formControlName="maxDiscount" placeholder="Max Discount Value" (keypress)="numberOnly($event)">
+                    </div>
+
+                    <div class="form-group mb-3  col-12">
+                        <label for="" class="mb-1"> Use Per Coupon</label>
+                        <input type="text" class="form-control" id="usePerCoupon" name="usePerCoupon" formControlName="usePerCoupon" placeholder="Use per coupon" (keypress)="numberOnly($event)">
+                    </div>
+
+                    <div class="form-group mb-3 col-12">
+                        <label for="" class="mb-1"> Coupon Description</label>
+                        <textarea class="form-control" id="couponDescription" name="couponDescription" formControlName="couponDescription" placeholder="Set your coupon description"></textarea>
+                    </div>
+
+                    <div class="form-group mb-3 col-12">
+                        <label for="" class="mb-1">Publish</label>
+                        <select class="form-select" aria-label="Default select example" formControlName="publish">
+                            <option value="" selected hidden disabled>Select </option>
+                            <option value="true">Publish</option>
+                            <option value="false">Unpublish</option>
+                          </select>
+                    </div>
+
+                </div>
+
+                <div class="form-group mb-3">
+                    <button type="submit" class="btn btn-primary " >{{selectedCoupon ? 'Update' :
+                        'Add'}} Coupon</button>
+                </div>
+
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Close</button>
+        </div>
+    </ng-template>
+
+</div>

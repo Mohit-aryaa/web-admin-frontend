@@ -94,7 +94,7 @@ export const appRoutes: Route[] = [
             {path: 'shipping', loadChildren: () => import('app/modules/admin/shipping/shipping.module').then(m => m.ShippingModule)},
             {path: 'questions', loadChildren: () => import('app/modules/admin/questions/questions.module').then(m => m.QuestionsModule)},
             {path: 'consultant', loadChildren: () => import('app/modules/admin/consultant/consultant.module').then(m => m.ConsultantModule)},
-
+            {path: 'coupons', loadChildren: () => import('app/modules/admin/coupon/coupon.module').then(m => m.CouponModule)}
         ]
     }
 ];

@@ -1,0 +1,13 @@
+.ng-invalid.ng-touched {
+    border-color: #dc3545 !important
+}
+::ng-deep .mat-simple-snackbar {
+    justify-content: center!important;
+}
+::ng-deep .cdk-overlay-container {
+    z-index: 100000!important;
+}
+
+.mat-form-field {
+    width: 100%!important;
+}
