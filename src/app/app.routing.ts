@@ -93,6 +93,9 @@ export const appRoutes: Route[] = [
             {path: 'edit-bundle-product/:id', loadChildren: () => import('app/modules/admin/add-bundle-product/add-bundle-product.module').then(m => m.AddBundleProductModule)},
             {path: 'shipping', loadChildren: () => import('app/modules/admin/shipping/shipping.module').then(m => m.ShippingModule)},
             {path: 'questions', loadChildren: () => import('app/modules/admin/questions/questions.module').then(m => m.QuestionsModule)},
+            {path: 'add-Service', loadChildren: () => import('app/modules/admin/add-services/add-services.module').then(m => m.AddServiceModule)},
+            {path: 'add-Service', loadChildren: () => import('app/modules/admin/add-services/add-services.module').then(m => m.AddServiceModule)},
+            {path: 'consultant', loadChildren: () => import('app/modules/admin/consultant/consultant.module').then(m => m.ConsultantModule)},
             {path: 'consultant', loadChildren: () => import('app/modules/admin/consultant/consultant.module').then(m => m.ConsultantModule)},
             {path: 'coupons', loadChildren: () => import('app/modules/admin/coupon/coupon.module').then(m => m.CouponModule)}
         ]
