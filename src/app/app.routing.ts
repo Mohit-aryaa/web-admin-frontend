@@ -97,8 +97,7 @@ export const appRoutes: Route[] = [
             {path: 'add-Service', loadChildren: () => import('app/modules/admin/add-services/add-services.module').then(m => m.AddServiceModule)},
             {path: 'consultant', loadChildren: () => import('app/modules/admin/consultant/consultant.module').then(m => m.ConsultantModule)},
             {path: 'consultant', loadChildren: () => import('app/modules/admin/consultant/consultant.module').then(m => m.ConsultantModule)},
-
-            {path: 'consultant', loadChildren: () => import('app/modules/admin/consultant/consultant.module').then(m => m.ConsultantModule)},
+            {path: 'coupons', loadChildren: () => import('app/modules/admin/coupon/coupon.module').then(m => m.CouponModule)}
         ]
     }
 ];

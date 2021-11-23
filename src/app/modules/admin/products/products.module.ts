@@ -19,6 +19,9 @@ import { GetCategoryNameByIdPipe } from 'app/pipe/get-category-name-by-id.pipe';
 import { GetSubCategoryNameByIdPipe } from 'app/pipe/get-sub-category-name-by-id.pipe';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import {MatChipsModule} from '@angular/material/chips';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @NgModule({
   declarations: [
@@ -48,7 +51,9 @@ import {MatChipsModule} from '@angular/material/chips';
     NgxDatatableModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    MatChipsModule
+    MatChipsModule,
+    MatSlideToggleModule,
+    NgxSkeletonLoaderModule
   ]
 })
 export class ProductsModule { }

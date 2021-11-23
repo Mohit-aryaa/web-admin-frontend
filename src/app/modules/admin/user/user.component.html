@@ -1,4 +1,4 @@
-<div class="flex flex-col flex-auto min-w-0" style="max-height: 90vh; overflow-y: scroll;">
+<div class="flex flex-col flex-auto min-w-0" >
     <!-- Main -->
     <div class="flex-auto p-6 sm:p-10">
         <div class="row mb-3">
@@ -10,7 +10,7 @@
                 <button (click)="openRoleModal()" mat-flat-button color="primary" id="addBtn" class="mb-3 shadow">Add Role</button>
             </div>
         </div>
-        
+
 
         <!-- CONTENT GOES HERE -->
         <div class="row">
@@ -31,7 +31,7 @@
                     </div>
                     <ng-template #table>
                         <table mat-table [dataSource]="userDataSource" matSort class="" style="width: 100%;">
-                            
+
                             <ng-container matColumnDef="allUsers">
                                 <th mat-header-cell *matHeaderCellDef> All Users</th>
                                 <td mat-cell *matCellDef="let userElement">
@@ -49,21 +49,21 @@
                                 <button mat-icon-button (click)="openUpdateModal(userElement, i)">
                                     <mat-icon>edit</mat-icon>
                                 </button>
-                                    <button mat-icon-button color="warn"  (click)="deleteUser(userElement,i)"> 
+                                    <button mat-icon-button color="warn"  (click)="deleteUser(userElement,i)">
                                         <mat-icon>delete</mat-icon>
                                     </button>
                                 </td>
                             </ng-container>
-                
+
                             <tr mat-header-row *matHeaderRowDef="displayedUserColumns"></tr>
                             <tr mat-row *matRowDef="let row; columns: displayedUserColumns;"></tr>
                         </table>
                     </ng-template>
-                     <mat-paginator 
+                     <mat-paginator
                         #UserTablePaginator
-                         [pageIndex]="0" 
-                         [pageSize]="5" 
-                         [pageSizeOptions]="[5, 10, 20]" 
+                         [pageIndex]="0"
+                         [pageSize]="5"
+                         [pageSizeOptions]="[5, 10, 20]"
                          (page)="userPageChanged($event)"
                          aria-label="Select page"
                          showFirstLastButtons>
@@ -90,7 +90,7 @@
                             <th mat-header-cell *matHeaderCellDef> Role Name</th>
                             <td mat-cell *matCellDef="let element"> {{element.roleName}}</td>
                         </ng-container>
-                
+
                         <!-- Action Column -->
                         <ng-container matColumnDef="action">
                             <th mat-header-cell *matHeaderCellDef class="text-right"> Action </th>
@@ -98,22 +98,22 @@
                             <button mat-icon-button (click)="openUpdateModal(element, i)">
                                 <mat-icon>edit</mat-icon>
                             </button>
-                                <button mat-icon-button color="warn"  (click)="deleteRole(element,i)"> 
+                                <button mat-icon-button color="warn"  (click)="deleteRole(element,i)">
                                     <mat-icon>delete</mat-icon>
                                 </button>
                             </td>
                         </ng-container>
-            
+
                         <tr mat-header-row *matHeaderRowDef="displayedRoleColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedRoleColumns;"></tr>
                     </table>
-            
-                    <mat-paginator  
+
+                    <mat-paginator
                         #RoleTablePaginator
-                        [pageIndex]="0" 
-                        [pageSize]="5" 
-                        [pageSizeOptions]="[5, 10, 20]" 
-                        (page)="rolePageChanged($event)" 
+                        [pageIndex]="0"
+                        [pageSize]="5"
+                        [pageSizeOptions]="[5, 10, 20]"
+                        (page)="rolePageChanged($event)"
                         aria-label="Select page">
                     </mat-paginator>
                 </div>

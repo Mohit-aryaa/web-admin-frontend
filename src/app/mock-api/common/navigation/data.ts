@@ -243,7 +243,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: 'Coupons',
         type: 'basic',
         icon: 'heroicons_outline:identification',
-        link: ''
+        link: '/coupons'
     },
     {
         id: 'ticket',

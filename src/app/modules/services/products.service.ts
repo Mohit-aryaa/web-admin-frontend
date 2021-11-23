@@ -49,6 +49,14 @@ export class ProductsService {
         return this._http.post(`${this.api_url}/bulkDelete`, payload);
     }
 
+    bulkPublish(payload: any) {
+        return this._http.post(`${this.api_url}/bulkPublish`, payload);
+    }
+
+    bulkUnpublish(payload: any) {
+        return this._http.post(`${this.api_url}/bulkUnpublish`, payload);
+    }
+
     uploadProductImage(payload: any) {
         return this._http.post(`${this.api_url}/upload`, payload);
     }
@@ -57,10 +65,17 @@ export class ProductsService {
         return this._http.get(`${this.api_url}?filter=${payload}`);
     }
 
-    // filterTable(payload:any): Observable<any> {
-    //     console.log(payload)
-    //     return this._http.get(`${this.api_url}?filterTable=${payload}`);
-    // }
+    setPublish(payload:any){
+        return this._http.post(`${this.api_url}/setPublish`, payload)
+    }
+
+    setTodaysDeal(payload:any){
+        return this._http.post(`${this.api_url}/setTodaysDeal`, payload)
+    }
+
+    setFeatured(payload:any){
+        return this._http.post(`${this.api_url}/setFeatured`, payload)
+    }
 
     filterTable(payload: any): Observable<any> {
         return this._http.get(`${this.api_url}?searchInput=${payload.searchInput}&product=${payload.product}&category=${payload.category}&vendor=${payload.vendor}&publish=${payload.publish}`);

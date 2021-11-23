@@ -48,8 +48,28 @@ export class BundleProductService {
         return this._http.post(`${this.api_url}/bulkDelete`, payload);
     }
 
+    bulkPublish(payload: any) {
+        return this._http.post(`${this.api_url}/bulkPublish`, payload);
+    }
+
+    bulkUnpublish(payload: any) {
+        return this._http.post(`${this.api_url}/bulkUnpublish`, payload);
+    }
+
     uploadBundleProductImage(payload: any) {
         return this._http.post(`${this.api_url}/upload`, payload);
+    }
+
+    setPublish(payload:any){
+        return this._http.post(`${this.api_url}/setPublish`, payload)
+    }
+
+    setTodaysDeal(payload:any){
+        return this._http.post(`${this.api_url}/setTodaysDeal`, payload)
+    }
+
+    setFeatured(payload:any){
+        return this._http.post(`${this.api_url}/setFeatured`, payload)
     }
 
     filterBundleProducts(payload: any): Observable<any> {
