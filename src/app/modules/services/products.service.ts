@@ -65,16 +65,16 @@ export class ProductsService {
         return this._http.get(`${this.api_url}?filter=${payload}`);
     }
 
-    setPublish(payload:any){
-        return this._http.post(`${this.api_url}/setPublish`, payload)
+    setPublish(payload: any){
+        return this._http.post(`${this.api_url}/setPublish`, payload);
     }
 
-    setTodaysDeal(payload:any){
-        return this._http.post(`${this.api_url}/setTodaysDeal`, payload)
+    setTodaysDeal(payload: any){
+        return this._http.post(`${this.api_url}/setTodaysDeal`, payload);
     }
 
-    setFeatured(payload:any){
-        return this._http.post(`${this.api_url}/setFeatured`, payload)
+    setFeatured(payload: any){
+        return this._http.post(`${this.api_url}/setFeatured`, payload);
     }
 
     filterTable(payload: any): Observable<any> {
