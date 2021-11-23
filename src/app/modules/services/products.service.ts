@@ -1,6 +1,9 @@
+/* eslint-disable max-len */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/member-ordering */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { products } from 'app/mock-api/apps/ecommerce/inventory/data';
 import { environment } from 'environments/environment';
 import { Observable } from 'rxjs';
 
@@ -10,9 +13,7 @@ import { Observable } from 'rxjs';
 export class ProductsService {
     constructor(private _http: HttpClient) { }
 
-    apiUrl: string = environment.apiUrl;
-    
-    api_url = `${this.apiUrl}/products`;
+    api_url: string = environment.apiUrl + '/products';
 
     getProducts(payload: any): Observable<any> {
         return this._http.get(
@@ -61,7 +62,7 @@ export class ProductsService {
     //     return this._http.get(`${this.api_url}?filterTable=${payload}`);
     // }
 
-    filterTable(payload:any): Observable<any> {
+    filterTable(payload: any): Observable<any> {
         return this._http.get(`${this.api_url}?searchInput=${payload.searchInput}&product=${payload.product}&category=${payload.category}&vendor=${payload.vendor}&publish=${payload.publish}`);
     }
 }

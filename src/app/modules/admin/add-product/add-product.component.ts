@@ -1,24 +1,28 @@
-import { Component, OnInit } from "@angular/core";
-import { COMMA, ENTER } from "@angular/cdk/keycodes";
-import { MatChipInputEvent } from "@angular/material/chips";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { BrandService } from "../../services/brand.service";
-import { CategoriesService } from "../../services//categories.service";
-import { ProductsService } from "../../services/products.service";
-import { SubCategoriesService } from "../../services//sub-Categories.service";
-import { VendorService } from "../../services/vendor.service";
-import { HttpClient } from "@angular/common/http";
-import { colors } from "../colors";
-import { MatTabChangeEvent } from "@angular/material/tabs";
-import { countries } from "../country";
-import { SubChildCategoryService } from "../../services/sub-child-category.service";
-import { ActivatedRoute, Router } from "@angular/router";
+/* eslint-disable @typescript-eslint/prefer-for-of */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/member-ordering */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { Component, OnInit } from '@angular/core';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { BrandService } from '../../services/brand.service';
+import { CategoriesService } from '../../services//categories.service';
+import { ProductsService } from '../../services/products.service';
+import { SubCategoriesService } from '../../services//sub-Categories.service';
+import { VendorService } from '../../services/vendor.service';
+import { HttpClient } from '@angular/common/http';
+import { colors } from '../colors';
+import { MatTabChangeEvent } from '@angular/material/tabs';
+import { countries } from '../country';
+import { SubChildCategoryService } from '../../services/sub-child-category.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ThemePalette } from '@angular/material/core';
 @Component({
-    selector: "app-add-product",
-    templateUrl: "./add-product.component.html",
-    styleUrls: ["./add-product.component.scss"],
+    selector: 'app-add-product',
+    templateUrl: './add-product.component.html',
+    styleUrls: ['./add-product.component.scss'],
 })
 export class AddProductComponent implements OnInit {
     productsForm: FormGroup;
@@ -39,20 +43,20 @@ export class AddProductComponent implements OnInit {
     getProductImages: [];
 
     similarProducts: any = [
-        "Extra cheese",
-        "Mushroom",
-        "Onion",
-        "Pepperoni",
-        "Sausage",
-        "Tomato",
+        'Extra cheese',
+        'Mushroom',
+        'Onion',
+        'Pepperoni',
+        'Sausage',
+        'Tomato',
     ];
     blogPosts: any = [
-        "Extra cheese",
-        "Mushroom",
-        "Onion",
-        "Pepperoni",
-        "Sausage",
-        "Tomato",
+        'Extra cheese',
+        'Mushroom',
+        'Onion',
+        'Pepperoni',
+        'Sausage',
+        'Tomato',
     ];
     selectedIndex: number = 0;
     constructor(
@@ -75,76 +79,76 @@ export class AddProductComponent implements OnInit {
         this.getBrands();
         this.getVendors();
         this.productsForm = this._formBuilder.group({
-            productName: ["", [Validators.required]],
-            productDescription: ["", [Validators.required]],
-            productImagepicture: [""],
-            productImages: [""],
-            productSku: ["", [Validators.required]],
-            productModel: ["", [Validators.required]],
-            productCategory: ["", [Validators.required]],
-            productSubCategory: ["", [Validators.required]],
-            productSubChildCategory: ["", [Validators.required]],
-            productBrand: ["", [Validators.required]],
-            vendor: ["", [Validators.required]],
-            unit: ["", [Validators.required]],
+            productName: ['', [Validators.required]],
+            productDescription: ['', [Validators.required]],
+            productImagepicture: [''],
+            productImages: [''],
+            productSku: ['', [Validators.required]],
+            productModel: ['', [Validators.required]],
+            productCategory: ['', [Validators.required]],
+            productSubCategory: ['', [Validators.required]],
+            productSubChildCategory: ['', [Validators.required]],
+            productBrand: ['', [Validators.required]],
+            vendor: ['', [Validators.required]],
+            unit: ['', [Validators.required]],
             dimensions: this._formBuilder.group({
-                length: ["", [Validators.required]],
-                breadth: ["", [Validators.required]],
-                height: ["", [Validators.required]],
+                length: ['', [Validators.required]],
+                breadth: ['', [Validators.required]],
+                height: ['', [Validators.required]],
             }),
-            weight: ["", [Validators.required]],
-            tags: ["", [Validators.required]],
-            productCountry: ["", [Validators.required]],
-            manfactureDate: ["", [Validators.required]],
-            stock: ["", [Validators.required]],
+            weight: ['', [Validators.required]],
+            tags: ['', [Validators.required]],
+            productCountry: ['', [Validators.required]],
+            manfactureDate: ['', [Validators.required]],
+            stock: ['', [Validators.required]],
             todaysDeal: [false],
-            publish: ["", [Validators.required]],
+            publish: ['', [Validators.required]],
             featured: [false],
-            price: ["", [Validators.required]],
-            mrp: ["", [Validators.required]],
-            purchasePrice: ["", [Validators.required]],
-            shippingCost: ["", [Validators.required]],
-            productTax: ["", [Validators.required]],
-            productDiscount: ["", [Validators.required]],
-            maxQuantity: ["", [Validators.required]],
-            minimumQuantity: ["", [Validators.required]],
+            price: ['', [Validators.required]],
+            mrp: ['', [Validators.required]],
+            purchasePrice: ['', [Validators.required]],
+            shippingCost: ['', [Validators.required]],
+            productTax: ['', [Validators.required]],
+            productDiscount: ['', [Validators.required]],
+            maxQuantity: ['', [Validators.required]],
+            minimumQuantity: ['', [Validators.required]],
             customersOptions: this._formBuilder.group({
-                color: ["", [Validators.required]],
-                customerChoiceInput : ["", [Validators.required]],
-                choiceStyle: ["", [Validators.required]],
+                color: ['', [Validators.required]],
+                customerChoiceInput : ['', [Validators.required]],
+                choiceStyle: ['', [Validators.required]],
             }),
-            seoKeyWords: ["", [Validators.required]],
-            metaTagKeywords: ["", [Validators.required]],
-            metaTagDescription: ["", [Validators.required]],
-            metaTagTitle: ["", [Validators.required]],
-            imageAltTag: ["", [Validators.required]],
-            seoUrl: ["", [Validators.required]],
-            youtubeVideoId: ["", [Validators.required]],
+            seoKeyWords: ['', [Validators.required]],
+            metaTagKeywords: ['', [Validators.required]],
+            metaTagDescription: ['', [Validators.required]],
+            metaTagTitle: ['', [Validators.required]],
+            imageAltTag: ['', [Validators.required]],
+            seoUrl: ['', [Validators.required]],
+            youtubeVideoId: ['', [Validators.required]],
             question: this._formBuilder.group({
-                productQuestion: ["", [Validators.required]],
-                productAnswer: ["", [Validators.required]],
+                productQuestion: ['', [Validators.required]],
+                productAnswer: ['', [Validators.required]],
             }),
-            blogPost: ["", [Validators.required]],
-            similarProduct: ["", [Validators.required]],
+            blogPost: ['', [Validators.required]],
+            similarProduct: ['', [Validators.required]],
             delivery: this._formBuilder.group({
-                pincode: ["", [Validators.required]],
-                description: ["", [Validators.required]],
+                pincode: ['', [Validators.required]],
+                description: ['', [Validators.required]],
             }),
             bulkDiscount: this._formBuilder.group({
-                quantity: ["", [Validators.required]],
-                discountAmount: ["", [Validators.required]],
-                discountType: ["", [Validators.required]],
+                quantity: ['', [Validators.required]],
+                discountAmount: ['', [Validators.required]],
+                discountType: ['', [Validators.required]],
             }),
             cashBack: this._formBuilder.group({
-                cashBackAmount: ["", [Validators.required]],
-                customerGroup: ["", [Validators.required]],
+                cashBackAmount: ['', [Validators.required]],
+                customerGroup: ['', [Validators.required]],
             }),
-            variant: ["", [Validators.required]],
+            variant: ['', [Validators.required]],
         });
 
-        console.log('color', this.productsForm.value.customersOptions.color)
+        console.log('color', this.productsForm.value.customersOptions.color);
 
-        this.selectedProduct = this.route.snapshot.paramMap.get("id");
+        this.selectedProduct = this.route.snapshot.paramMap.get('id');
         if (this.selectedProduct !== null) {
             this.getData(this.selectedProduct);
         }
@@ -156,7 +160,7 @@ export class AddProductComponent implements OnInit {
             id: this.selectedProduct,
             image: e,
         };
-        if (confirm("Are you sure to delete ?")) {
+        if (confirm('Are you sure to delete ?')) {
             this.productsService.removeImage(removeImageData).subscribe(
                 (response: any) => {
                     console.log(response.images);
@@ -176,7 +180,7 @@ export class AddProductComponent implements OnInit {
     tags: any = [];
 
     add(event: MatChipInputEvent): void {
-        const value = (event.value || "").trim();
+        const value = (event.value || '').trim();
         // Add our fruit
         if (value) {
             this.tags.push({ name: value });
@@ -268,14 +272,14 @@ export class AddProductComponent implements OnInit {
 
     nextStep() {
         const maxNumberOfTabs = 11;
-        if (this.selectedIndex != maxNumberOfTabs) {
+        if (this.selectedIndex !== maxNumberOfTabs) {
             this.selectedIndex = this.selectedIndex + 1;
         }
         //console.log(this.selectedIndex);
     }
 
     previousStep() {
-        if (this.selectedIndex != 0) {
+        if (this.selectedIndex !== 0) {
             this.selectedIndex = this.selectedIndex - 1;
         }
         //console.log(this.selectedIndex);
@@ -297,10 +301,10 @@ export class AddProductComponent implements OnInit {
     onSelectdProductImage(event: any) {
         this.showPreview = true;
         this.urls = [];
-        let files = event.target.files;
+        const files = event.target.files;
         if (files) {
-            for (let file of files) {
-                let reader = new FileReader();
+            for (const file of files) {
+                const reader = new FileReader();
                 reader.onload = (e: any) => {
                     this.urls.push(e.target.result);
                 };
@@ -318,14 +322,14 @@ export class AddProductComponent implements OnInit {
         }
 
         if (this.selectedProduct) {
-            if (this.getProductImages.length == 0 && this.urls.length == 0) {
-                this._snackBar.open("At least one image is required", "", {
+            if (this.getProductImages.length === 0 && this.urls.length === 0) {
+                this._snackBar.open('At least one image is required', '', {
                     duration: 2000,
-                    verticalPosition: "top",
+                    verticalPosition: 'top',
                 });
                 return false;
             }
-            if (this.productsForm.value.productImagepicture == "") {
+            if (this.productsForm.value.productImagepicture === '') {
                 this.productsForm.patchValue({
                     productImages: undefined,
                 });
@@ -339,27 +343,27 @@ export class AddProductComponent implements OnInit {
                         this.urls = undefined;
                         this.showPreview = false;
                         this.storeImg = undefined;
-                        this._snackBar.open(res.message, "", {
+                        this._snackBar.open(res.message, '', {
                             duration: 2000,
-                            verticalPosition: "top",
+                            verticalPosition: 'top',
                         });
                         setTimeout(() => {
-                            this.router.navigate(["/products"]);
+                            this.router.navigate(['/products']);
                         }, 2000);
                     },
                     (errors) => {
                         console.log(errors);
-                        this._snackBar.open(errors.error.message, "", {
+                        this._snackBar.open(errors.error.message, '', {
                             duration: 2000,
-                            verticalPosition: "top",
+                            verticalPosition: 'top',
                         });
                     }
                 );
         } else {
-            if (this.showPreview == false) {
-                this._snackBar.open("Banner is required", "", {
+            if (this.showPreview === false) {
+                this._snackBar.open('Banner is required', '', {
                     duration: 2000,
-                    verticalPosition: "top",
+                    verticalPosition: 'top',
                 });
                 return false;
             }
@@ -370,16 +374,16 @@ export class AddProductComponent implements OnInit {
                     this.urls = undefined;
                     this.showPreview = false;
                     this.storeImg = undefined;
-                    this._snackBar.open(res.message, "", {
+                    this._snackBar.open(res.message, '', {
                         duration: 2000,
-                        verticalPosition: "top",
+                        verticalPosition: 'top',
                     });
                 },
                 (errors) => {
                     console.log(errors);
-                    this._snackBar.open(errors.error.message, "", {
+                    this._snackBar.open(errors.error.message, '', {
                         duration: 2000,
-                        verticalPosition: "top",
+                        verticalPosition: 'top',
                     });
                 }
             );
@@ -389,18 +393,18 @@ export class AddProductComponent implements OnInit {
     postData() {
         this.productsForm.markAllAsTouched();
         const formData = new FormData();
-        var filename = [];
+        const filename = [];
         if (this.productsForm.invalid) {
-            this._snackBar.open("All field are required", "", {
+            this._snackBar.open('All field are required', '', {
                 duration: 2000,
-                verticalPosition: "top",
+                verticalPosition: 'top',
             });
             return false;
         }
         if (this.storeImg.length > 0) {
             for (let i = 0; i < this.storeImg.length; i++) {
-                formData.append("images[]", this.storeImg[i]);
-                filename.push(this.storeImg[i].name.split(".").pop());
+                formData.append('images[]', this.storeImg[i]);
+                filename.push(this.storeImg[i].name.split('.').pop());
             }
             const file = filename.toString();
             this.imgUploading = true;
@@ -418,9 +422,9 @@ export class AddProductComponent implements OnInit {
                     }
                 );
             } else {
-                this._snackBar.open("Only jpg, png and jpeg formats are allowed", "", {
+                this._snackBar.open('Only jpg, png and jpeg formats are allowed', '', {
                     duration: 2000,
-                    verticalPosition: "top",
+                    verticalPosition: 'top',
                 });
                 return false;
             }
@@ -444,25 +448,25 @@ export class AddProductComponent implements OnInit {
         //toolbar: '.toolbar',
         toolbar: {
             container: [
-                ["bold", "italic", "underline", "strike"], // toggled buttons
-                ["blockquote", "code-block"],
+                ['bold', 'italic', 'underline', 'strike'], // toggled buttons
+                ['blockquote', 'code-block'],
 
                 [{ header: 1 }, { header: 2 }], // custom button values
-                [{ list: "ordered" }, { list: "bullet" }],
-                [{ script: "sub" }, { script: "super" }], // superscript/subscript
-                [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
-                [{ direction: "rtl" }], // text direction
+                [{ list: 'ordered' }, { list: 'bullet' }],
+                [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
+                [{ indent: '-1' }, { indent: '+1' }], // outdent/indent
+                [{ direction: 'rtl' }], // text direction
 
-                [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+                [{ size: ['small', false, 'large', 'huge'] }], // custom dropdown
                 [{ header: [1, 2, 3, 4, 5, 6, false] }],
 
                 [{ color: [] }, { background: [] }], // dropdown with defaults from theme
                 [{ font: [] }],
                 [{ align: [] }],
 
-                ["clean"], // remove formatting button
+                ['clean'], // remove formatting button
 
-                ["link", "image", "video"], // link and image, video
+                ['link', 'image', 'video'], // link and image, video
             ],
         },
     };
@@ -482,9 +486,9 @@ export class AddProductComponent implements OnInit {
     };
 
     onFocus = () => {
-        console.log("On Focus");
+        console.log('On Focus');
     };
     onBlur = () => {
-        console.log("Blurred");
+        console.log('Blurred');
     };
 }

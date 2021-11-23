@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/member-ordering */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
@@ -9,8 +12,7 @@ import { Observable } from 'rxjs/internal/Observable';
 export class StockService {
     constructor(private _http: HttpClient) { }
 
-    apiUrl: string = environment.apiUrl;
-    api_url = `${this.apiUrl}/products/stock`;
+    api_url: string = environment.apiUrl + '/prdoucts/stock';
 
     getStock(payload: any): Observable<any> {
         return this._http.get(
