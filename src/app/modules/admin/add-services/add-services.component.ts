@@ -18,6 +18,7 @@ import { SubChildCategoryService } from '../../services/sub-child-category.servi
 import { ActivatedRoute, Router } from '@angular/router';
 import { ThemePalette } from '@angular/material/core';
 import { ServicesService } from 'app/modules/services/services.service';
+import { ConsultantService } from 'app/modules/services/consultant.service';
 @Component({
   selector: 'app-add-services',
   templateUrl: './add-services.component.html',
@@ -33,6 +34,7 @@ export class AddServicesComponent implements OnInit {
     showOldImages: boolean = false;
     getCategoriesList: any[];
     getSubCategoriesList: any[];
+    getConsultantList: any[];
     getSubChildCategoriesList: any[];
     getBrandsList: any[];
     getVendorsList: any[];
@@ -67,6 +69,7 @@ export class AddServicesComponent implements OnInit {
         private categoriesService: CategoriesService,
         private _formBuilder: FormBuilder,
         private _snackBar: MatSnackBar,
+        private consultantServices: ConsultantService,
         private route: ActivatedRoute,
         private router: Router
     ) { }
@@ -75,7 +78,7 @@ export class AddServicesComponent implements OnInit {
         this.getColors = colors;
         this.country = countries;
         this.getCategories();
-
+        this.getConsultant();
         this.productsForm = this._formBuilder.group({
             productTitle: ['', [Validators.required]],
             productImagepicture: [''],
@@ -83,7 +86,6 @@ export class AddServicesComponent implements OnInit {
             productDescription:['',[Validators.required]],
             productCategory: ['', [Validators.required]],
             productConsultant: ['hhkkk'],
-            productBrand: ['', [Validators.required]],
             tags: ['', [Validators.required]],
             salePrice: ['', [Validators.required]],
             servicesDiscount: ['', [Validators.required]],
@@ -162,6 +164,17 @@ export class AddServicesComponent implements OnInit {
         );
     }
 
+    getConsultant() {
+        this.consultantServices.listConsultants().subscribe(
+            (res: any) => {
+                this.getConsultantList = res.Consultants;
+            },
+            (errors: any) => {
+                console.log(errors);
+            }
+        )
+    }
+
 
 
 
@@ -186,7 +199,7 @@ export class AddServicesComponent implements OnInit {
 
     getData(data: any) {
         this.showOldImages = true;
-        this.servicesService.showProduct(data).subscribe((res: any) => {
+        this.servicesService.getServices(data).subscribe((res: any) => {
             console.log(res);
             this.tags = res.tags;
             this.getProductImages = res.productImages;
@@ -232,7 +245,7 @@ export class AddServicesComponent implements OnInit {
                 });
             }
             this.servicesService
-                .updateProducts(this.selectedProduct, this.productsForm.value)
+                .updateServices(this.selectedProduct, this.productsForm.value)
                 .subscribe(
                     (res: any) => {
                         this.productsForm.reset();
@@ -264,7 +277,7 @@ export class AddServicesComponent implements OnInit {
                 });
                 return false;
             }
-            this.servicesService.addProducts(this.productsForm.value).subscribe(
+            this.servicesService.addServices(this.productsForm.value).subscribe(
                 (res: any) => {
                     this.productsForm.reset();
                     this.tags = [];
@@ -299,7 +312,7 @@ export class AddServicesComponent implements OnInit {
             const file = filename.toString();
             this.imgUploading = true;
             if (file.match(/png/g) || file.match(/jpeg/g) || file.match(/jpg/g)) {
-                this.servicesService.uploadProductImage(formData).subscribe(
+                this.servicesService.uploadServicesImage(formData).subscribe(
                     (res: any) => {
                         this.productsForm.patchValue({
                             productImages: res.imagePath,

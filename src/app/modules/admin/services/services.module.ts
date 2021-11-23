@@ -17,6 +17,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { DataTablesModule } from 'angular-datatables';
 import { SharedModule } from 'app/shared/shared.module';
 import { Route } from '@angular/compiler/src/core';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
  const route: Route[] = [
 
@@ -48,6 +49,7 @@ import { Route } from '@angular/compiler/src/core';
     NgxDatatableModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
+    MatSlideToggleModule
   ]
 })
 export class ServicesModule { }

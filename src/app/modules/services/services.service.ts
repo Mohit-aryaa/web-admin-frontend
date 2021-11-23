@@ -13,29 +13,29 @@ export class ServicesService {
 
     api_url: string = environment.apiUrl + '/services';
 
-    getProducts(payload: any): Observable<any> {
+    getServices(payload: any): Observable<any> {
         return this._http.get(
             `${this.api_url}?offset=${payload.params.offset}&limit=${payload.params.limit}&previousSize=${payload.params.previousSize}`
         );
     }
 
-    showProduct(payload: any): Observable<any> {
+    showService(payload: any): Observable<any> {
         return this._http.get(`${this.api_url}/${payload}`);
     }
 
-    listProduct(): Observable<any> {
+    listServices(): Observable<any> {
         return this._http.get(this.api_url);
     }
 
-    addProducts(payload: any) {
+    addServices(payload: any) {
         return this._http.post(this.api_url, payload);
     }
 
-    updateProducts(params: any, payload: any) {
+    updateServices(params: any, payload: any) {
         return this._http.put(`${this.api_url}/${params}`, payload);
     }
 
-    deleteProducts(params: any) {
+    deleteServices(params: any) {
         return this._http.delete(`${this.api_url}/${params._id}`, params);
     }
 
@@ -55,11 +55,11 @@ export class ServicesService {
         return this._http.post(`${this.api_url}/bulkUnpublish`, payload);
     }
 
-    uploadProductImage(payload: any) {
+    uploadServicesImage(payload: any) {
         return this._http.post(`${this.api_url}/upload`, payload);
     }
 
-    filterProduct(payload: any): Observable<any> {
+    filterServices(payload: any): Observable<any> {
         return this._http.get(`${this.api_url}?filter=${payload}`);
     }
 

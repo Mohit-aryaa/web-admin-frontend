@@ -79,7 +79,7 @@
                                             </label>
                                             <select class="form-select" aria-label="Default select example" formControlName="productConsultant">
                                                 <option value="selected">Select</option>
-                                                <option value="NKKK">NKKK</option>
+                                                <option *ngFor="let consultant of getConsultantList" [value]="consultant._id">{{consultant.name}}</option>
                                             </select>
                                         </div>
 

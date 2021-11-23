@@ -28,9 +28,9 @@ export class AuthService
     /**
      * Setter & getter for access token
      */
-    set accessToken(token: any)
+    set accessToken(token: string)
     {
-        localStorage.setItem('accessToken', JSON.stringify(token));
+        localStorage.setItem('accessToken', token);
     }
 
     get accessToken(): string
@@ -105,11 +105,11 @@ export class AuthService
             switchMap((response: any) => {
 
                 // Store the access token in the local storage
-                const data = {
-                    accessToken: response.accessToken,
-                    userType:1
-                }
-                this.accessToken = data;
+                // const data = {
+                //     accessToken: response.accessToken,
+                //     userType:1
+                // }
+                this.accessToken = response.accessToken;
 
 
 
@@ -125,7 +125,7 @@ export class AuthService
         );
     }
 
-    
+
 
     /**
      * Sign in using the access token

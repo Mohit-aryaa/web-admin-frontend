@@ -164,10 +164,10 @@ export class ServicesComponent implements OnInit {
 
     getData() {
         this.servicesService
-            .getProducts({ params: this.tablePaging })
+            .getServices({ params: this.tablePaging })
             .subscribe((res: any) => {
                 this.loading = false;
-                this.products = res.Products;
+                this.products = res.Services;
                 console.log('this.users', this.products);
                 this.products.length = res.total;
                 this.dataSource = new MatTableDataSource<any>(this.products);
@@ -181,11 +181,11 @@ export class ServicesComponent implements OnInit {
             this.userDataPromise.unsubscribe();
         }
         this.userDataPromise = this.servicesService
-            .getProducts({ params: this.tablePaging })
+            .getServices({ params: this.tablePaging })
             .subscribe((response: any) => {
                 this.loading = false;
                 this.products.length = this.tablePaging['previousSize'];
-                this.products.push(...response.Products);
+                this.products.push(...response.Services);
                 this.products.length = response.total;
                 this.dataSource = new MatTableDataSource<any>(this.products);
                 this.dataSource._updateChangeSubscription();
@@ -207,7 +207,7 @@ export class ServicesComponent implements OnInit {
     applyProductFilter(filterValue: string) {
         const filterData = filterValue.trim().toLowerCase();
         this.userDataPromise = this.servicesService
-            .filterProduct(filterData)
+            .filterServices(filterData)
             .subscribe((res: any) => {
                 this.loading = false;
                 this.products = res.Products;
@@ -221,7 +221,7 @@ export class ServicesComponent implements OnInit {
         if (confirm('Are you sure to delete ?')) {
             console.log(deleteProduct);
             this.servicesService
-                .deleteProducts(deleteProduct)
+                .deleteServices(deleteProduct)
                 .subscribe((res: any) => {
                     this.getNextData();
                 });
