@@ -17,13 +17,14 @@ export class AuthSignInComponent implements OnInit
 {
     @ViewChild('signInNgForm') signInNgForm: NgForm;
     @ViewChild('signInOtpNgForm') signInOtpNgForm: NgForm;
-    //@ViewChild('otpField')  otpFieldVariable: ElementRef; 
+    //@ViewChild('otpField')  otpFieldVariable: ElementRef;
 
     alert: { type: FuseAlertType; message: string } = {
         type   : 'success',
         message: ''
     };
     signInForm: FormGroup;
+    vendorSignInForm:FormGroup;
     signInOtpForm: FormGroup;
     showAlert: boolean = false;
     countryCode:number =  91;
@@ -57,6 +58,13 @@ export class AuthSignInComponent implements OnInit
             rememberMe: ['']
         });
 
+        this.vendorSignInForm = this._formBuilder.group({
+            email     : ['', [Validators.required, Validators.email]],
+            password  : ['', Validators.required],
+            rememberMe: ['']
+        });
+
+
         this.signInOtpForm = this._formBuilder.group({
             dialCode: ['91', [Validators.required]],
             number:  ['', [Validators.required]],
@@ -72,23 +80,7 @@ export class AuthSignInComponent implements OnInit
         this.countryCode = event.dialCode;
    }
 
-    getOtp() {
-        const userValues = {
-            type: "phone",
-            countryPhoneCode: '+'+ this.countryCode,
-            phone: this.signInOtpForm.value.number,
-        }
-        //
-        console.log(userValues);
-        this._authService.getOtp(userValues).subscribe(
-            (results: any) => {
-                console.log(results)
-            },
-            errors => {
-                console.log(errors);
-            }
-        )
-    }
+
     /**
      * Sign in
      */
@@ -141,33 +133,25 @@ export class AuthSignInComponent implements OnInit
             );
     }
 
-    signInOtp() {
-        console.log('signInOtp click')
-        this.signInOtpValues = {
-            // email: "user@mail.com",
-            // password: "user@123",
-            type: "phone",
-            // notificationToken: "", 
-            referalCode: "ref",
-            countryPhoneCode: '+'+ this.countryCode,
-            phone: this.signInOtpForm.value.number,
-            otp: this.signInOtpForm.value.otp,
-            // token: null
-         }
-         
-        if(this.signInOtpForm.invalid) {
-            console.log('form', this.signInOtpForm.value)
+    vendorSignIn(): void
+    {
+        // Return if the form is invalid
+        if ( this.vendorSignInForm.invalid )
+        {
             return;
-        } 
+        }
 
-        this.signInOtpForm.disable();
+        // Disable the form
+        this.vendorSignInForm.disable();
+
+        // Hide the alert
         this.showAlert = false;
 
-        
-         this._authService.signInOtp(this.signInOtpValues)
-             .subscribe(
-                () => {
-
+        // Sign in
+        this._authService.vendorSignIn(this.vendorSignInForm.value)
+            .subscribe(
+                (response:any) => {
+                    console.log(response)
                     // Set the redirect url.
                     // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
                     // to the correct page after a successful sign in. This way, that url can be set via
@@ -178,27 +162,18 @@ export class AuthSignInComponent implements OnInit
                     this._router.navigateByUrl(redirectURL);
 
                 },
-                (response) => {
+                (errors: any) => {
+
                     // Re-enable the form
-                    this.signInOtpForm.enable();
-                    
+                    this.vendorSignInForm.enable();
+
                     // Reset the form
-                    // this.signInOtpNgForm.resetForm(); 
-                    //this.otpFieldVariable.nativeElement.value = "";
-                    this.signInOtpForm.patchValue({otp: ''})
-                    var message: any;
-                    if(typeof response.error.errors[0] !== "string") {
-                        //console.log('im object')
-                         message = response.error.message + ': ' + response.error.errors[0].msg;   
-                    } else {
-                         message = response.error.message + ': ' + response.error.errors[0]; // ah v ta object aa   
-                    }
-                    console.log(response);
-                     
-                    // set the alert
+                    this.vendorSignInForm.reset();
+
+                    // Set the alert
                     this.alert = {
                         type   : 'error',
-                        message: message
+                        message: errors.error.message
                     };
 
                     // Show the alert
@@ -206,4 +181,6 @@ export class AuthSignInComponent implements OnInit
                 }
             );
     }
+
+
 }

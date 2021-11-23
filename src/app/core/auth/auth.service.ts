@@ -9,6 +9,7 @@ import { environment } from 'environments/environment';
 @Injectable()
 export class AuthService
 {
+    private  api_url : string = environment.apiUrl + '/admin'
     private _authenticated: boolean = false;
     /**
      * Constructor
@@ -27,9 +28,9 @@ export class AuthService
     /**
      * Setter & getter for access token
      */
-    set accessToken(token: string)
+    set accessToken(token: any)
     {
-        localStorage.setItem('accessToken', token);
+        localStorage.setItem('accessToken', JSON.stringify(token));
     }
 
     get accessToken(): string
@@ -91,73 +92,8 @@ export class AuthService
             })
         );
     }
-    
-    //Admin data queries
-    getAdminUsers(): Observable<any> 
-    {
-        return this._httpClient.get('http://18.221.25.167:3000/admin/user') 
-    }
-    addAdminUsers(data: any) {
-        return this._httpClient.post('http://18.221.25.167:3000/admin/user', data)
-    }
-    updateAdminUsers(id, data: any) {
-        return this._httpClient.put(`http://18.221.25.167:3000/admin/user/${id}`, data)
-    }
 
-    //Intereste category queries
-    addNewInterestedCategory(data: any){
-       return this._httpClient.post('http://18.221.25.167:3000/admin/interest', data)  
-    }
-    getInterestedCategory(): Observable <any>
-    {
-        return this._httpClient.get('http://18.221.25.167:3000/admin/interest')
-    }
-    updateInterestedCategory(id, data: any) {
-        return this._httpClient.put(`http://18.221.25.167:3000/admin/interest/${id}`, data)
-    }
-    deleteInterestedCategory(del:any ) {
-        //console.log(info.Id)
-        return this._httpClient.delete('http://18.221.25.167:3000/admin/interest/'+del._id, del);    
-    }
-
-     //Product category queries
-     addNewProductCategory(data: any){
-        return this._httpClient.post('http://18.221.25.167:3000/admin/product-category', data)  
-     }
-     getProductCategory(): Observable <any>
-     {
-         return this._httpClient.get('http://18.221.25.167:3000/admin/product-category')
-     }
-     updateProductCategory(id, data: any) {
-         return this._httpClient.put(`http://18.221.25.167:3000/admin/product-category/${id}`, data)
-     }
-     deleteProductCategory(del:any ) {
-         //console.log(info.Id)
-         return this._httpClient.delete('http://18.221.25.167:3000/admin/product-category/'+del._id, del);    
-     }
-
-     //Product subcategory queries
-     addNewProductSubCategory(data: any){
-        return this._httpClient.post('http://18.221.25.167:3000/admin/product-subcategory', data)  
-     }
-     getSubProductCategory(): Observable <any>
-     {
-         return this._httpClient.get('http://18.221.25.167:3000/admin/product-subcategory')
-     }
-     updateProductSubCategory(id, data: any) {
-         return this._httpClient.put(`http://18.221.25.167:3000/admin/product-subcategory/${id}`, data)
-     }
-     deleteProductSubCategory(del:any ) {
-         //console.log(info.Id)
-         return this._httpClient.delete('http://18.221.25.167:3000/admin/product-subcategory/'+del._id, del);    
-     }
-
-   
-
-
-
-
-    signInOtp(credentials: any): Observable<any>
+    vendorSignIn(credentials: { email: string; password: string }): Observable<any>
     {
         // Throw error, if the user is already logged in
         if ( this._authenticated )
@@ -165,18 +101,23 @@ export class AuthService
             return throwError('User is already logged in.');
         }
 
-        return this._httpClient.post('http://18.221.25.167:3000/auth/login', credentials).pipe(
+        return this._httpClient.post(`${this.api_url}/vendorSignIn`, credentials).pipe(
             switchMap((response: any) => {
 
                 // Store the access token in the local storage
-                console.log(response)
-                this.accessToken = response.token;
+                const data = {
+                    accessToken: response.accessToken,
+                    userType:1
+                }
+                this.accessToken = data;
+
+
 
                 // Set the authenticated flag to true
                 this._authenticated = true;
 
                 // Store the user on the user service
-                this._userService.user = response.user;
+                //this._userService.user = response.user;
 
                 // Return a new observable with the response
                 return of(response);
@@ -184,10 +125,7 @@ export class AuthService
         );
     }
 
-    getOtp(data): Observable<any> 
-    {
-        return this._httpClient.post('http://18.221.25.167:3000/auth/request-otp', data);
-    }
+    
 
     /**
      * Sign in using the access token
@@ -244,6 +182,13 @@ export class AuthService
     {
         return this._httpClient.post('${apiUrl}/auth/register', user);
     }
+
+    vendorSignUp(vendor: { name: string; email: string; password: string; company: string;  }): Observable<any>
+    {
+        return this._httpClient.post(`${this.api_url}`, vendor);
+    }
+
+
 
     /**
      * Unlock session

@@ -7,8 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardComponent implements OnInit {
   cards = [];
-  constructor() { 
-    this.cards = [ 
+  constructor() {
+    this.cards = [
       {
         title: 'Summary',
         total: 21,
@@ -46,21 +46,21 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.getcardStatus()
-    
+
   }
 
   getcardStatus() {
     for (let i = 0; i < this.cards.length; i++) {
-      console.log(this.cards[i].total)
+      //console.log(this.cards[i].total)
       if(this.cards[i].title == 'Summary' ) {
         this.cards[i].cardstatus = 'text-primary';
-      } 
+      }
       else if (this.cards[i].title == 'Overdue' ) {
         this.cards[i].cardstatus = 'text-danger';
-      } 
+      }
       else if (this.cards[i].title == 'Issues') {
         this.cards[i].cardstatus = 'text-success';
-      } 
+      }
        if (this.cards[i].title == 'Features') {
         this.cards[i].cardstatus = 'text-warning';
       }

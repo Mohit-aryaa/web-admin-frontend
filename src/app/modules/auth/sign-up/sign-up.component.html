@@ -28,11 +28,12 @@
             </fuse-alert>
 
             <!-- Sign Up form -->
-        
+            <mat-tab-group>
+                <mat-tab label="Admin">
                     <form
                         class="mt-8"
                         [formGroup]="signUpForm">
-        
+
                         <!-- Name field -->
                         <mat-form-field class="w-full">
                             <mat-label>Full name</mat-label>
@@ -44,7 +45,7 @@
                                 Full name is required
                             </mat-error>
                         </mat-form-field>
-        
+
                         <!-- Email field -->
                         <mat-form-field class="w-full">
                             <mat-label>Email address</mat-label>
@@ -59,7 +60,7 @@
                                 Please enter a valid email address
                             </mat-error>
                         </mat-form-field>
-        
+
                         <!-- Password field -->
                         <mat-form-field class="w-full">
                             <mat-label>Password</mat-label>
@@ -87,7 +88,7 @@
                                 Password is required
                             </mat-error>
                         </mat-form-field>
-        
+
                         <!-- Company field -->
                         <mat-form-field class="w-full">
                             <mat-label>Company</mat-label>
@@ -95,8 +96,9 @@
                                 id="company-confirm"
                                 matInput
                                 [formControlName]="'company'">
+
                         </mat-form-field>
-        
+
                         <!-- ToS and PP -->
                         <div class="inline-flex items-end w-full mt-1.5">
                             <mat-checkbox
@@ -114,7 +116,7 @@
                                 </a>
                             </mat-checkbox>
                         </div>
-        
+
                         <!-- Submit button -->
                         <button
                             class="fuse-mat-button-large w-full mt-6"
@@ -130,10 +132,124 @@
                                 [diameter]="24"
                                 [mode]="'indeterminate'"></mat-progress-spinner>
                         </button>
-        
-                    </form>    
-             
-          
+
+                    </form>
+                </mat-tab>
+                <mat-tab label="Vendor">
+                    <form #vendorSignUpNgForm
+                        class="mt-8"
+                        [formGroup]="vendorSignUpForm">
+
+                        <!-- Name field -->
+                        <mat-form-field class="w-full">
+                            <mat-label>Full name</mat-label>
+                            <input
+                                id="vendor-name"
+                                matInput
+                                [formControlName]="'name'">
+                            <mat-error *ngIf="vendorSignUpForm.get('name').hasError('required')">
+                                Full name is required
+                            </mat-error>
+                        </mat-form-field>
+
+                        <!-- Email field -->
+                        <mat-form-field class="w-full">
+                            <mat-label>Email address</mat-label>
+                            <input
+                                id="vendor-email"
+                                matInput
+                                [formControlName]="'email'">
+                            <mat-error *ngIf="vendorSignUpForm.get('email').hasError('required')">
+                                Email address is required
+                            </mat-error>
+                            <mat-error *ngIf="signUpForm.get('email').hasError('email')">
+                                Please enter a valid email address
+                            </mat-error>
+                        </mat-form-field>
+
+                        <!-- Password field -->
+                        <mat-form-field class="w-full">
+                            <mat-label>Password</mat-label>
+                            <input
+                                id="vendor-password"
+                                matInput
+                                type="password"
+                                [formControlName]="'password'"
+                                #vendorPasswordField>
+                            <button
+                                mat-icon-button
+                                type="button"
+                                (click)="vendorPasswordField.type === 'password' ? vendorPasswordField.type = 'text' : vendorPasswordField.type = 'password'"
+                                matSuffix>
+                                <mat-icon
+                                    class="icon-size-5"
+                                    *ngIf="vendorPasswordField.type === 'password'"
+                                    [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                                <mat-icon
+                                    class="icon-size-5"
+                                    *ngIf="vendorPasswordField.type === 'text'"
+                                    [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+                            </button>
+                            <mat-error>
+                                Password is required
+                            </mat-error>
+                        </mat-form-field>
+
+                        <!-- Company field -->
+                        <mat-form-field class="w-full">
+                            <mat-label>Company</mat-label>
+                            <input
+                                id="vednor-company-confirm"
+                                matInput
+                                [formControlName]="'company'">
+                                <mat-error *ngIf="vendorSignUpForm.get('company').hasError('required')">
+                                    Company name is required
+                                </mat-error>
+                        </mat-form-field>
+
+                        <!-- ToS and PP -->
+                        <div class="inline-flex items-end w-full mt-1.5">
+                            <mat-checkbox
+                                [color]="'primary'"
+                                [formControlName]="'agreements'">
+                                <span>I agree to the</span>
+                                <a
+                                    class="ml-1 text-primary-500 hover:underline"
+                                    [routerLink]="['./']">Terms of Service
+                                </a>
+                                <span>and</span>
+                                <a
+                                    class="ml-1 text-primary-500 hover:underline"
+                                    [routerLink]="['./']">Privacy Policy
+                                </a>
+                                <mat-error *ngIf="vendorSignUpForm.get('agreements').hasError('requiredTrue')">
+                                    <small> You must agree to terms & conditions</small>
+                                </mat-error>
+                            </mat-checkbox>
+                        </div>
+
+                        <!-- Submit button -->
+                        <button
+                            class="fuse-mat-button-large w-full mt-6"
+                            mat-flat-button
+                            [color]="'primary'"
+                            [disabled]="vendorSignUpForm.disabled"
+                            (click)="vendorSignUp()">
+                            <span *ngIf="!vendorSignUpForm.disabled">
+                                Create your free account
+                            </span>
+                            <mat-progress-spinner
+                                *ngIf="vendorSignUpForm.disabled"
+                                [diameter]="24"
+                                [mode]="'indeterminate'"></mat-progress-spinner>
+                        </button>
+
+                    </form>
+                </mat-tab>
+            </mat-tab-group>
+
+
+
         </div>
     </div>
     <div class="relative hidden md:flex flex-auto items-center justify-center w-1/2 h-full p-16 lg:px-28 overflow-hidden bg-gray-800 dark:border-l">
