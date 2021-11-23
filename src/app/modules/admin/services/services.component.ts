@@ -11,9 +11,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-
 import { CategoriesService } from 'app/modules/services/categories.service';
-import { ProductsService } from '../../services/products.service';
+import { ServicesService } from 'app/modules/services/services.service';
 import { VendorService } from '../../services/vendor.service';
 @Component({
   selector: 'app-services',
@@ -47,9 +46,8 @@ export class ServicesComponent implements OnInit {
     setBulkDeleteItems = [];
     searchForm: FormGroup;
     constructor(
-        private http: HttpClient,
         private _formBuilder: FormBuilder,
-        private productsService: ProductsService,
+        private servicesService: ServicesService ,
         private _snackBar: MatSnackBar,
         private vendorsService: VendorService,
         private categoryService: CategoriesService
@@ -139,7 +137,7 @@ export class ServicesComponent implements OnInit {
             this.setBulkDeleteItems.length > 0
         ) {
             if (confirm('Are you sure to delete ?')) {
-                this.productsService.bulkDelete(this.setBulkDeleteItems).subscribe(
+                this.servicesService.bulkDelete(this.setBulkDeleteItems).subscribe(
                     (res: any) => {
                         const element = <HTMLInputElement>(
                             document.getElementById('deleteAll')
@@ -165,7 +163,7 @@ export class ServicesComponent implements OnInit {
     }
 
     getData() {
-        this.productsService
+        this.servicesService
             .getProducts({ params: this.tablePaging })
             .subscribe((res: any) => {
                 this.loading = false;
@@ -182,7 +180,7 @@ export class ServicesComponent implements OnInit {
         if (this.userDataPromise) {
             this.userDataPromise.unsubscribe();
         }
-        this.userDataPromise = this.productsService
+        this.userDataPromise = this.servicesService
             .getProducts({ params: this.tablePaging })
             .subscribe((response: any) => {
                 this.loading = false;
@@ -208,7 +206,7 @@ export class ServicesComponent implements OnInit {
 
     applyProductFilter(filterValue: string) {
         const filterData = filterValue.trim().toLowerCase();
-        this.userDataPromise = this.productsService
+        this.userDataPromise = this.servicesService
             .filterProduct(filterData)
             .subscribe((res: any) => {
                 this.loading = false;
@@ -222,7 +220,7 @@ export class ServicesComponent implements OnInit {
     deleteProduct(deleteProduct: any) {
         if (confirm('Are you sure to delete ?')) {
             console.log(deleteProduct);
-            this.productsService
+            this.servicesService
                 .deleteProducts(deleteProduct)
                 .subscribe((res: any) => {
                     this.getNextData();

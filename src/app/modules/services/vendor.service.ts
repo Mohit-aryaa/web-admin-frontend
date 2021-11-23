@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/member-ordering */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
@@ -9,8 +12,7 @@ import { Observable } from 'rxjs/internal/Observable';
 export class VendorService {
     constructor(private _http: HttpClient) { }
 
-    apiUrl: string = environment.apiUrl;
-    api_url = `${this.apiUrl}/vendors`;
+    api_url: string = environment.apiUrl + '/vendors';
 
     getVendors(payload: any): Observable<any> {
         return this._http.get(
@@ -22,7 +24,7 @@ export class VendorService {
         return this._http.get(this.api_url);
     }
 
-    showVendor(params: any) {
+    showVendor(params: any): Observable<any>{
         return this._http.get(`${this.api_url}/${params}`);
     }
 

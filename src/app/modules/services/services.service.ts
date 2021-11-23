@@ -5,38 +5,37 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
 import { Observable } from 'rxjs';
-
 @Injectable({
-    providedIn: 'root',
+  providedIn: 'root'
 })
-export class BundleProductService {
+export class ServicesService {
     constructor(private _http: HttpClient) { }
 
-    api_url: string = environment.apiUrl + '/bundleProducts';
+    api_url: string = environment.apiUrl + '/services';
 
-    getBundleProducts(payload: any): Observable<any> {
+    getProducts(payload: any): Observable<any> {
         return this._http.get(
             `${this.api_url}?offset=${payload.params.offset}&limit=${payload.params.limit}&previousSize=${payload.params.previousSize}`
         );
     }
 
-    showBundleProduct(payload: any): Observable<any> {
+    showProduct(payload: any): Observable<any> {
         return this._http.get(`${this.api_url}/${payload}`);
     }
 
-    listBundleProduct(): Observable<any> {
+    listProduct(): Observable<any> {
         return this._http.get(this.api_url);
     }
 
-    addBundleProducts(payload: any) {
+    addProducts(payload: any) {
         return this._http.post(this.api_url, payload);
     }
 
-    updateBundleProducts(params: any, payload: any) {
+    updateProducts(params: any, payload: any) {
         return this._http.put(`${this.api_url}/${params}`, payload);
     }
 
-    deleteBundleProducts(params: any) {
+    deleteProducts(params: any) {
         return this._http.delete(`${this.api_url}/${params._id}`, params);
     }
 
@@ -56,23 +55,28 @@ export class BundleProductService {
         return this._http.post(`${this.api_url}/bulkUnpublish`, payload);
     }
 
-    uploadBundleProductImage(payload: any) {
+    uploadProductImage(payload: any) {
         return this._http.post(`${this.api_url}/upload`, payload);
     }
 
-    setPublish(payload:any){
-        return this._http.post(`${this.api_url}/setPublish`, payload)
-    }
-
-    setTodaysDeal(payload:any){
-        return this._http.post(`${this.api_url}/setTodaysDeal`, payload)
-    }
-
-    setFeatured(payload:any){
-        return this._http.post(`${this.api_url}/setFeatured`, payload)
-    }
-
-    filterBundleProducts(payload: any): Observable<any> {
+    filterProduct(payload: any): Observable<any> {
         return this._http.get(`${this.api_url}?filter=${payload}`);
+    }
+
+    setPublish(payload: any){
+        return this._http.post(`${this.api_url}/setPublish`, payload);
+    }
+
+    setTodaysDeal(payload: any){
+        return this._http.post(`${this.api_url}/setTodaysDeal`, payload);
+    }
+
+    setFeatured(payload: any){
+        return this._http.post(`${this.api_url}/setFeatured`, payload);
+    }
+
+    filterTable(payload: any): Observable<any> {
+        return this._http.get(`${this.api_url}?searchInput=${payload.searchInput}&product=${payload.product}
+        &category=${payload.category}&vendor=${payload.vendor}&publish=${payload.publish}`);
     }
 }
