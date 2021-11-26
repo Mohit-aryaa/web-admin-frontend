@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable @angular-eslint/use-lifecycle-interface */
-/* eslint-disable @typescript-eslint/prefer-for-of */
-/* eslint-disable @typescript-eslint/consistent-type-assertions */
 /* eslint-disable prefer-arrow/prefer-arrow-functions */
+/* eslint-disable @typescript-eslint/consistent-type-assertions */
+/* eslint-disable @typescript-eslint/prefer-for-of */
+/* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/member-ordering */
-import { HttpClient } from '@angular/common/http';
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
@@ -15,14 +14,13 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BrandService } from '../../services/brand.service';
-
 @Component({
-    selector: 'app-brand',
-    templateUrl: './brand.component.html',
-    styleUrls: ['./brand.component.scss'],
+  selector: 'app-custmor-groups',
+  templateUrl: './custmor-groups.component.html',
+  styleUrls: ['./custmor-groups.component.scss']
 })
-export class BrandComponent implements OnInit {
-    @ViewChild('content') content: any;
+export class CustmorGroupsComponent implements OnInit {
+ @ViewChild('content') content: any;
     @ViewChild(MatSort) sort!: MatSort;
     dataSource = new MatTableDataSource<any>();
     @ViewChild('Paginator') Paginator!: MatPaginator;
@@ -46,7 +44,6 @@ export class BrandComponent implements OnInit {
     ImageBox: any;
     showImageBox: boolean = false;
     constructor(
-        private http: HttpClient,
         private modalService: NgbModal,
         private _formBuilder: FormBuilder,
         private brandsService: BrandService,

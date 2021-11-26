@@ -172,7 +172,7 @@ export class AddServicesComponent implements OnInit {
             (errors: any) => {
                 console.log(errors);
             }
-        )
+        );
     }
 
 
@@ -314,6 +314,7 @@ export class AddServicesComponent implements OnInit {
             if (file.match(/png/g) || file.match(/jpeg/g) || file.match(/jpg/g)) {
                 this.servicesService.uploadServicesImage(formData).subscribe(
                     (res: any) => {
+                        console.log(res.imagePath);
                         this.productsForm.patchValue({
                             productImages: res.imagePath,
                         });

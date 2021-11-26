@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Route } from '@angular/router';
 import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
@@ -97,7 +99,9 @@ export const appRoutes: Route[] = [
             {path: 'add-Service', loadChildren: () => import('app/modules/admin/add-services/add-services.module').then(m => m.AddServiceModule)},
             {path: 'consultant', loadChildren: () => import('app/modules/admin/consultant/consultant.module').then(m => m.ConsultantModule)},
             {path: 'consultant', loadChildren: () => import('app/modules/admin/consultant/consultant.module').then(m => m.ConsultantModule)},
-            {path: 'coupons', loadChildren: () => import('app/modules/admin/coupon/coupon.module').then(m => m.CouponModule)}
+            {path: 'coupons', loadChildren: () => import('app/modules/admin/coupon/coupon.module').then(m => m.CouponModule)},
+            {path: 'customers-groups', loadChildren: () => import('app/modules/admin/custmor-groups/Custmor-groups.module').then(m => m.CustmorGroupsModule)},
+            {path: 'notifications', loadChildren: () => import('app/modules/admin/notifications/notifications.module').then(m => m.NotificationsModule)},
         ]
     }
 ];

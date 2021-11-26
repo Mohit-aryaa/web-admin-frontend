@@ -1,30 +1,35 @@
-import { HttpClient } from "@angular/common/http";
-import { Component, OnInit, ViewChild } from "@angular/core";
+/* eslint-disable @angular-eslint/use-lifecycle-interface */
+/* eslint-disable @typescript-eslint/consistent-type-assertions */
+/* eslint-disable @typescript-eslint/prefer-for-of */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/member-ordering */
+/* eslint-disable @typescript-eslint/naming-convention */
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
     FormBuilder,
     FormControl,
     FormGroup,
     Validators,
-} from "@angular/forms";
-import { MatPaginator } from "@angular/material/paginator";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { MatSort } from "@angular/material/sort";
-import { MatTableDataSource } from "@angular/material/table";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { CategoriesService } from "app/modules/services/categories.service";
-import { ProductsService } from "../../services/products.service";
-import { VendorService } from "../../services/vendor.service";
+} from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { CategoriesService } from 'app/modules/services/categories.service';
+import { ProductsService } from '../../services/products.service';
+import { VendorService } from '../../services/vendor.service';
 
 @Component({
-    selector: "app-products",
-    templateUrl: "./products.component.html",
-    styleUrls: ["./products.component.scss"],
+    selector: 'app-products',
+    templateUrl: './products.component.html',
+    styleUrls: ['./products.component.scss'],
 })
 export class ProductsComponent implements OnInit {
-    @ViewChild("content") content: any;
+    @ViewChild('content') content: any;
     @ViewChild(MatSort) sort!: MatSort;
     dataSource = new MatTableDataSource<any>();
-    @ViewChild("Paginator") Paginator!: MatPaginator;
+    @ViewChild('Paginator') Paginator!: MatPaginator;
     publishProduct = new FormControl();
     loading: boolean = true;
     products: any[];
@@ -56,34 +61,34 @@ export class ProductsComponent implements OnInit {
     ) { }
 
     displayedColumnsOne: string[] = [
-        "check",
-        "name",
-        "image",
-        "productSku",
-        "stock",
-        "category",
-        "subCategory",
-        "todayDeal",
-        "publish",
-        "feature",
-        "action",
+        'check',
+        'name',
+        'image',
+        'productSku',
+        'stock',
+        'category',
+        'subCategory',
+        'todayDeal',
+        'publish',
+        'feature',
+        'action',
     ];
     ngOnInit(): void {
         this.getData();
         this.getVendors();
         this.getCategories();
         this.searchForm = this._formBuilder.group({
-            searchInput: [""],
-            product: ["", [Validators.required]],
-            category: ["", [Validators.required]],
-            vendor: ["", [Validators.required]],
-            publish: ["", [Validators.required]],
+            searchInput: [''],
+            product: ['', [Validators.required]],
+            category: ['', [Validators.required]],
+            vendor: ['', [Validators.required]],
+            publish: ['', [Validators.required]],
         });
     }
 
     ngAfterViewInit() {
         this.searchForm.patchValue({
-            product: "productName",
+            product: 'productName',
         });
     }
 
@@ -108,10 +113,10 @@ export class ProductsComponent implements OnInit {
         this.getNextData();
         this.searchForm.reset();
         this.searchForm.patchValue({
-            product: "productName",
-            category: "",
-            vendor: "",
-            publish: "",
+            product: 'productName',
+            category: '',
+            vendor: '',
+            publish: '',
         });
     }
 
@@ -140,17 +145,17 @@ export class ProductsComponent implements OnInit {
     //check all checks in table
     getBulkItems(e: any) {
         this.setBulkItems = [];
-        var items: any = document.getElementsByClassName("bulkChecks");
+        const items: any = document.getElementsByClassName('bulkChecks');
         if (e.target.checked) {
             for (let i = 0; i < items.length; i++) {
-                let element = items[i];
+                const element = items[i];
                 element.checked = true;
-                let getId = element.getAttribute("id");
+                const getId = element.getAttribute('id');
                 this.setBulkItems.push(getId);
             }
         } else {
             for (let i = 0; i < items.length; i++) {
-                let element = items[i];
+                const element = items[i];
                 element.checked = false;
                 console.log(element);
                 this.setBulkItems = [];
@@ -161,10 +166,10 @@ export class ProductsComponent implements OnInit {
 
     //check only single item
     getCheckedItem(event: any, index: any) {
-        let checkElement = <HTMLInputElement>document.getElementById("checkAll");
+        const checkElement = <HTMLInputElement>document.getElementById('checkAll');
         checkElement.checked = false;
-        var element = <HTMLInputElement>document.getElementById(event._id);
-        var isChecked = element.checked;
+        const element = <HTMLInputElement>document.getElementById(event._id);
+        const isChecked = element.checked;
         if (isChecked) {
             this.setBulkItems.push(event._id);
         } else {
@@ -175,17 +180,17 @@ export class ProductsComponent implements OnInit {
 
     BulkDelete() {
         if ( typeof this.setBulkItems !== undefined && this.setBulkItems.length > 0  ) {
-            if (confirm("Are you sure to delete ?")) {
+            if (confirm('Are you sure to delete ?')) {
                 this.productsService.bulkDelete(this.setBulkItems).subscribe(
                     (res: any) => {
-                        let element = <HTMLInputElement>(
-                            document.getElementById("checkAll")
+                        const element = <HTMLInputElement>(
+                            document.getElementById('checkAll')
                         );
                         element.checked = false;
                         this.setBulkItems = [];
-                        this._snackBar.open(res.message, "", {
+                        this._snackBar.open(res.message, '', {
                             duration: 2000,
-                            verticalPosition: "top",
+                            verticalPosition: 'top',
                         });
                         this.getNextData();
                     },
@@ -195,26 +200,26 @@ export class ProductsComponent implements OnInit {
                 );
             }
         } else {
-            this._snackBar.open("No product selected", "", {
+            this._snackBar.open('No product selected', '', {
                 duration: 2000,
-                verticalPosition: "top",
+                verticalPosition: 'top',
             });
         }
     }
 
     BulkPublish() {
         if ( typeof this.setBulkItems !== undefined && this.setBulkItems.length > 0  ) {
-            if (confirm("Are you sure to Publish ?")) {
+            if (confirm('Are you sure to Publish ?')) {
                 this.productsService.bulkPublish(this.setBulkItems).subscribe(
                     (res: any) => {
-                        let element = <HTMLInputElement>(
-                            document.getElementById("checkAll")
+                        const element = <HTMLInputElement>(
+                            document.getElementById('checkAll')
                         );
                         this.setBulkItems = [];
                         element.checked = false;
-                        this._snackBar.open(res.message, "", {
+                        this._snackBar.open(res.message, '', {
                             duration: 2000,
-                            verticalPosition: "top",
+                            verticalPosition: 'top',
                         });
                         this.getNextData();
                     },
@@ -224,26 +229,26 @@ export class ProductsComponent implements OnInit {
                 );
             }
         } else {
-            this._snackBar.open("No product selected", "", {
+            this._snackBar.open('No product selected', '', {
                 duration: 2000,
-                verticalPosition: "top",
+                verticalPosition: 'top',
             });
         }
     }
 
     BulkUnpublish() {
         if ( typeof this.setBulkItems !== undefined && this.setBulkItems.length > 0  ) {
-            if (confirm("Are you sure to Publish ?")) {
+            if (confirm('Are you sure to Publish ?')) {
                 this.productsService.bulkUnpublish(this.setBulkItems).subscribe(
                     (res: any) => {
-                        let element = <HTMLInputElement>(
-                            document.getElementById("checkAll")
+                        const element = <HTMLInputElement>(
+                            document.getElementById('checkAll')
                         );
                         this.setBulkItems = [];
                         element.checked = false;
-                        this._snackBar.open(res.message, "", {
+                        this._snackBar.open(res.message, '', {
                             duration: 2000,
-                            verticalPosition: "top",
+                            verticalPosition: 'top',
                         });
                         this.getNextData();
                     },
@@ -253,9 +258,9 @@ export class ProductsComponent implements OnInit {
                 );
             }
         } else {
-            this._snackBar.open("No product selected", "", {
+            this._snackBar.open('No product selected', '', {
                 duration: 2000,
-                verticalPosition: "top",
+                verticalPosition: 'top',
             });
         }
     }
@@ -267,7 +272,7 @@ export class ProductsComponent implements OnInit {
                 this.loading = false;
                 this.products = res.Products;
                 this.getProductsLength = this.products.length;
-                console.log("this.users", this.products);
+                console.log('this.users', this.products);
                 this.products.length = res.total;
                 this.dataSource = new MatTableDataSource<any>(this.products);
                 this.dataSource.paginator = this.Paginator;
@@ -283,7 +288,7 @@ export class ProductsComponent implements OnInit {
             .getProducts({ params: this.tablePaging })
             .subscribe((response: any) => {
                 this.loading = false;
-                this.products.length = this.tablePaging["previousSize"];
+                this.products.length = this.tablePaging['previousSize'];
                 this.products.push(...response.Products);
                 this.products.length = response.total;
                 this.dataSource = new MatTableDataSource<any>(this.products);
@@ -293,18 +298,18 @@ export class ProductsComponent implements OnInit {
     }
 
     pageChanged(event: any) {
-        this.tablePaging["limit"] = event.pageSize;
-        this.tablePaging["offset"] = event.pageIndex.toString();
-        let pageIndex = event.pageIndex;
-        let pageSize = event.pageSize;
-        let previousIndex = event.previousPageIndex;
-        let previousSize = pageSize * pageIndex;
-        this.tablePaging["previousSize"] = previousSize;
+        this.tablePaging['limit'] = event.pageSize;
+        this.tablePaging['offset'] = event.pageIndex.toString();
+        const pageIndex = event.pageIndex;
+        const pageSize = event.pageSize;
+        const previousIndex = event.previousPageIndex;
+        const previousSize = pageSize * pageIndex;
+        this.tablePaging['previousSize'] = previousSize;
         this.getNextData();
     }
 
     applyProductFilter(filterValue: string) {
-        var filterData = filterValue.trim().toLowerCase();
+        const filterData = filterValue.trim().toLowerCase();
         this.userDataPromise = this.productsService
             .filterProduct(filterData)
             .subscribe((res: any) => {
@@ -324,9 +329,9 @@ export class ProductsComponent implements OnInit {
         };
         this.productsService.setPublish(setData).subscribe(
             (res: any) => {
-                this._snackBar.open(res.message, "", {
+                this._snackBar.open(res.message, '', {
                     duration: 2000,
-                    verticalPosition: "top",
+                    verticalPosition: 'top',
                 });
                 this.getNextData();
                 this.loading = false;
@@ -345,9 +350,9 @@ export class ProductsComponent implements OnInit {
         };
         this.productsService.setTodaysDeal(setTodaysDealData).subscribe(
             (res: any) => {
-                this._snackBar.open(res.message, "", {
+                this._snackBar.open(res.message, '', {
                     duration: 2000,
-                    verticalPosition: "top",
+                    verticalPosition: 'top',
                 });
                 this.getNextData();
                 this.loading = false;
@@ -365,9 +370,9 @@ export class ProductsComponent implements OnInit {
         };
         this.productsService.setFeatured(setFeaturedData).subscribe(
             (res: any) => {
-                this._snackBar.open(res.message, "", {
+                this._snackBar.open(res.message, '', {
                     duration: 2000,
-                    verticalPosition: "top",
+                    verticalPosition: 'top',
                 });
                 this.getNextData();
                 this.loading = false;
@@ -378,7 +383,7 @@ export class ProductsComponent implements OnInit {
         );
     }
     deleteProduct(deleteProduct: any) {
-        if (confirm("Are you sure to delete ?")) {
+        if (confirm('Are you sure to delete ?')) {
             console.log(deleteProduct);
             this.productsService
                 .deleteProducts(deleteProduct)

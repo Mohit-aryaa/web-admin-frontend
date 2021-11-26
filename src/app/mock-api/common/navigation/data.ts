@@ -215,14 +215,14 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: 'Notifications',
         type: 'basic',
         icon: 'heroicons_outline:identification',
-        link: ''
+        link: '/notifications'
     },
     {
         id: 'customersGroups',
         title: 'Customer Groups',
         type: 'basic',
         icon: 'heroicons_outline:identification',
-        link: ''
+        link: '/customers-groups'
     },
     {
         id: 'consultations',
